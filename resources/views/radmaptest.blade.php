@@ -387,8 +387,13 @@
 	})});
 	var divMarkerRadPats = new L.Marker([53.51876, -113.52683], {
 		icon: new L.DivIcon({
-		className: 'my-div-icon2',
+		className: '',
 		html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Patient Area</span>'
+	})});
+	var divMarkerRadStaff = new L.Marker([53.518423, -113.526814], {
+		icon: new L.DivIcon({
+		className: '',	
+		html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Staff Area</span>'
 	})});
 
 	var rect1Bounds = [[53.520515, -113.523949], [53.520484, -113.523893]];
@@ -404,20 +409,22 @@
 	function onZoomShow(){
 		var zoomx = map.getZoom();
 		console.log('Zoom level is = ' + zoomx );
-		if(zoomx > 18 && !floor2DetailedShapesAdded) {
+		if(zoomx > 17 && !floor2DetailedShapesAdded) {
 		rect1.addTo(secondFloorDetailed).openTooltip();
 		divMarker1.addTo(map);
 		rectRadPats.addTo(map);
 		divMarkerRadPats.addTo(map);
+		divMarkerRadStaff.addTo(map);
 		rectRadStaff.addTo(map);
 		floor2DetailedShapesAdded = true;
 		console.log('2nd Floor shapes added ' );
 		}	
-		if(zoomx <= 18 && floor2DetailedShapesAdded) { 
+		if(zoomx <= 17 && floor2DetailedShapesAdded) { 
 		rect1.remove();
 		divMarker1.remove();
 		rectRadPats.remove(map);
 		divMarkerRadPats.remove(map);
+		divMarkerRadStaff.remove(map);
 		rectRadStaff.remove(map);
 		floor2DetailedShapesAdded = false;
 		console.log('2nd Floor shapes removed ' );
