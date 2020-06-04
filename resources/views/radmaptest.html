@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="{{ app()->getLocale() }}">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+	<title>@yield('title','Radiology Map')</title>
+
+
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!-- Styles -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+		integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+		crossorigin="" />
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+	<!-- Scripts -->
+	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+		integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+		crossorigin=""></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-realtime/2.2.0/leaflet-realtime.min.js"></script>
+	<!-- Vue CDN -->
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+	<!-- Leaflet Opacity Control Plugin -->
+
+
+	<style>
+		body {
+			padding: 0;
+			margin: 0;
+		}
+
+		html,
+		body,
+		#map {
+			height: 100%;
+			width: 100vw;
+		}
+
+		#mapid {
+			height: 580px;
+		}
+
+		.leaflet-fade-anim .leaflet-tile,
+		.leaflet-zoom-anim .leaflet-zoom-animated {
+			will-change: auto !important;
+		}
+
+
+		#myBtn {
+			display: block;
+			/* Hidden by default */
+			position: fixed;
+			/* Fixed/sticky position */
+			bottom: 20px;
+			/* Place the button at the bottom of the page */
+			right: 30px;
+			/* Place the button 30px from the right */
+			z-index: 1499;
+			/* Make sure it does not overlap */
+			border: solid 2px grey;
+			/* Remove borders */
+			outline: none;
+			/* Remove outline */
+			background-color: white;
+			/* Set a background color */
+			color: darkgrey;
+			/* Text color */
+			cursor: pointer;
+			/* Add a mouse pointer on hover */
+			padding: 15px;
+			/* Some padding */
+			border-radius: 10px;
+			/* Rounded corners */
+			font-size: 10px;
+			/* Increase font size */
+		}
+
+		#myBtn:hover {
+			background-color: #555;
+			/* Add a dark-grey background on hover */
+		}
+
+
+	</style>
+</head>
+
+
+<body>
+
+	<div id="vue">
+		<input :placeholder="inputPlaceHolder" :class='className' type="text" id="input" v-model="newName" @keyup.enter='addName' @keyup.esc='deleteNames'>
+		<button :disabled="Disabled" :class=" { 'w3-black': submitted} " @click="addName">Push</button>
+		<p v-bind:title='arrTitle'>
+			Hello {{newName}}	<br>
+			{{reverseNewName}}
+<br>
+			<ul>
+				<li v-for='ar in arr' v-text='ar'>{{arr}}</li>
+				<li :title='arrTitle' v-text='arr'>{{arr}}</li>
+			</ul>
+		</p>
+	</div>
+
+	<script>
+		
+	var app = new Vue({
+			el: '#vue',
+
+			data: {
+				inputPlaceHolder:'Final Value',
+				newName: '',
+				arr: ['name1', 'name2', 'name3', 'cool'],
+				arrTitle: 'This is a whole array updated',
+				className:'w3-input w3-bottombar w3-border-black w3-third w3-grey ',
+				btnClassName: 'w3-black w3-large', 	
+				submitted: false,
+				Disabled: false,
+
+			},
+
+
+			methods:{
+				addName() {
+					this.arr.push(this.newName);
+					this.newName = '';
+					this.btnClassName = 'w3-button w3-border w3-blue w3-disabled';  		
+				},
+
+				deleteNames() {
+					this.arr = [];
+				}
+				
+			},
+
+			computed:{
+				reverseNewName() {
+					return this.newName.split('').reverse().join('');
+				}
+			}
+
+
+		})
+
+
+	</script>
+
+	<div id="map">
+		<button class="" onclick="locateMe()" id="myBtn" title="Find My Location">Find Me</button>
+	</div>
+
+
+
+
+	<script>
+		
+
+		var center = [53.520742, -113.523992];
+
+		var littleton = L.marker([53.521217, -113.522732]).bindPopup('Main Entrance.'),
+			denver = L.marker([53.51978872112979, -113.52213084697725]).bindPopup('Parking'),
+			aurora = L.marker([53.52067209847866, -113.52413713932039]).bindPopup('Radiology Department'),
+			golden = L.marker([53.521326, -113.524185]).bindPopup('Help Desk');
+
+		var cities = L.layerGroup([littleton, denver, aurora, golden]);
+
+		//	var mymap = L.map('map').setView(center, 20);
+
+		var main = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+			maxZoom: 20,
+			id: 'mapbox/streets-v11',
+			tileSize: 512,
+			zoomOffset: -1,
+			accessToken: 'pk.eyJ1IjoiZGV2dGVra2VuNDgyIiwiYSI6ImNrN21nN2oxdTAwMHMzZW4xc3hwcmljdnMifQ.1bf42iYapSNIQ_PS8D9DbQ'
+		});
+
+		var imageUrl2 = 'http://almasrepair.com/images/floorplan1.png',
+			imageBounds = [
+				[53.522184, -113.525419],
+				[53.519451, -113.521535]
+			],
+			firstFloor = L.imageOverlay(imageUrl2, imageBounds).setOpacity(0.7);
+
+
+		var map = L.map('map', {
+			center: [53.520742, -113.523992],
+			zoom: 18,
+			layers: [main, cities, firstFloor]
+		});
+
+
+		// add a marker in the given location
+		var upperCorner = [53.521833, -113.525398];
+		var lowerCorner = [53.519451, -113.521535];
+
+		var imageUrl = 'http://almasrepair.com/images/floorplan2.png',
+			imageBounds = [
+				upperCorner,
+				lowerCorner
+			];
+		var secondFloor = L.imageOverlay(imageUrl, imageBounds).setOpacity(0.7);
+
+		var baseMaps = {
+			"Main": Main,
+		};
+
+		var overlayMaps = {
+			"Markers": cities,
+			"First Floor": firstFloor,
+			"Second Floor": secondFloor,
+		};
+
+		L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+		var clickpopup = L.popup();
+
+		function onMapClick(e) {
+			clickpopup
+				.setLatLng(e.latlng)
+				.setContent("You clicked the map at " + e.latlng.toString())
+				.openOn(map);
+		}
+
+
+
+		function locateMe() {
+			map.locate({
+				setView: true,
+				maxZoom: 18
+			});
+		}
+
+
+		function onLocationFound(e) {
+			var radius = e.accuracy;
+			console.log(e);
+			L.marker(e.latlng).addTo(map)
+				.bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+			L.circle(e.latlng, radius).addTo(map);
+		}
+
+		map.on('locationfound', onLocationFound);
+
+		function onLocationError(e) {
+			alert(e.message);
+		}
+
+		map.on('locationerror', onLocationError);
+	</script>
+</body>
+
+</html>
