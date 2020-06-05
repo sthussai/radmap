@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Cache;
 */
 
 Route::get('/cookie/set','CookieController@setCookie');
+Route::get('/cookie/setCenterCookie','CookieController@setCenterCookie');
 Route::get('/cookie/get','CookieController@getCookie');
 
 Route::get('/', function () {

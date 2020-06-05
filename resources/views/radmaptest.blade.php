@@ -198,10 +198,10 @@
 <body>
 	@include('components.rad-loader')
 
-
 	<div id="map">
 
-	<button id="find" class="myBtn" onclick="locateMe(map);" style="font-size:{{$fontSize}}" title="Find My Location">Locate
+		<button id="find" class="myBtn" onclick="locateMe(map);" style="font-size:{{$fontSize}}"
+			title="Find My Location">Locate
 			<span id="btn-loader" style="display:none" class="loader-1" title="Find My Location"></span>
 		</button>
 		<button id="stop" style="display: none" class="myBtn" onclick="stopLocating(map);"
@@ -212,6 +212,8 @@
 
 		<div id="myNav1" class="overlaynav" onclick="">
 
+
+
 			<!-- Button to close the overlay navigation -->
 			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
 
@@ -220,30 +222,45 @@
 				<a href="/" onclick="closeNav()">Home</a>
 				<a href="/about" onclick="closeNav()">About</a>
 				<a href="/feedback" onclick="closeNav()">Feedback</a>
-				
+
 				<form class="w3-padding-large" action="/cookie/set" method="GET">
-				<div class="w3-container w3-margin-top">
-					<label class="w3-text-white w3-large">Location Marker Color</label><br><br>
-					<input name="color" style="max-width: 100px; margin:auto" class="w3-input w3-button w3-white" type="color">
-				</div>
-				
-				<div class="w3-container w3-margin-top">
-				<label class="w3-text-white w3-large">Change Font Size</label><br><br>
-				<select style="max-width: 250px; margin:auto"  class="w3-select" name="fontSize">
-                  <option value="null" selected> </option>
-                  <option value="10px">Small Font</option>
-                  <option value="15px">Medium Font</option>
-                  <option value="20px">Large Font</option>
-                </select>
-				</div>
+					<div class="w3-container w3-margin-top">
+						<label class="w3-text-white w3-large">Set Map Center and Zoom</label><br><br>
+						<input name="centerCoords" id="centerCoordsInput" style="max-width: 200px; margin:auto"
+							class="w3-input w3-white" type="text">
+						<input name="centerZoom" id="centerZoomInput" style="max-width: 200px; margin:auto"
+							class="w3-input w3-white" max="20" type="number">
+					</div>
 
-				<div class="w3-container w3-margin-top">
-					<button class="w3-button w3-dark-grey" type="submit"><i class="fa fa-check w3-margin-right"></i>
-				  Save</button>
-				</div>
-				</form>	
+					<div class="w3-container w3-margin-top">
+						<button id="setMapCenterBtn" class="w3-button w3-dark-grey" placeholder="Lat, Lng"
+							autocomplete="off" onclick="event.preventDefault();setMapCenter();closeNav() "
+							type="Set Map Center"><i class="fa fa-check w3-margin-right"></i> Set Center</button>
+					</div>
 
-				<button class="w3-button w3-padding w3-white w3-large w3-margin-top" onclick="setCenter()"
+					<div class="w3-container w3-margin-top">
+						<label class="w3-text-white w3-large">Location Marker Color</label><br><br>
+						<input name="color" style="max-width: 100px; margin:auto" class="w3-input w3-button w3-white"
+							type="color">
+					</div>
+
+					<div class="w3-container w3-margin-top">
+						<label class="w3-text-white w3-large">Change Font Size</label><br><br>
+						<select style="max-width: 250px; margin:auto" class="w3-select" name="fontSize">
+							<option value="null" selected> </option>
+							<option value="10px">Small Font</option>
+							<option value="15px">Medium Font</option>
+							<option value="20px">Large Font</option>
+						</select>
+					</div>
+
+					<div class="w3-container w3-margin-top">
+						<button class="w3-button w3-dark-grey" type="submit"><i class="fa fa-check w3-margin-right"></i>
+							Save</button>
+					</div>
+				</form>
+
+				<button class="w3-button w3-padding w3-white w3-large w3-margin-top" onclick="recenterMap()"
 					title="Stop Location Sharing">Recenter Map</button> <br>
 				<button class="w3-button w3-padding w3-white w3-large w3-margin-top" onclick=" location.reload(); "
 					title="Stop Location Sharing">Refresh Map</button>
@@ -254,33 +271,33 @@
 
 	</div>
 
-	
+
 	<script>
 		//function to close Navigation After pressing 'ESc'
 		$(window).keydown(function(event) {
-        if (event.which == 27) { //27 == Key Code for ESc
-		  closeNav();
-		  console.log('Closing nav');
-        }
-      });
-			
+			if (event.which == 27) { //27 == Key Code for ESc
+				closeNav();
+				console.log('Closing nav');
+			}
+		});
 
-      //function to open Navigation After pressing Key M
+
+		//function to open Navigation After pressing Key M
 
 		$(window).keydown(function(event) {
-        if (event.which == 77) { //77 == Key Code for M
-		  openNav();
-		  console.log('Open nav');
-        }
-      });
+			if (event.which == 77) { //77 == Key Code for M
+				openNav();
+				console.log('Open nav');
+			}
+		});
 	</script>
 
 
 	<script>
 
-
-
-		var center = [53.520742, -113.523992];
+		var center = "{{$centerCoords}}";
+		center = center.split(",");
+		console.log('center = ' + center);
 		var centerMarker = L.marker([53.521217, -113.522732]).bindPopup('UofA Hospital Main Entrance');
 		var floor1url = 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/floorplan1.png';
 		var floor2url = 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/floorplan2.png';
@@ -349,7 +366,7 @@
 
 		var map = L.map('map', {
 			center: center,
-			zoom: 18,
+			zoom: {{$centerZoom}},
 			layers: [secondFloorMap, centerMarker]
 		});
 
@@ -380,73 +397,86 @@
 		L.control.layers(baseMaps, overlayMaps).addTo(map);
 
 
-	var divMarker1 = new L.Marker(center, {
-		icon: new L.DivIcon({
-		className: 'my-div-icon',
-		html: '<span class="w3-text-white">Hallway</span>'
-	})});
-	var divMarkerRadPats = new L.Marker([53.51876, -113.52683], {
-		icon: new L.DivIcon({
-		className: '',
-		html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Patient Area</span>'
-	})});
-	var divMarkerRadStaff = new L.Marker([53.518423, -113.526814], {
-		icon: new L.DivIcon({
-		className: '',	
-		html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Staff Area</span>'
-	})});
+		var divMarker1 = new L.Marker(center, {
+			icon: new L.DivIcon({
+				className: 'my-div-icon',
+				html: '<span class="w3-text-white">Hallway</span>'
+			})
+		});
+		var divMarkerRadPats = new L.Marker([53.51876, -113.52683], {
+			icon: new L.DivIcon({
+				className: '',
+				html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Patient Area</span>'
+			})
+		});
+		var divMarkerRadStaff = new L.Marker([53.518423, -113.526814], {
+			icon: new L.DivIcon({
+				className: '',
+				html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Staff Area</span>'
+			})
+		});
 
-	var rect1Bounds = [[53.520515, -113.523949], [53.520484, -113.523893]];
-	var rect1 = new L.rectangle(rect1Bounds).bindTooltip('2A1');
+		var rect1Bounds = [
+			[53.520515, -113.523949],
+			[53.520484, -113.523893]
+		];
+		var rect1 = new L.rectangle(rect1Bounds).bindTooltip('2A1');
 
-	var rectRadPatsBounds = [[53.51888, -113.527026], [53.518565, -113.5265]];
-	var rectRadPats = new L.rectangle(rectRadPatsBounds).bindTooltip('Radiology Patients Area');
+		var rectRadPatsBounds = [
+			[53.51888, -113.527026],
+			[53.518565, -113.5265]
+		];
+		var rectRadPats = new L.rectangle(rectRadPatsBounds).bindTooltip('Radiology Patients Area');
 
-	var rectRadStaffBounds = [[53.518534, -113.527023], [53.51825, -113.526496]];
-	var rectRadStaff = new L.rectangle(rectRadStaffBounds).bindTooltip('Radiology Staff Area');
-	
-	var pedwayRemoved, floor2DetailedShapesAdded;
-	function onZoomShow(){
-		var zoomx = map.getZoom();
-		console.log('Zoom level is = ' + zoomx );
-		if(zoomx > 17 && !floor2DetailedShapesAdded) {
-		rect1.addTo(secondFloorDetailed).openTooltip();
-		divMarker1.addTo(map);
-		rectRadPats.addTo(map);
-		divMarkerRadPats.addTo(map);
-		divMarkerRadStaff.addTo(map);
-		rectRadStaff.addTo(map);
-		floor2DetailedShapesAdded = true;
-		console.log('2nd Floor shapes added ' );
-		}	
-		if(zoomx <= 17 && floor2DetailedShapesAdded) { 
-		rect1.remove();
-		divMarker1.remove();
-		rectRadPats.remove(map);
-		divMarkerRadPats.remove(map);
-		divMarkerRadStaff.remove(map);
-		rectRadStaff.remove(map);
-		floor2DetailedShapesAdded = false;
-		console.log('2nd Floor shapes removed ' );
+		var rectRadStaffBounds = [
+			[53.518534, -113.527023],
+			[53.51825, -113.526496]
+		];
+		var rectRadStaff = new L.rectangle(rectRadStaffBounds).bindTooltip('Radiology Staff Area');
+
+		var pedwayRemoved, floor2DetailedShapesAdded;
+
+		function onZoomShow() {
+			var zoomx = map.getZoom();
+			console.log('Zoom level is = ' + zoomx);
+			if (zoomx > 17 && !floor2DetailedShapesAdded) {
+				rect1.addTo(secondFloorDetailed).openTooltip();
+				divMarker1.addTo(map);
+				rectRadPats.addTo(map);
+				divMarkerRadPats.addTo(map);
+				divMarkerRadStaff.addTo(map);
+				rectRadStaff.addTo(map);
+				floor2DetailedShapesAdded = true;
+				console.log('2nd Floor shapes added ');
+			}
+			if (zoomx <= 17 && floor2DetailedShapesAdded) {
+				rect1.remove();
+				divMarker1.remove();
+				rectRadPats.remove(map);
+				divMarkerRadPats.remove(map);
+				divMarkerRadStaff.remove(map);
+				rectRadStaff.remove(map);
+				floor2DetailedShapesAdded = false;
+				console.log('2nd Floor shapes removed ');
+			}
+
+			if (zoomx < 15 && !pedwayRemoved) {
+				pedway.remove();
+				pedwayRemoved = true;
+				console.log('Pedway removed on zoom out');
+			}
+			if (zoomx >= 15 && pedwayRemoved) {
+				pedway.addTo(secondFloorMap);
+				pedway.addTo(secondFloorDetailed);
+				pedwayRemoved = false;
+				console.log('Pedway added after being removed');
+			}
 		}
 
-		if(zoomx < 15 && !pedwayRemoved){
-			pedway.remove();
-			pedwayRemoved = true;
-			console.log('Pedway removed on zoom out' );
-			}
-		if(zoomx >= 15 && pedwayRemoved){
-			pedway.addTo(secondFloorMap);
-			pedway.addTo(secondFloorDetailed);
-			pedwayRemoved = false;
-			console.log('Pedway added after being removed' );
-		}	
-	}
-
-map.on('zoomend', onZoomShow );
+		map.on('zoomend', onZoomShow);
 
 
-	
+
 
 		function locateMe(map) {
 			document.getElementById('btn-loader').style.display = 'block';
@@ -580,7 +610,7 @@ map.on('zoomend', onZoomShow );
 			document.getElementById('stop').style.display = 'none';
 		}
 
-		function setCenter() {
+		function recenterMap() {
 			console.log('Zoom = ' + map.getZoom());
 			map.setView(center, 17);
 
@@ -599,6 +629,32 @@ map.on('zoomend', onZoomShow );
 		/* Close when someone clicks on the "x" symbol inside the overlay Nav Bar */
 		function closeNav() {
 			document.getElementById("myNav1").style.height = "0%";
+		}
+		
+
+
+
+		function setMapCenter() {
+			var centerCoords = document.getElementById("centerCoordsInput").value;
+			var centerZoom = document.getElementById("centerZoomInput").value;
+			ajaxSetMapCenter(centerCoords, centerZoom);
+			centerCoords = centerCoords.split(",");
+			map.setView(centerCoords, centerZoom);
+		}
+
+
+		function ajaxSetMapCenter(centerCoords, centerZoom) {
+			$.ajax({
+				type: 'get',
+				url: '/cookie/setCenterCookie',
+				data: {
+					'centerCoords': centerCoords,
+					'centerZoom': centerZoom
+				},
+				success: function(data) {
+					console.log(centerCoords + 'set successfully');
+				}
+			});
 		}
 	</script>
 
