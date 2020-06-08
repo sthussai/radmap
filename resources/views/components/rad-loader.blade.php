@@ -19,8 +19,9 @@
     position: relative;
     top: 10%;
     width: 100%;
+    max-width: 450px;
     text-align: center;
-    margin-top: 30px;
+    margin: 30px auto;
   }
 
 

@@ -49,4 +49,5 @@ Route::get('/reactradmap', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('dashboard');
+Route::get('/radmapstaff', 'HomeController@radmapstaff');

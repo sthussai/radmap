@@ -318,6 +318,8 @@ $('div.overlay-content').click(function(e) {
 		var centerMarker = L.marker([53.521217, -113.522732]).bindPopup('UofA Hospital Main Entrance');
 		var floor1url = 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/floorplan1.png';
 		var floor2url = 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/floorplan2.png';
+		var floor2details_url =
+			'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/floor2details2.png';
 		var arr = [0, 0, 0];
 		var currentCoord = '';
 		var prevCoord = '';
@@ -345,6 +347,14 @@ $('div.overlay-content').click(function(e) {
 				opacity: 0.7,
 				interactive: true,
 			});
+		var floor2DetailsBounds = [
+				[53.521047, -113.52434],
+				[53.520111, -113.52332]
+			],
+			 floor2DetailsImage = L.imageOverlay(floor2details_url, floor2DetailsBounds, {
+				opacity: 1,
+				interactive: true,
+			});
 
 		var pedwaylatlngs = [
 			[53.52037, -113.525395],
@@ -368,7 +378,8 @@ $('div.overlay-content').click(function(e) {
 		});
 		var firstFloorMap = L.layerGroup([firstFloorImage]);
 		var secondFloorMap = L.layerGroup([secondFloorImage, pedway]);
-		
+		var secondFloorDetailedMap = L.layerGroup([secondFloorImage, pedway, floor2DetailsImage]);
+
 		var map = L.map('map', {
 			center: center,
 			zoom: {{$centerZoom}},
@@ -391,6 +402,7 @@ $('div.overlay-content').click(function(e) {
 		var baseMaps = {
 			"1st Floor": firstFloorMap,
 			"2nd Floor": secondFloorMap,
+			"2nd Floor Detailed": secondFloorDetailedMap,
 		};
 
 		var overlays = {
@@ -523,6 +535,7 @@ $('div.overlay-content').click(function(e) {
 			var rectRadStaff = new L.rectangle(rectRadStaffBounds).bindTooltip('Radiology Staff Area');
 
 			var kayeClinicRadiologyGroup = new L.layerGroup([divMarkerRadPats, divMarkerRadStaff, rectRadPats, rectRadStaff]).addTo(secondFloorMap);
+			kayeClinicRadiologyGroup.addTo(secondFloorDetailedMap);
 		var rect1Bounds = [
 			[53.520515, -113.523949],
 			[53.520484, -113.523893]
@@ -535,23 +548,35 @@ $('div.overlay-content').click(function(e) {
 				html: '<span class="w3-text-white">Hallway</span>'
 			})
 		});
-		var pedwayRemoved;
+		var pedwayRemoved, floor2DetailedShapesAdded;
 
 		function onZoomShow() {
 			var zoomx = map.getZoom();
 			console.log('Zoom level is = ' + zoomx);
+			if (zoomx > 17 && !floor2DetailedShapesAdded) {
+				rect1.addTo(secondFloorDetailedMap).openTooltip();
+				divMarker1.addTo(secondFloorDetailedMap);
+				floor2DetailedShapesAdded = true;
+				console.log('2nd Floor shapes added ');
+			}
+			if (zoomx <= 17 && floor2DetailedShapesAdded) {
+				rect1.remove();
+				divMarker1.remove();
+				floor2DetailedShapesAdded = false;
+				console.log('2nd Floor shapes removed ');
+			}
 
-			if (zoomx < 17 && !pedwayRemoved) {
+			if (zoomx < 15 && !pedwayRemoved) {
 				pedway.remove();
 				kayeClinicRadiologyGroup.remove();
-				secondFloorPaths.remove();
 				pedwayRemoved = true;
 				console.log('Pedway removed on zoom out');
 			}
-			if (zoomx >= 17 && pedwayRemoved) {
-				pedway.addTo(secondFloorMap);
+			if (zoomx >= 15 && pedwayRemoved) {
 				kayeClinicRadiologyGroup.addTo(secondFloorMap);
-				secondFloorPaths.addTo(secondFloorMap);
+				kayeClinicRadiologyGroup.addTo(secondFloorDetailedMap);
+				pedway.addTo(secondFloorMap);
+				pedway.addTo(secondFloorDetailedMap);
 				pedwayRemoved = false;
 				console.log('Pedway added after being removed');
 			}

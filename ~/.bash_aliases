@@ -1,1 +1,0 @@
-alias pa="php artisan"

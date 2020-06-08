@@ -16,11 +16,8 @@ class RadMapController extends Controller
     
     public function test(Request $request){
         //dd($request);
-        $colorCookie = $request->cookie('color');
-        $fontSizeCookie = $request->cookie('fontSize');
-        //$centerCoordsCookie = 
-        if($colorCookie) {$color = $colorCookie; } else {$color = $this->color;}
-        if($fontSizeCookie) {$fontSize = $fontSizeCookie; } else {$fontSize = $this->fontSize;}
+        if($request->cookie('color')) {$color = $request->cookie('color'); } else {$color = $this->color;}
+        if($request->cookie('fontSize')) {$fontSize = $request->cookie('fontSize'); } else {$fontSize = $this->fontSize;}
         if($request->cookie('centerCoords')) {$centerCoords = $request->cookie('centerCoords'); } else {$centerCoords = $this->centerCoords;}
         if($request->cookie('centerZoom')) {$centerZoom = $request->cookie('centerZoom'); } else {$centerZoom = $this->centerZoom;}
         return view('radmaptest', ['demo'=>$this->demo, 'color'=>$color,'fontSize'=> $fontSize, 'centerCoords'=> $centerCoords, 'centerZoom'=> $centerZoom ]);
