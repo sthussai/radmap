@@ -200,6 +200,12 @@
 
 	<div id="map">
 
+		<div class="w3-display-container" style="z-index: 1000">
+			<div id="infoDiv" class="w3-display-topmiddle w3-black w3-padding " style="font-size: {{$fontSize}};">Viewing Second Floor Map of University Hospital
+			</div>
+		</div>
+
+
 		<button id="find" class="myBtn" onclick="locateMe(map);" style="font-size:{{$fontSize}}"
 			title="Find My Location">Locate
 			<span id="btn-loader" style="display:none" class="loader-1" title="Find My Location"></span>
@@ -219,29 +225,78 @@
 
 			<!-- Overlay content -->
 			<section class="overlaynav-content">
-				<a href="/" onclick="closeNav()" class="w3-hover-white">Home</a>
+
+			<div id='menu_items' class="w3-row w3-white w3-opacity " style='font-size:1.5em;'>
+      <div class="w3-col s6">
+        <button class="w3-button  w3-block w3-hover-blue-grey  " onclick="menuTabChange('Settings')"><i class="fa fa-gear w3-margin-right"></i>Settings</button>
+      </div>
+
+      <div class="w3-col  s6">
+        <button href="#plans" class="w3-button w3-block w3-hover-blue-grey  "
+          onclick="menuTabChange('Directions')"><i class="fa fa-map w3-margin-right"></i>Directions</button>
+      </div>
+
+    </div>
+
+
+			<div class="tabContent w3-margin-top" id="Links">
+			<a href="/" onclick="closeNav()" class="w3-hover-white">Home</a>
 				<a href="/about" onclick="closeNav()" class="w3-hover-white">About</a>
 				<a href="/feedback" onclick="closeNav()" class="w3-hover-white">Feedback</a>
 
+			</div>
+
+			<div class="tabContent" id="Directions">
+			<button onclick="menuTabChange('Links')" class="w3-btn w3-text-white w3-hover-opacity"><i class="fa fa-bars w3-margin-right"></i>Main Menu</button>
+			<div class="w3-container w3-margin-top">
+					<label class="w3-text-white w3-large ">Show Path to...</label><br><br>
+						<select id="directionsToInput" style="max-width: 250px; margin:auto" class="w3-select" name="directionsTo">
+							<option value="null" selected> </option>
+							<option value="kayeEdmontonClinic">Kaye Edmonton Clinic</option>
+							<option value="radiologyUAH">Radiology UAH</option>
+							<option value="mainCafeteria">Main Cafeteria</option>
+							<option value="2J2">Unit 2J2</option>
+						</select>
+						<br><br>	
+					<label class="w3-text-white w3-large ">From</label><br><br>
+					<select id="directionsFromInput" style="max-width: 250px; margin:auto" class="w3-select" name="directionsFrom">
+							<option value="null" selected> </option>
+							<option value="kayeEdmontonClinic">Kaye Edmonton Clinic</option>
+							<option value="radiologyUAH">Radiology UAH</option>
+							<option value="mainCafeteria">Main Cafeteria</option>
+							<option value="2J2">Unit 2J2</option>
+						</select>
+					<br><br>	
+					<button id="showPathsBtn" class="w3-button w3-dark-grey" 
+						autocomplete="off" onclick="event.preventDefault();showRequestedPaths();closeNav() "
+						>Show Path</button>							
+					</div>
+
+					<br><br>
+					<button onclick="toggleAllPaths();closeNav()" id="pathsBtn" class="w3-btn w3-text-white w3-hover-opacity">Show All Paths</button>
+			</div>
+			
+			<div class="tabContent" id="Settings">
+				<button onclick="menuTabChange('Links')" class="w3-btn w3-text-white w3-hover-opacity"><i class="fa fa-bars w3-margin-right"></i>Main Menu</button>
+				
 				<form class="w3-padding-large" action="/cookie/set" method="GET">
-					<div class="w3-container w3-margin-top">
-						<label class="w3-text-white w3-large w3-hover-white">Set Map Center and Zoom</label><br><br>
+				<div class="w3-container w3-margin-top">
+					<label class="w3-text-white w3-large ">Set Map Center and Zoom</label><br><br>
 						<input name="centerCoords" id="centerCoordsInput" style="max-width: 200px; margin:auto"
 							class="w3-input w3-white" type="text">
 						<input name="centerZoom" id="centerZoomInput" style="max-width: 200px; margin:auto"
-							class="w3-input w3-white" max="20" type="number">
+						class="w3-input w3-white" max="20" type="number">
 					</div>
 
 					<div class="w3-container w3-margin-top">
-						<button id="setMapCenterBtn" class="w3-button w3-dark-grey" placeholder="Lat, Lng"
-							autocomplete="off" onclick="event.preventDefault();setMapCenter();closeNav() "
-							type="Set Map Center"><i class="fa fa-check w3-margin-right"></i> Set Center</button>
+						<button id="setMapCenterBtn" class="w3-button w3-dark-grey" 
+					 onclick="event.preventDefault();setMapCenter();closeNav()"><i class="fa fa-check w3-margin-right"></i> Set Center</button>
 					</div>
-
+					
 					<div class="w3-container w3-margin-top">
 						<label class="w3-text-white w3-large">Location Marker Color</label><br><br>
 						<input name="color" style="max-width: 100px; margin:auto" class="w3-input w3-button w3-white"
-							type="color">
+						type="color">
 					</div>
 
 					<div class="w3-container w3-margin-top">
@@ -253,17 +308,18 @@
 							<option value="20px">Large Font</option>
 						</select>
 					</div>
-
+					
 					<div class="w3-container w3-margin-top">
 						<button class="w3-button w3-dark-grey" type="submit"><i class="fa fa-check w3-margin-right"></i>
 							Save</button>
 					</div>
 				</form>
-
+				
 				<button class="w3-button w3-padding w3-white w3-large w3-margin-top" onclick="recenterMap()"
-					title="Stop Location Sharing">Recenter Map</button> <br>
+				title="Stop Location Sharing">Recenter Map</button> <br>
 				<button class="w3-button w3-padding w3-white w3-large w3-margin-top" onclick=" location.reload(); "
-					title="Stop Location Sharing">Refresh Map</button>
+				title="Stop Location Sharing">Refresh Map</button>
+			</div>
 
 			</section>
 
@@ -284,11 +340,19 @@ L.DomEvent.on(navContent, 'click dblclick scroll', function (ev) {
 	console.log('stopped event');
 });
 
-// stop child click bubbling up to parent
-$('div.overlay-content').click(function(e) {
-		e.stopPropagation();
-		console.log('stopped jQ event');
-      });
+
+function menuTabChange(showTab){
+var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabContent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+	  }
+	  if(showTab != null){
+		  document.getElementById(showTab).style.display = "block";
+	  }
+    }
+
+	menuTabChange('Links');
 
 		//function to close Navigation After pressing 'ESc'
 		$(window).keydown(function(event) {
@@ -398,7 +462,8 @@ $('div.overlay-content').click(function(e) {
 		}
 
 
-		L.control.layers(baseMaps, overlays).addTo(map);
+		var controls = L.control.layers(baseMaps, overlays, {collapsed:false}).addTo(map);
+
 
 		var stairsMarker1stFloor = L.marker([53.520605, -113.524552]).bindPopup('Stairs to go up to 2nd Floor Level').addTo(firstFloorMap).openPopup();
 		var stairsMarker2ndFloor = L.marker([53.520518, -113.524601]).bindPopup('Stairs to go down to 1st Floor Level').addTo(secondFloorMap).openPopup();
@@ -491,10 +556,52 @@ $('div.overlay-content').click(function(e) {
 			weight: 5,
 			lineCap: 'butt',
 		}).bindPopup('Path between UAH Radiology 2nd Floor and Parking 2nd Floor ');
+		
+		
+		var firstFloorPaths = new L.layerGroup([pathBetweenCafeteriaAndStairs1stFloor,pathBetweenStairsAndMRI1stFloor]); 
+		
+		var secondFloorPaths = new L.layerGroup([pathBetweenStairsAndKayeClinic2ndFloor,pathBetweenStairsAndRadiologyUAH2ndFloor, pathBetweenRadiologyUAH2ndFloorAnd2J2, pathBetweenUAH2ndFloorParkingAnd2J2, pathBetweenUAH2ndFloorParkingAndRadiologyUAH]); 
 
+		var showingAllPaths = false;	
+		function toggleAllPaths(){
+			showingAllPaths =! showingAllPaths;
+			if(showingAllPaths) {
+				document.getElementById('pathsBtn').innerText = 'Hide All Paths';
+				secondFloorPaths.addTo(secondFloorMap);
+				firstFloorPaths.addTo(firstFloorMap);
+			}
+			else{
+				document.getElementById('pathsBtn').innerText = 'Show All Paths';
+				secondFloorPaths.remove();
+				firstFloorPaths.remove();
+			}
+		}
 
-		var secondFloorPaths = new L.layerGroup([pathBetweenStairsAndKayeClinic2ndFloor,pathBetweenStairsAndRadiologyUAH2ndFloor, pathBetweenRadiologyUAH2ndFloorAnd2J2, pathBetweenUAH2ndFloorParkingAnd2J2, pathBetweenUAH2ndFloorParkingAndRadiologyUAH]).addTo(secondFloorMap); 
-
+		var requestedPathsLayerGroup = new L.layerGroup([]);
+		function showRequestedPaths(){
+			if(showingAllPaths){toggleAllPaths()};
+			var directionToPath = document.getElementById("directionsToInput").value;
+			var directionFromPath = document.getElementById("directionsFromInput").value;
+			console.log(directionToPath);
+			console.log(directionFromPath);
+			requestedPathsLayerGroup.clearLayers();
+			if(directionToPath == 'kayeEdmontonClinic' && directionFromPath == 'radiologyUAH'){
+				var requestedPathTo = pathBetweenStairsAndKayeClinic2ndFloor.setStyle({color:'black'});
+				var requestedPathFrom = pathBetweenStairsAndRadiologyUAH2ndFloor.setStyle({color:'black'});
+				requestedPathTo.addTo(requestedPathsLayerGroup);
+				requestedPathFrom.addTo(requestedPathsLayerGroup);
+				requestedPathsLayerGroup.addTo(secondFloorMap);
+			}
+			if(directionToPath == 'kayeEdmontonClinic' && directionFromPath == '2J2'){
+				var requestedPathTo = pathBetweenStairsAndKayeClinic2ndFloor.setStyle({color:'black'});
+				var requestedPathbetween = pathBetweenStairsAndRadiologyUAH2ndFloor.setStyle({color:'black'});
+				var requestedPathFrom = pathBetweenRadiologyUAH2ndFloorAnd2J2.setStyle({color:'black'});
+				requestedPathTo.addTo(requestedPathsLayerGroup);
+				requestedPathFrom.addTo(requestedPathsLayerGroup);
+				requestedPathbetween.addTo(requestedPathsLayerGroup);
+				requestedPathsLayerGroup.addTo(secondFloorMap);
+			}
+		}
 
 			var divMarkerRadPats = new L.Marker([53.51876, -113.52683], {
 				icon: new L.DivIcon({
@@ -528,6 +635,8 @@ $('div.overlay-content').click(function(e) {
 			[53.520484, -113.523893]
 		];
 
+	
+
 		var rect1 = new L.rectangle(rect1Bounds).bindTooltip('2A1');
 		var divMarker1 = new L.Marker(center, {
 			icon: new L.DivIcon({
@@ -544,14 +653,12 @@ $('div.overlay-content').click(function(e) {
 			if (zoomx < 17 && !pedwayRemoved) {
 				pedway.remove();
 				kayeClinicRadiologyGroup.remove();
-				secondFloorPaths.remove();
 				pedwayRemoved = true;
 				console.log('Pedway removed on zoom out');
 			}
 			if (zoomx >= 17 && pedwayRemoved) {
 				pedway.addTo(secondFloorMap);
 				kayeClinicRadiologyGroup.addTo(secondFloorMap);
-				secondFloorPaths.addTo(secondFloorMap);
 				pedwayRemoved = false;
 				console.log('Pedway added after being removed');
 			}
@@ -727,6 +834,17 @@ $('div.overlay-content').click(function(e) {
 			map.setView(centerCoords, centerZoom);
 		}
 
+		
+
+
+		var baseLayerChange = false;	
+		function changeInfoDivMessage(){
+			baseLayerChange =! baseLayerChange;
+			if(baseLayerChange) {document.getElementById('infoDiv').innerText = 'Viewing First Floor Map of University Hospital';}
+			else{document.getElementById('infoDiv').innerText = 'Viewing Second Floor Map of University Hospital';}
+		}
+
+		map.on('baselayerchange', changeInfoDivMessage );
 
 		function ajaxSetMapCenter(centerCoords, centerZoom) {
 			$.ajax({
