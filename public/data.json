@@ -1,0 +1,89 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.523469, 53.520413 ]
+      },
+      "properties": {
+        "name": "Point 1",
+        "amenity": "Baseball Stadium",
+        "popupContent": "Point Description 1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52398, 53.520414  ]
+      },
+      "properties": {
+        "name": "Point 2",
+        "amenity": "Baseball Stadium",
+        "popupContent": "Point Description 2"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.524012, 53.520395  ]
+      },
+      "properties": {
+        "name": "Point 3",
+        "amenity": "Baseball Stadium",
+        "popupContent": "Point Description 3"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.523939, 53.520919  ]
+      },
+      "properties": {
+        "name": "Point 4",
+        "amenity": "Baseball Stadium",
+        "popupContent": "Main Cafeteria Point 1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.523937,53.521032  ]
+      },
+      "properties": {
+        "name": "Point 5",
+        "amenity": "Baseball Stadium",
+        "popupContent": "Main Cafeteria Point 2"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.524552,53.52103  ]
+      },
+      "properties": {
+        "name": "Point 6",
+        "amenity": "Baseball Stadium",
+        "popupContent": "Main Cafeteria Point 3"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.524552,53.520605  ]
+      },
+      "properties": {
+        "name": "Point 7",
+        "amenity": "Baseball Stadium",
+        "popupContent": "Main Cafeteria Point 4"
+      }
+    }
+  ]
+}

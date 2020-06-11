@@ -88,7 +88,7 @@
             <a href="{{ route('login') }}">Login</a>
 
             @if (Route::has('register'))
-            <a href="{{ route('register') }}">Register</a>
+<!--             <a href="{{ route('register') }}">Register</a> -->
             @endif
             @endauth
         </div>
@@ -102,7 +102,8 @@
             <div class="links">
                 <a href="/radmap">Main</a>
                 <a href="/radmaptest">Test</a>
-                <a href="/reactradmap">React</a>
+<!--                 <a href="/reactradmap">React</a> -->
+                <a href="/radmapstaff">Staff</a>
                 <a href="/about">About</a>
                 <a href="/feedback">Feedback</a>
             </div>

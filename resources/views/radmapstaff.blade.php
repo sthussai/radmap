@@ -210,104 +210,11 @@
 		<button class="menuBtn" style="background-color:{{$color}}" onclick="openNav();" title="Open Menu">
 			<i class="fa fa-bars "></i></button>
 
-		<div id="myNav1" class="overlaynav" onclick="">
-
-
-
-			<!-- Button to close the overlay navigation -->
-			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-
-			<!-- Overlay content -->
-			<section class="overlaynav-content">
-				<a href="/" onclick="closeNav()" class="w3-hover-white">Home</a>
-				<a href="/about" onclick="closeNav()" class="w3-hover-white">About</a>
-				<a href="/feedback" onclick="closeNav()" class="w3-hover-white">Feedback</a>
-
-				<form class="w3-padding-large" action="/cookie/set" method="GET">
-					<div class="w3-container w3-margin-top">
-						<label class="w3-text-white w3-large w3-hover-white">Set Map Center and Zoom</label><br><br>
-						<input name="centerCoords" id="centerCoordsInput" style="max-width: 200px; margin:auto"
-							class="w3-input w3-white" type="text">
-						<input name="centerZoom" id="centerZoomInput" style="max-width: 200px; margin:auto"
-							class="w3-input w3-white" max="20" type="number">
-					</div>
-
-					<div class="w3-container w3-margin-top">
-						<button id="setMapCenterBtn" class="w3-button w3-dark-grey" placeholder="Lat, Lng"
-							autocomplete="off" onclick="event.preventDefault();setMapCenter();closeNav() "
-							type="Set Map Center"><i class="fa fa-check w3-margin-right"></i> Set Center</button>
-					</div>
-
-					<div class="w3-container w3-margin-top">
-						<label class="w3-text-white w3-large">Location Marker Color</label><br><br>
-						<input name="color" style="max-width: 100px; margin:auto" class="w3-input w3-button w3-white"
-							type="color">
-					</div>
-
-					<div class="w3-container w3-margin-top">
-						<label class="w3-text-white w3-large">Change Font Size</label><br><br>
-						<select style="max-width: 250px; margin:auto" class="w3-select" name="fontSize">
-							<option value="null" selected> </option>
-							<option value="10px">Small Font</option>
-							<option value="15px">Medium Font</option>
-							<option value="20px">Large Font</option>
-						</select>
-					</div>
-
-					<div class="w3-container w3-margin-top">
-						<button class="w3-button w3-dark-grey" type="submit"><i class="fa fa-check w3-margin-right"></i>
-							Save</button>
-					</div>
-				</form>
-
-				<button class="w3-button w3-padding w3-white w3-large w3-margin-top" onclick="recenterMap()"
-					title="Stop Location Sharing">Recenter Map</button> <br>
-				<button class="w3-button w3-padding w3-white w3-large w3-margin-top" onclick=" location.reload(); "
-					title="Stop Location Sharing">Refresh Map</button>
-
-			</section>
-
-		</div>
+	@include('components.rad-mainmenu')
 
 	</div>
 
 	
-
-
-	<script>
-var navContent = document.getElementById('myNav1');
-/* map.on('scroll', L.DomEvent.disableScrollPropagation(navContent));
-map.on('click', L.DomEvent.disableClickPropagation(navContent)); */
-L.DomEvent.on(navContent, 'click dblclick scroll', function (ev) {
-	L.DomEvent.stopPropagation(ev);
-	L.DomEvent.disableScrollPropagation(navContent);
-	console.log('stopped event');
-});
-
-// stop child click bubbling up to parent
-$('div.overlay-content').click(function(e) {
-		e.stopPropagation();
-		console.log('stopped jQ event');
-      });
-
-		//function to close Navigation After pressing 'ESc'
-		$(window).keydown(function(event) {
-			if (event.which == 27) { //27 == Key Code for ESc
-				closeNav();
-				console.log('Closing nav');
-			}
-		});
-
-
-		//function to open Navigation After pressing Key M
-
-		$(window).keydown(function(event) {
-			if (event.which == 77) { //77 == Key Code for M
-				openNav();
-				console.log('Open nav');
-			}
-		});
-	</script>
 
 
 	<script>
