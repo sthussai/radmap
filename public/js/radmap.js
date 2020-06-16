@@ -93,68 +93,371 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+var pathGroup = L.layerGroup().addTo(secondFloorMap);
 var myLayer = null;
-var states;
-var urhere = L.marker([53.520419, -113.524389]).bindPopup('Ur here for Demo').addTo(secondFloorMap);
-var to = urhere.getLatLng();
-var distancesArray = [];
-console.log(distancesArray);
+var startRefPointMarker = L.marker([53.51993090722499, -113.52201819419861], {
+  draggable: true
+}).bindPopup('Ur here for Demo 2').addTo(secondFloorMap);
+var endRefPointMarker = L.marker([53.52060200173207, -113.52428197860719], {
+  draggable: true
+}).bindPopup('Final location').addTo(secondFloorMap);
+var firstRefPoint = null;
+var endRefPoint = null;
+var distancesToClosestRefPointArray = [];
+var ltlnFinalLocationsArray = [];
+var geojsonMarkerOptions = {
+  radius: 8,
+  fillColor: "grey",
+  color: "#000",
+  weight: 1,
+  opacity: 1,
+  fillOpacity: 0.8
+};
+var minDistanceLine = null;
+var markersObject = {};
+var markersArray = [];
+var start = "Point 14";
+var end = "Point 5";
+
+function ajaxGetGeoJsonFinalLocations() {
+  $.ajax({
+    dataType: "json",
+    url: '/finalLocationData.json',
+    success: function success(data) {
+      //    console.log(data);
+      myLayer = L.geoJSON(data, {
+        onEachFeature: popupOnEachFinalLocation,
+        pointToLayer: function pointToLayer(feature, latlng) {
+          return L.circleMarker(latlng, geojsonMarkerOptions);
+        },
+        style: function style(feature) {
+          switch (feature.properties.floor) {
+            case 'location':
+              return {
+                color: "black",
+                fillColor: "grey"
+              };
+          }
+        }
+      }).addTo(secondFloorMap);
+    },
+    error: function error(xhr) {
+      console.log('Error - probably with parsing JSON data');
+      console.log(xhr);
+    }
+  });
+}
+
+ajaxGetGeoJsonFinalLocations();
 
 function ajaxGetGeoJson() {
   $.ajax({
     dataType: "json",
     url: '/data.json',
     success: function success(data) {
-      console.log(data);
       myLayer = L.geoJSON(data, {
-        onEachFeature: popupOnEachFeature
-      }).addTo(map);
+        filter: function filter(feature) {
+          return feature.properties.floor;
+        },
+        onEachFeature: popupOnEachFeature,
+        pointToLayer: function pointToLayer(feature, latlng) {
+          return L.circleMarker(latlng, geojsonMarkerOptions);
+        },
+        style: function style(feature) {
+          switch (feature.properties.floor) {
+            case 'first':
+              return {
+                color: "#ff0000",
+                fillColor: "orange"
+              };
+
+            case 'second':
+              return {
+                color: "#0000ff",
+                fillColor: "lightblue"
+              };
+          }
+        }
+      }).addTo(secondFloorMap);
     },
     error: function error(xhr) {
-      console.log('Error - probably with JSON data');
+      console.log('Error - probably with parsing JSON data');
       console.log(xhr);
     }
   });
 }
 
 ajaxGetGeoJson();
-/* L.geoJSON(states, {
-    style: function(feature) {
-        switch (feature.properties.party) {
-            case 'Republican': return {color: "#ff0000"};
-            case 'Democrat':   return {color: "#0000ff"};
-        }
-    },
-	onEachFeature: onEachFeature2
-}).addTo(map); */
 
-function popupOnEachFeature(feature, layer) {
-  // does this feature have a property named popupContent?
+function ajaxGetGeoJsonFirstFloor() {
+  $.ajax({
+    dataType: "json",
+    url: '/firstFloorData.json',
+    success: function success(data) {
+      myLayer = L.geoJSON(data, {
+        filter: function filter(feature) {
+          return feature.properties.floor;
+        },
+        onEachFeature: popupOnEachFeature,
+        pointToLayer: function pointToLayer(feature, latlng) {
+          return L.circleMarker(latlng, geojsonMarkerOptions);
+        },
+        style: function style(feature) {
+          switch (feature.properties.floor) {
+            case 'first':
+              return {
+                color: "#ff0000",
+                fillColor: "orange"
+              };
+
+            case 'second':
+              return {
+                color: "#0000ff",
+                fillColor: "lightblue"
+              };
+          }
+        }
+      }).addTo(firstFloorMap);
+    },
+    error: function error(xhr) {
+      console.log('Error - probably with parsing JSON data');
+      console.log(xhr);
+    }
+  });
+} //ajaxGetGeoJsonFirstFloor();
+
+
+function popupOnEachFinalLocation(feature, layer) {
   if (feature.properties && feature.properties.popupContent) {
     layer.bindPopup(feature.properties.popupContent);
   }
 
-  var lt = feature.geometry.coordinates[1];
-  var ln = feature.geometry.coordinates[0];
-  var ltln = [lt, ln];
-  ltln = map.distance(ltln, to);
-  ltln = Math.round(ltln * 100) / 100;
-  distancesArray.push(ltln);
-  console.log(distancesArray);
-}
-
-function minimumDistance() {
-  if (distancesArray.length != 0) {
-    console.log(distancesArray);
-    var min = Math.min.apply(Math, distancesArray);
-    console.log(min);
+  if (feature.properties && feature.geometry.type == "Point") {
+    var lt = feature.geometry.coordinates[1];
+    var ln = feature.geometry.coordinates[0];
+    var ltln = [lt, ln];
+    ltlnFinalLocationsArray.push(ltln);
   }
 }
 
+function popupOnEachFeature(feature, layer) {
+  if (feature.properties && feature.properties.popupContent) {
+    layer.bindPopup(feature.properties.popupContent);
+  }
+
+  if (feature.properties && feature.geometry.type == "Point") {
+    markersArray.push(feature);
+    var name = feature.properties.name;
+    var neighbour = {};
+    neighbour[feature.properties.neighbour1] = parseInt(feature.properties.neighbour1Distance);
+
+    if (feature.properties.neighbour2) {
+      neighbour[feature.properties.neighbour2] = parseInt(feature.properties.neighbour2Distance);
+    }
+
+    if (feature.properties.neighbour3) {
+      neighbour[feature.properties.neighbour3] = parseInt(feature.properties.neighbour3Distance);
+    }
+
+    markersObject[name] = neighbour;
+  }
+}
+
+var minDistanceLineCoords = [];
+
+var shortestDistanceNode = function shortestDistanceNode(distances, visited) {
+  // create a default value for shortest
+  var shortest = null; // for each node in the distances object
+
+  for (var node in distances) {
+    // if no node has been assigned to shortest yet
+    // or if the current node's distance is smaller than the current shortest
+    var currentIsShortest = shortest === null || distances[node] < distances[shortest]; // and if the current node is in the unvisited set
+
+    if (currentIsShortest && !visited.includes(node)) {
+      // update shortest to be the current node
+      shortest = node;
+    }
+  }
+
+  return shortest;
+};
+
+var findShortestPath = function findShortestPath(graph, startNode, endNode) {
+  // track distances from the start node using a hash object
+  var distances = {};
+  distances[endNode] = "Infinity";
+  distances = Object.assign(distances, graph[startNode]); // track paths using a hash object
+
+  console.log("Start " + start + " end " + end);
+  console.log("distances");
+  console.log(distances);
+  var parents = {
+    endNode: null
+  };
+
+  for (var child in graph[startNode]) {
+    parents[child] = startNode;
+  }
+
+  console.log("parents");
+  console.log(parents); // collect visited nodes
+
+  var visited = []; // find the nearest node
+
+  var node = shortestDistanceNode(distances, visited); //return console.log(node);
+  // for that node:
+
+  while (node) {
+    // find its distance from the start node & its child nodes
+    var distance = distances[node];
+    var children = graph[node]; // for each of those child nodes:
+
+    for (var _child in children) {
+      // make sure each child node is not the start node
+      if (String(_child) === String(startNode)) {
+        continue;
+      } else {
+        // save the distance from the start node to the child node
+        var newdistance = distance + children[_child]; // if there's no recorded distance from the start node to the child node in the distances object
+        // or if the recorded distance is shorter than the previously stored distance from the start node to the child node
+
+        if (!distances[_child] || distances[_child] > newdistance) {
+          // save the distance to the object
+          distances[_child] = newdistance; // record the path
+
+          parents[_child] = node;
+        }
+      }
+    } // move the current node to the visited set
+
+
+    visited.push(node); // move to the nearest neighbor node
+
+    node = shortestDistanceNode(distances, visited);
+  } // using the stored paths from start node to end node
+  // record the shortest path
+
+
+  var shortestPath = [endNode];
+  var parent = parents[endNode];
+
+  while (parent) {
+    shortestPath.push(parent);
+    parent = parents[parent];
+  } //this is the shortest path
+
+
+  shortestPath.reverse();
+  var results = {
+    distance: distances[endNode],
+    path: shortestPath
+  }; // return the shortest path & the end node's distance from the start node
+
+  console.log("results");
+  console.log(results);
+  getNamesInOrder(results.path);
+};
+
+var getNamesInOrder = function getNamesInOrder(path) {
+  minDistanceLineCoords = [];
+
+  for (var i = 0; i < path.length; i++) {
+    markersArray.forEach(function (feature) {
+      if (feature.properties.name == path[i]) {
+        var lt = feature.geometry.coordinates[1];
+        var ln = feature.geometry.coordinates[0];
+        var ltln = [lt, ln];
+        minDistanceLineCoords.push(ltln);
+      }
+    });
+  }
+
+  drawLine();
+};
+
+var drawLine = function drawLine() {
+  pathGroup.clearLayers();
+  minDistanceLine = L.polyline(minDistanceLineCoords, {
+    color: "black"
+  }).bindPopup('Minimum distance path ').addTo(pathGroup);
+}; // Takes ltln array and user location ltln as 'this' value, returns ltln of closest ref point
+
+
+var setStartPoint = function setStartPoint() {
+  getClosestPointFrom(startRefPointMarker);
+
+  if (firstRefPoint) {
+    firstRefPoint.remove();
+  }
+
+  ;
+  firstRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {
+    color: 'green'
+  }).addTo(secondFloorMap);
+  firstRefPoint.bindPopup('Your closest reference point is here').openPopup();
+  start = distancesToClosestRefPointArray[0][2];
+  findShortestPath(markersObject, start, end);
+};
+
+startRefPointMarker.on('dragend', setStartPoint);
+
+var setEndPoint = function setEndPoint() {
+  getClosestPointFrom(endRefPointMarker);
+
+  if (endRefPoint) {
+    endRefPoint.remove();
+  }
+
+  ;
+  endRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {
+    color: 'white'
+  }).addTo(map);
+  endRefPoint.bindPopup('Your End point is here').openPopup();
+  end = distancesToClosestRefPointArray[0][2];
+  setStartPoint();
+};
+
+endRefPointMarker.on('dragend', setEndPoint);
+
+var getClosestPointFrom = function getClosestPointFrom(PointMarker) {
+  distancesToClosestRefPointArray = [];
+  markersArray.forEach(function (feature) {
+    var lt = feature.geometry.coordinates[1];
+    var ln = feature.geometry.coordinates[0];
+    var ltln = [lt, ln];
+    var name = feature.properties.name;
+    var ltlnDistance = map.distance(ltln, PointMarker.getLatLng());
+    ltlnDistance = Math.round(ltlnDistance * 100) / 100;
+    ltlnDistance = [ltlnDistance, ltln, name];
+    distancesToClosestRefPointArray.push(ltlnDistance);
+  });
+  distancesToClosestRefPointArray.sort(function (a, b) {
+    return a[0] - b[0];
+  });
+  return distancesToClosestRefPointArray;
+};
+
 $('#infoDiv').click(function () {
-  console.log('min = ');
-  minimumDistance();
+  myLayer.bringToBack();
 });
+$('#hidebtn').click(function () {
+  console.log('markersObject');
+  console.log(markersObject);
+  console.log('markers Array');
+  console.log(markersArray);
+  myLayer.bringToFront();
+});
+/* let graph = {
+	"Point 14": { "Point 13": 1},
+	"Point 13": { "Point 14": 1, "Point 10": 1, "Point 17": 2 },
+	"Point 10": { "Point 8": 2, "Point 3": 3, "Point 13": 1 },
+	"Point 17": { "Point 3": 1, "Point 13": 1 },
+	"Point 8": { "Point 7": 2, "Point 10": 2 },
+	"Point 7": { "Point 5": 1 , "Point 8": 2},
+	"Point 3": { "Point 5": 1, "Point 17": 1, "Point 10": 3  },
+	"Point 5": {"Point 3": 1, "Point 7": 1 },
+}; */
 
 /***/ }),
 
@@ -184,7 +487,7 @@ $(window).on("load", function () {
   console.log("hello");
 });
 $("#hidebtn").click(function () {
-  $("#infoDiv").toggle(500);
+  $("#infoDiv").slideToggle(100);
 
   if (showInfo) {
     $("#hidebtn").text("Show");
@@ -222,17 +525,11 @@ var overlays = {
 var controls = L.control.layers(baseMaps, overlays, {
   collapsed: false
 }).addTo(map);
+var controlsElement = controls.getContainer();
+console.log(controlsElement);
+ajaxGetGeoJsonFirstFloor();
 var stairsMarker1stFloor = L.marker([53.520605, -113.524552]).bindPopup('Stairs to go up to 2nd Floor Level').addTo(firstFloorMap);
-var stairsMarker2ndFloor = L.marker([53.520518, -113.524601]).bindPopup('Stairs to go down to 1st Floor Level').addTo(secondFloorMap);
-var urhere = L.marker([53.520419, -113.524389]).bindPopup('Ur here for Demo').addTo(secondFloorMap);
-var from = stairsMarker2ndFloor.getLatLng();
-var to = urhere.getLatLng();
-var distance = map.distance(from, to);
-var coordsDistancePolyLine = [urhere.getLatLng(), //cafeteria starting point
-stairsMarker2ndFloor.getLatLng() //2nd point			
-];
-L.polyline(coordsDistancePolyLine).bindPopup('Nearest Path with distance of ' + Math.floor(distance) + ' m').addTo(secondFloorMap);
-var pixel = map.project(urhere.getLatLng(), 19); //	console.log(pixel);
+var stairsMarker2ndFloor = L.marker([53.520518, -113.524601]).bindPopup('Stairs to go down to 1st Floor Level').addTo(secondFloorMap); //var pixel = map.project(urhere.getLatLng(), 19);
 
 var coordsBetweenCafeteriaAndStairs1stFloor = [[-113.523939, 53.520919], //cafeteria starting point
 [-113.523937, 53.521032], //2nd point
@@ -393,21 +690,21 @@ function showRequestedPaths() {
   }
 }
 
-var divMarkerRadPats = new L.Marker([53.51876, -113.52683], {
+var divMarkerRadPats = new L.Marker([53.518570974858534, -113.52696150541308], {
   icon: new L.DivIcon({
     className: '',
     html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Patient Area</span>'
   })
 });
-var divMarkerRadStaff = new L.Marker([53.518423, -113.526814], {
+var divMarkerRadStaff = new L.Marker([53.51857895180517, -113.52668255567552], {
   icon: new L.DivIcon({
     className: '',
     html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Staff Area</span>'
   })
 });
-var rectRadPatsBounds = [[53.51888, -113.527026], [53.518565, -113.5265]];
+var rectRadPatsBounds = [[53.51862112948697, -113.52706074714662], [53.51846888301307, -113.52678984403612]];
 var rectRadPats = new L.rectangle(rectRadPatsBounds).bindTooltip('Radiology Patients Area');
-var rectRadStaffBounds = [[53.518534, -113.527023], [53.51825, -113.526496]];
+var rectRadStaffBounds = [[53.518619628257014, -113.52674692869188], [53.51846651102743, -113.52648943662645]];
 var rectRadStaff = new L.rectangle(rectRadStaffBounds).bindTooltip('Radiology Staff Area');
 var kayeClinicRadiologyGroup = new L.layerGroup([divMarkerRadPats, divMarkerRadStaff, rectRadPats, rectRadStaff]).addTo(secondFloorMap);
 var rect1Bounds = [[53.520515, -113.523949], [53.520484, -113.523893]];
@@ -525,8 +822,24 @@ function onLocationFound(e) {
 
 map.on('locationfound', onLocationFound);
 
+var copyToClipboard = function copyToClipboard(str) {
+  var el = document.createElement('textarea');
+  el.value = str;
+  el.setAttribute('readonly', '');
+  el.style.position = 'absolute';
+  el.style.left = '-9999px';
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+};
+
 function onMapDblClick(t) {
   coordPopup.setLatLng(t.latlng).setContent("You clicked the map at " + t.latlng.toString()).openOn(map);
+  coordString = t.latlng.lat + ', ' + t.latlng.lng;
+  coordString = t.latlng.lng + ', ' + t.latlng.lat;
+  copyToClipboard(coordString);
+  console.log("Copied the Coordinates to Clipboard: " + coordString);
 }
 
 map.on('dblclick', onMapDblClick);
@@ -550,11 +863,6 @@ function stopLocating() {
   document.getElementById('findBtn').style.backgroundColor = '';
   document.getElementById('btn-loader').style.display = 'none';
   document.getElementById('stopBtn').style.display = 'none';
-}
-
-function success() {
-  console.log('Sweet success - image loaded');
-  console.log('Zoom = ' + map.getZoom());
 }
 
 var baseLayerChange = false;

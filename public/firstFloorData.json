@@ -1,0 +1,480 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52488279342653, 53.521258101243866  ]
+      },
+      "properties": {
+        "name": "Point 1",
+        "floor": "first",
+        "popupContent": "Point 1",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52454483509065, 53.52125862538236  ]
+      },
+      "properties": {
+        "name": "Point 2",
+        "floor": "first",
+        "popupContent": "Point 2",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52390915155412, 53.52125558701608  ]
+      },
+      "properties": {
+        "name": "Point 3",
+        "floor": "first",
+        "popupContent": "Point 3",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52324664592743, 53.52127137263653  ]
+      },
+      "properties": {
+        "name": "Point 4",
+        "floor": "first",
+        "popupContent": "Point 4",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52290600538255, 53.52126036292541  ]
+      },
+      "properties": {
+        "name": "Point 5",
+        "floor": "first",
+        "popupContent": "Point 5",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52326810359955, 53.521510677371936  ]
+      },
+      "properties": {
+        "name": "Point 6",
+        "floor": "first",
+        "popupContent": "Point 6",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52326005697252, 53.52186811308723  ]
+      },
+      "properties": {
+        "name": "Point 7",
+        "floor": "first",
+        "popupContent": "Point 7",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52451130747795, 53.52102285438584  ]
+      },
+      "properties": {
+        "name": "Point 8",
+        "floor": "first",
+        "popupContent": "Point 8",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52451130747795, 53.52102285438584  ]
+      },
+      "properties": {
+        "name": "Point 8",
+        "floor": "first",
+        "popupContent": "Point 8",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52387830615044, 53.52103081592075  ]
+      },
+      "properties": {
+        "name": "Point 9",
+        "floor": "first",
+        "popupContent": "Point 9",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52389037609102, 53.52092864347813  ]
+      },
+      "properties": {
+        "name": "Point 10",
+        "floor": "first",
+        "popupContent": "Point 10",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.5233995318413, 53.52093662289389  ]
+      },
+      "properties": {
+        "name": "Point 11",
+        "floor": "first",
+        "popupContent": "Point 11",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.5233995318413, 53.52093662289389  ]
+      },
+      "properties": {
+        "name": "Point 12",
+        "floor": "first",
+        "popupContent": "Point 12",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52339416742326, 53.5210483872223  ]
+      },
+      "properties": {
+        "name": "Point 13",
+        "floor": "first",
+        "popupContent": "Point 13",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52321177721025, 53.52115763609829  ]
+      },
+      "properties": {
+        "name": "Point 14",
+        "floor": "first",
+        "popupContent": "Point 14",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52341026067737, 53.52085054367954  ]
+      },
+      "properties": {
+        "name": "Point 15",
+        "floor": "first",
+        "popupContent": "Point 15",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52238699793818, 53.52084743136733  ]
+      },
+      "properties": {
+        "name": "Point 16",
+        "floor": "first",
+        "popupContent": "Point 16",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52239906787874, 53.52069906018151  ]
+      },
+      "properties": {
+        "name": "Point 17",
+        "floor": "first",
+        "popupContent": "Point 17",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52213084697725, 53.52054835468738  ]
+      },
+      "properties": {
+        "name": "Point 18",
+        "floor": "first",
+        "popupContent": "Point 18",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52450460195544, 53.520713401955526  ]
+      },
+      "properties": {
+        "name": "Point 19",
+        "floor": "first",
+        "popupContent": "Point 19",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52466285228729, 53.520654455567964 ]
+      },
+      "properties": {
+        "name": "Point 20",
+        "floor": "first",
+        "popupContent": "Point 20",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52485999464992, 53.520658444069895 ]
+      },
+      "properties": {
+        "name": "Point 21",
+        "floor": "first",
+        "popupContent": "Point 21",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52430880069733, 53.52059220519894 ]
+      },
+      "properties": {
+        "name": "Point 22",
+        "floor": "first",
+        "popupContent": "Point 22",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52430611848834, 53.520185320607595 ]
+      },
+      "properties": {
+        "name": "Point 23",
+        "floor": "first",
+        "popupContent": "Point 23",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52473124861717, 53.520184724693955 ]
+      },
+      "properties": {
+        "name": "Point 24",
+        "floor": "first",
+        "popupContent": "Point 24",
+        "secondFloor": false,
+        "test": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 1",
+        "neighbour2Distance": "1"
+      }
+    }
+  
+  ]
+}

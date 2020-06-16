@@ -16,7 +16,7 @@ $(window).on("load", function() {
 	});
 
     $("#hidebtn").click(function(){ 
-     $("#infoDiv").toggle(500);
+     $("#infoDiv").slideToggle(100);
       
         if(showInfo){
        $("#hidebtn").text("Show")
@@ -56,27 +56,16 @@ $('#menuBtn').click(function(){openNav();});
 
     var controls = L.control.layers(baseMaps, overlays, {collapsed:false}).addTo(map);
 
-
-
+	let controlsElement = controls.getContainer();
+	console.log(controlsElement);
+	ajaxGetGeoJsonFirstFloor();
     
 
 
 		var stairsMarker1stFloor = L.marker([53.520605, -113.524552]).bindPopup('Stairs to go up to 2nd Floor Level').addTo(firstFloorMap);
 		var stairsMarker2ndFloor = L.marker([53.520518, -113.524601]).bindPopup('Stairs to go down to 1st Floor Level').addTo(secondFloorMap);
-		var urhere = L.marker([53.520419, -113.524389]).bindPopup('Ur here for Demo').addTo(secondFloorMap);
-		var from = stairsMarker2ndFloor.getLatLng();
-     	var to = urhere.getLatLng();
-
-		var distance = map.distance(from, to);
-
-		var coordsDistancePolyLine = [
-			urhere.getLatLng(), //cafeteria starting point
-			stairsMarker2ndFloor.getLatLng(), //2nd point			
-		];
-
-		L.polyline(coordsDistancePolyLine).bindPopup('Nearest Path with distance of ' + Math.floor(distance) +' m').addTo(secondFloorMap);
-		var pixel = map.project(urhere.getLatLng(), 19);
-	//	console.log(pixel);
+		
+		//var pixel = map.project(urhere.getLatLng(), 19);
 		
 
 
@@ -245,13 +234,13 @@ $('#menuBtn').click(function(){openNav();});
 
 
 
-			var divMarkerRadPats = new L.Marker([53.51876, -113.52683], {
+			var divMarkerRadPats = new L.Marker([53.518570974858534, -113.52696150541308], {
 				icon: new L.DivIcon({
 					className: '',
 					html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Patient Area</span>'
 				})
 			});
-			var divMarkerRadStaff = new L.Marker([53.518423, -113.526814], {
+			var divMarkerRadStaff = new L.Marker([53.51857895180517, -113.52668255567552], {
 				icon: new L.DivIcon({
 					className: '',
 					html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Staff Area</span>'
@@ -260,14 +249,14 @@ $('#menuBtn').click(function(){openNav();});
 
 			
 			var rectRadPatsBounds = [
-				[53.51888, -113.527026],
-				[53.518565, -113.5265]
+				[53.51862112948697, -113.52706074714662],
+				[53.51846888301307, -113.52678984403612]
 			];
 			var rectRadPats = new L.rectangle(rectRadPatsBounds).bindTooltip('Radiology Patients Area');
 
 			var rectRadStaffBounds = [
-				[53.518534, -113.527023],
-				[53.51825, -113.526496]
+				[53.518619628257014, -113.52674692869188],
+				[53.51846651102743, -113.52648943662645]
 			];
 			var rectRadStaff = new L.rectangle(rectRadStaffBounds).bindTooltip('Radiology Staff Area');
 
@@ -413,11 +402,28 @@ $('#menuBtn').click(function(){openNav();});
 		map.on('locationfound', onLocationFound);
 
 
+	  const copyToClipboard = (str) => {
+		const el = document.createElement('textarea');
+		el.value = str;
+		el.setAttribute('readonly', '');
+		el.style.position = 'absolute';
+		el.style.left = '-9999px';
+		document.body.appendChild(el);
+		el.select();
+		document.execCommand('copy');
+		document.body.removeChild(el);
+	  };
+
 
 
 		function onMapDblClick(t) {
 			coordPopup.setLatLng(t.latlng)
 				.setContent("You clicked the map at " + t.latlng.toString()).openOn(map);
+				coordString = t.latlng.lat + ', ' + t.latlng.lng;
+				coordString = t.latlng.lng + ', ' + t.latlng.lat;
+			
+			copyToClipboard(coordString);
+			console.log("Copied the Coordinates to Clipboard: " + coordString);
 
 		}
 
@@ -444,16 +450,6 @@ $('#menuBtn').click(function(){openNav();});
 			document.getElementById('btn-loader').style.display = 'none';
 			document.getElementById('stopBtn').style.display = 'none';
 		}
-
-
-
-		function success() {
-			console.log('Sweet success - image loaded');
-			console.log('Zoom = ' + map.getZoom());
-		}
-
-
-
 
 
 		var baseLayerChange = false;	

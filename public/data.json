@@ -9,8 +9,9 @@
       },
       "properties": {
         "name": "Point 1",
-        "amenity": "Baseball Stadium",
-        "popupContent": "Point Description 1"
+        "floor": "second",
+        "popupContent": "Radz Hallway Point 1",
+        "secondFloor": true
       }
     },
     {
@@ -21,20 +22,352 @@
       },
       "properties": {
         "name": "Point 2",
-        "amenity": "Baseball Stadium",
-        "popupContent": "Point Description 2"
+        "floor": "second",
+        "popupContent": "Radz Hallway Point 2",
+        "secondFloor": true
       }
     },
     {
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [ -113.524012, 53.520395  ]
+        "coordinates": [ -113.52429538965228, 53.52039362235107  ]
       },
       "properties": {
         "name": "Point 3",
-        "amenity": "Baseball Stadium",
-        "popupContent": "Point Description 3"
+        "floor": "second",
+        "popupContent": "Radz Hallway Point 3",
+        "secondFloor": true,
+        "test": true,
+        "neighbour1": "Point 5",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 17",
+        "neighbour2Distance": "1",
+        "neighbour3": "Point 10",
+        "neighbour3Distance": "3"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.5243007540703, 53.52051491174373  ]
+      },
+      "properties": {
+        "name": "Point 4",
+        "floor": "second",
+        "popupContent": "Point 4",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52429807186127, 53.52060906758032  ]
+      },
+      "properties": {
+        "name": "Point 5",
+        "floor": "second",
+        "popupContent": "<img src='https://static.pexels.com/photos/189349/pexels-photo-189349.jpeg' height='150px' width='150px'/><p>Sunset</p>",
+        "secondFloor": true,
+        "test": true,
+        "neighbour1": "Point 3",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 7",
+        "neighbour2Distance": "1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52429807186127, 53.52071795444837  ]
+      },
+      "properties": {
+        "name": "Point 6",
+        "floor": "second",
+        "popupContent": "Point 6",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52428734302521, 53.5210141850337  ]
+      },
+      "properties": {
+        "name": "Point 7",
+        "floor": "second",
+        "popupContent": "Point 7",
+        "secondFloor": true,
+        "test": true,
+        "neighbour1": "Point 5",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 8",
+        "neighbour2Distance": "1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.5233834385872, 53.5210178856064  ]
+      },
+      "properties": {
+        "name": "Point 8",
+        "floor": "second",
+        "popupContent": "Point 8",
+        "secondFloor": true,
+        "test": true,
+        "neighbour1": "Point 7",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 10",
+        "neighbour2Distance": "2"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52337807416917, 53.520730582814394  ]
+      },
+      "properties": {
+        "name": "Point 9",
+        "floor": "second",
+        "popupContent": "Point 9",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52337807416917, 53.520417728976874  ]
+      },
+      "properties": {
+        "name": "Point 10",
+        "floor": "second",
+        "popupContent": "Point 10",
+        "secondFloor": true,
+        "test": true,
+        "neighbour1": "Point 13",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 3",
+        "neighbour2Distance": "3",
+        "neighbour3": "Point 8",
+        "neighbour3Distance": "2"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52337270975114, 53.520377712415055  ]
+      },
+      "properties": {
+        "name": "Point 11",
+        "floor": "second",
+        "popupContent": "Point 11",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52336600422862, 53.52015364202565  ]
+      },
+      "properties": {
+        "name": "Point 12",
+        "floor": "second",
+        "popupContent": "Point 12",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52336600422862, 53.52015364202565  ]
+      },
+      "properties": {
+        "name": "Point 13",
+        "floor": "second",
+        "popupContent": "Point 13",
+        "secondFloor": true,
+        "test": true,
+        "neighbour1": "Point 10",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 17",
+        "neighbour2Distance": "1",
+        "neighbour3": "Point 14",
+        "neighbour3Distance": "1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52305352687837, 53.52015505807627  ]
+      },
+      "properties": {
+        "name": "Point 14",
+        "floor": "second",
+        "popupContent": "Point 14",
+        "secondFloor": true,
+        "test": true,
+        "neighbour1": "Point 13",
+        "neighbour1Distance": "1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52270081639291, 53.52016242320309  ]
+      },
+      "properties": {
+        "name": "Point 15",
+        "floor": "second",
+        "popupContent": "Point 15",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52227300405504, 53.51989360333226  ]
+      },
+      "properties": {
+        "name": "Point 16",
+        "floor": "second",
+        "popupContent": "Point 16",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52429538965228, 53.52015986544371  ]
+      },
+      "properties": {
+        "name": "Point 17",
+        "floor": "second",
+        "popupContent": "Point 17",
+        "secondFloor": true,
+        "test": true,
+        "neighbour1": "Point 3",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 13",
+        "neighbour2Distance": "1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52429673075676, 53.52025015630513  ]
+      },
+      "properties": {
+        "name": "Point 18",
+        "floor": "second",
+        "popupContent": "Point 18",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52459311485292, 53.520390984191955  ]
+      },
+      "properties": {
+        "name": "Point 19",
+        "floor": "second",
+        "popupContent": "Point 19",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52535754442218, 53.520368770503474  ]
+      },
+      "properties": {
+        "name": "Point 20",
+        "floor": "second",
+        "popupContent": "Point 20",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52609649300577, 53.52036173995824  ]
+      },
+      "properties": {
+        "name": "Point 21",
+        "floor": "second",
+        "popupContent": "Point 21",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52608710527423, 53.519150547243036  ]
+      },
+      "properties": {
+        "name": "Point 22",
+        "floor": "second",
+        "popupContent": "Point 22",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52642238140106, 53.51914907775275  ]
+      },
+      "properties": {
+        "name": "Point 23",
+        "floor": "second",
+        "popupContent": "Point 23",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52676570415497, 53.51913920619323  ]
+      },
+      "properties": {
+        "name": "Point 24",
+        "floor": "second",
+        "popupContent": "Point 24",
+        "secondFloor": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52677911520006, 53.51876881117665  ]
+      },
+      "properties": {
+        "name": "Point 25",
+        "floor": "second",
+        "popupContent": "Point 25",
+        "secondFloor": true
       }
     },
     {
@@ -45,8 +378,8 @@
       },
       "properties": {
         "name": "Point 4",
-        "amenity": "Baseball Stadium",
-        "popupContent": "Main Cafeteria Point 1"
+        "floor": "first",
+        "popupContent": "Point 4 - Main Cafeteria Point 1"
       }
     },
     {
@@ -57,8 +390,8 @@
       },
       "properties": {
         "name": "Point 5",
-        "amenity": "Baseball Stadium",
-        "popupContent": "Main Cafeteria Point 2"
+        "floor": "first",
+        "popupContent": "Point 5 - Main Cafeteria Point 2"
       }
     },
     {
@@ -69,8 +402,8 @@
       },
       "properties": {
         "name": "Point 6",
-        "amenity": "Baseball Stadium",
-        "popupContent": "Main Cafeteria Point 3"
+        "floor": "first",
+        "popupContent": "Point 6 - Main Cafeteria Point 3"
       }
     },
     {
@@ -81,9 +414,10 @@
       },
       "properties": {
         "name": "Point 7",
-        "amenity": "Baseball Stadium",
-        "popupContent": "Main Cafeteria Point 4"
+        "floor": "first",
+        "popupContent": "Point 7 - Main Cafeteria Point 4"
       }
     }
+  
   ]
 }
