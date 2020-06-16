@@ -11,7 +11,7 @@ require('laravel-mix-react-css-modules');
  | file for the application as well as bundling up all the JS files.
  |
  */
-mix.webpackConfig({
+/* mix.webpackConfig({
 
 
 
@@ -39,13 +39,15 @@ mix.webpackConfig({
 
 
 
-});
+}); */
 
 
 
- 
-mix.react('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css')
-   .reactCSSModules();
-
+//mix.react('resources/js/app.js', 'public/js')
+//.reactCSSModules();
 //mix.dump();   
+ 
+mix.js('resources/js/app.js', 'public/js')
+    .js(['resources/js/geojson.js', 'resources/js/radmap.js'],'public/js/radmap.js')
+    .sass('resources/sass/app.scss', 'public/css')
+    .styles('resources/css/custom.css', 'public/css/custom.css');

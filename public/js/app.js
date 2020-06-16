@@ -7194,12 +7194,9 @@ module.exports = exports['default'];
 
 exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "\r\n.test-module__leaflet-container___1lG-Q{\r\n    width: 100%;\r\n    height: 100vh;\r\n  }", ""]);
+exports.push([module.i, "\r\n.leaflet-container{\r\n    width: 100%;\r\n    height: 100vh;\r\n  }", ""]);
 
-// Exports
-exports.locals = {
-	"leaflet-container": "test-module__leaflet-container___1lG-Q"
-};
+
 
 /***/ }),
 
@@ -90824,8 +90821,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _UserOutput_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./UserOutput.js */ "./resources/js/components/UserOutput.js");
-/* harmony import */ var _test_module_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./test.module.css */ "./resources/js/components/test.module.css");
-/* harmony import */ var _test_module_css__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_test_module_css__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _test_module_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./test.module.css */ "./resources/js/components/test.module.css");
+/* harmony import */ var _test_module_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_test_module_css__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -90977,7 +90974,7 @@ var ReactElement = /*#__PURE__*/function (_Component) {
         onClick: this.toggleShowResult,
         className: btnClasses.join(' ')
       }, this.state.showResult === true ? "Hide" : "Show"), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "test-module__btn___3f5IM"
+        styleName: "btn"
       }, "Test"));
     }
   }]);

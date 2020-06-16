@@ -11,13 +11,13 @@ class CookieController extends Controller {
    public function setCookie(Request $request) {
       
       //dd($request);
-      $minutes = 1;
+      $minutes = 10;
       return redirect()->action('RadMapController@test')->withCookie(cookie('color', $request->color, $minutes))
       ->withCookie(cookie('fontSize', $request->fontSize, $minutes));
    }
 
    public function setCenterCookie(Request $request) {
-      $minutes = 1;
+      $minutes = 10;
       if ($request->centerCoords) {
          return  redirect()->action('RadMapController@test')->withCookie(cookie('centerCoords', $request->centerCoords, $minutes))
          ->withCookie(cookie('centerZoom', $request->centerZoom, $minutes));
