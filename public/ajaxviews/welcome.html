@@ -1,0 +1,33 @@
+
+
+        <div class="content">
+            <div class="title m-b-md" style="font-weight: 10px ">
+                Rad Map
+            </div>
+
+            <div class="links">
+                <a href="/radmap">Main</a>
+<!--                 <a href="/radmaptest">Test</a> -->
+<!--                 <a href="/reactradmap">React</a> -->
+                <a href="/radmapstaff">Staff</a>
+                <a id="about">About</a>
+                <a href="/feedback">Feedback</a>
+            </div>
+            <!--             <div id="React"></div> -->
+        </div>
+
+        <script>
+                    $('#about').click(function(){
+            window.history.pushState("object or string", "Page Title", "/about");
+            console.log(window.location.pathname);
+            $.ajax({
+                url: '/ajaxviews/about.html',
+                dataType: 'html',
+                success: function(data){
+                    $('#mainDiv').html(data);
+                }
+            })
+        });
+
+
+        </script>

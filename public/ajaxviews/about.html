@@ -1,12 +1,4 @@
-@extends('layouts.map')
-
-@section('title', 'About')
-
-@section('content')
-
-
-    <div id="mainDiv" class="flex-center position-ref full-height">
-    <div class="content">
+<div class="content">
     <div class="title m-b-md">
         Rad Map
     </div>
@@ -25,9 +17,6 @@
     </div>
 </div>
 
-    </div>
-
-    
 <script>
             $('#backBtn').click(function(){
             window.history.pushState("object or string", "Page Title", "/")
@@ -41,6 +30,7 @@
         });
 
 window.addEventListener('popstate', function (event) {
+    console.log('fire');    
     if (window.location.pathname == "/" ){
             $.ajax({
                 url: '/ajaxviews/welcome.html',
@@ -54,4 +44,3 @@ window.addEventListener('popstate', function (event) {
 
 
 </script>
-@endsection

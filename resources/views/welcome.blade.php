@@ -3,37 +3,49 @@
 
 @section('content')
 
-<!-- <script src="{{ asset('js/app.js') }}" defer></script> -->
-    <div class="flex-center position-ref full-height">
-        @if (Route::has('login'))
+@if (Route::has('login'))
         <div class="top-right links">
             @auth
             <a href="{{ url('/home') }}">Home</a>
             @else
             <a href="{{ route('login') }}">Login</a>
-
-            @if (Route::has('register'))
-<!--             <a href="{{ route('register') }}">Register</a> -->
-            @endif
-            @endauth
+                @endauth
         </div>
         @endif
-
-        <div class="content">
-            <div class="title m-b-md" style="font-weight: 10px ">
-                Rad Map
-            </div>
-
-            <div class="links">
-                <a href="/radmap">Main</a>
-<!--                 <a href="/radmaptest">Test</a> -->
-<!--                 <a href="/reactradmap">React</a> -->
-                <a href="/radmapstaff">Staff</a>
-                <a href="/about">About</a>
-                <a href="/feedback">Feedback</a>
-            </div>
-            <!--             <div id="React"></div> -->
-        </div>
+    <div id="mainDiv" class="flex-center position-ref full-height">
+        <!-- Content loaded via AJAX -->
     </div>
+
+    <script>
+
+            $.ajax({
+                url: '/ajaxviews/welcome.html',
+                dataType: 'html',
+                success: function(data){
+                    $('#mainDiv').html(data);
+                }
+            });
+        
+
+
+        $('#about').click(function(){
+            window.history.pushState("object or string", "Page Title", "/about")
+        });
+
+        window.addEventListener('popstate', function (event) {
+    if (window.location.pathname == "/about" ){
+            $.ajax({
+                url: '/ajaxviews/about.html',
+                dataType: 'html',
+                success: function(data){
+                    $('#mainDiv').html(data);
+                }
+            })
+        }
+
+});
+
+
+    </script>
 
 @endsection
