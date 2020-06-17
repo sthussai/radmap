@@ -55,19 +55,25 @@ $('#menuBtn').click(function(){openNav();});
 
 
     var controls = L.control.layers(baseMaps, overlays, {collapsed:false}).addTo(map);
+	export { controls };
 
-	let controlsElement = controls.getContainer();
-	console.log(controlsElement);
-	ajaxGetGeoJsonFirstFloor();
-    
+	var secondFloorPopupMsg = $('<p>Stairs to go to 1st Floor Level <br> <button>1st Floor</button> </p>').click(function() {
+		map.removeLayer(secondFloorMap);
+		map.addLayer(firstFloorMap);
+	})[0];
+	var firstFloorPopupMsg = $('<p>Stairs to go to 2nd Floor Level <br> <button>2nd Floor</button> </p>').click(function() {
+		map.removeLayer(firstFloorMap);
+		map.addLayer(secondFloorMap);
+	})[0];
 
 
-		var stairsMarker1stFloor = L.marker([53.520605, -113.524552]).bindPopup('Stairs to go up to 2nd Floor Level').addTo(firstFloorMap);
-		var stairsMarker2ndFloor = L.marker([53.520518, -113.524601]).bindPopup('Stairs to go down to 1st Floor Level').addTo(secondFloorMap);
+		var stairsMarker1stFloor = L.marker([53.520605, -113.524552])
+		.bindPopup(firstFloorPopupMsg).addTo(firstFloorMap);
+		var stairsMarker2ndFloor = L.marker([53.520518, -113.524601])
+		.bindPopup(secondFloorPopupMsg).addTo(secondFloorMap);
 		
 		//var pixel = map.project(urhere.getLatLng(), 19);
 		
-
 
 
 		var coordsBetweenCafeteriaAndStairs1stFloor = [
@@ -419,7 +425,7 @@ $('#menuBtn').click(function(){openNav();});
 		function onMapDblClick(t) {
 			coordPopup.setLatLng(t.latlng)
 				.setContent("You clicked the map at " + t.latlng.toString()).openOn(map);
-				coordString = t.latlng.lat + ', ' + t.latlng.lng;
+				let coordString = t.latlng.lat + ', ' + t.latlng.lng;
 				coordString = t.latlng.lng + ', ' + t.latlng.lat;
 			
 			copyToClipboard(coordString);
@@ -454,6 +460,7 @@ $('#menuBtn').click(function(){openNav();});
 
 		var baseLayerChange = false;	
 		function changeInfoDivMessage(){
+			console.log(map.hasLayer(firstFloorMap));
 			baseLayerChange =! baseLayerChange;
 			if(baseLayerChange) {document.getElementById('infoDiv').innerText = 'Viewing First Floor Map of University Hospital';}
 			else{document.getElementById('infoDiv').innerText = 'Viewing Second Floor Map of University Hospital';}

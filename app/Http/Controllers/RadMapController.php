@@ -37,4 +37,35 @@ class RadMapController extends Controller
         }
         return view('radmaptest', ['demo' => $this->demo, 'color' => $color, 'fontSize' => $fontSize, 'centerCoords' => $centerCoords, 'centerZoom' => $centerZoom]);
     }
+    public function main(Request $request)
+    {
+        //dd($request);
+        if ($request->cookie('color')) {
+            $color = $request->cookie('color');
+        } else {
+            $color = $this->color;
+        }
+        if ($request->cookie('fontSize')) {
+            $fontSize = $request->cookie('fontSize');
+        } else {
+            $fontSize = $this->fontSize;
+        }
+        if ($request->cookie('centerCoords')) {
+            $centerCoords = $request->cookie('centerCoords');
+        } else {
+            $centerCoords = $this->centerCoords;
+        }
+        if ($request->cookie('centerZoom')) {
+            $centerZoom = $request->cookie('centerZoom');
+        } else {
+            $centerZoom = $this->centerZoom;
+        }
+        return view('radmap', ['demo' => $this->demo, 'color' => $color, 'fontSize' => $fontSize, 'centerCoords' => $centerCoords, 'centerZoom' => $centerZoom]);
+    }
+
+
+    public function about() {
+        return view('about');
+    }
+
 }

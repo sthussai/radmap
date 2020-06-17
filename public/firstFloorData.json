@@ -13,7 +13,7 @@
         "popupContent": "Point 1",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 2",
         "neighbour1Distance": "1",
         "neighbour2": "Point 1",
         "neighbour2Distance": "1"
@@ -34,7 +34,7 @@
         "test": true,
         "neighbour1": "Point 1",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
+        "neighbour2": "Point 3",
         "neighbour2Distance": "1"
       }
     }
@@ -51,10 +51,12 @@
         "popupContent": "Point 3",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 2",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
+        "neighbour2": "Point 9",
+        "neighbour2Distance": "1",
+        "neighbour3": "Point 4",
+        "neighbour3Distance": "1"
       }
     }
     ,
@@ -184,9 +186,9 @@
         "popupContent": "Point 9",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 3",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
+        "neighbour2": "Point 10",
         "neighbour2Distance": "1"
       }
     }
@@ -203,10 +205,10 @@
         "popupContent": "Point 10",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 9",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
+        "neighbour2": "Point 12",
+        "neighbour2Distance": "2"
       }
     }
     ,
@@ -241,9 +243,9 @@
         "popupContent": "Point 12",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
-        "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
+        "neighbour1": "Point 10",
+        "neighbour1Distance": "2",
+        "neighbour2": "Point 15",
         "neighbour2Distance": "1"
       }
     }
@@ -298,10 +300,10 @@
         "popupContent": "Point 15",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 12",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
+        "neighbour2": "Point 16",
+        "neighbour2Distance": "2"
       }
     }
     ,

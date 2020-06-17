@@ -1,3 +1,5 @@
+const { controls } = require("./radmap");
+
 let pathGroup = L.layerGroup().addTo(secondFloorMap);
 let myLayer = null;
 let startRefPointMarker = L.marker([53.51993090722499, -113.52201819419861], {draggable:true}).bindPopup('Ur here for Demo 2').addTo(secondFloorMap);
@@ -52,6 +54,7 @@ function ajaxGetGeoJsonFinalLocations() {
 
 ajaxGetGeoJsonFinalLocations();
 
+
 function ajaxGetGeoJson() {
     $.ajax({
         dataType: "json",
@@ -59,7 +62,7 @@ function ajaxGetGeoJson() {
         success: function(data) {
             myLayer = L.geoJSON(data, {
                 filter: function(feature) {
-                    return feature.properties.floor;
+                    return feature.properties.test;
                 },
                 onEachFeature: popupOnEachFeature,
                 pointToLayer: function (feature, latlng) {
@@ -90,7 +93,7 @@ function ajaxGetGeoJsonFirstFloor() {
         success: function(data) {
             myLayer = L.geoJSON(data, {
                 filter: function(feature) {
-                    return feature.properties.floor;
+                    return !feature.properties.secondFloor;
                 },
                 onEachFeature: popupOnEachFeature,
                 pointToLayer: function (feature, latlng) {
@@ -98,8 +101,7 @@ function ajaxGetGeoJsonFirstFloor() {
                 },
                 style: function(feature) {
                     switch (feature.properties.floor) {
-                        case 'first': return {color: "#ff0000", fillColor: "orange",};
-                        case 'second':   return {color: "#0000ff",  fillColor: "lightblue",};
+                        case 'first': return {color: "green", fillColor: "lightgreen",};    
                     }
                 },
 
@@ -113,7 +115,9 @@ function ajaxGetGeoJsonFirstFloor() {
 }
 
 
-//ajaxGetGeoJsonFirstFloor();
+ajaxGetGeoJsonFirstFloor();
+/* $(controls.getContainer()).mouseenter(function(){
+  }); */
 
 
 
@@ -134,7 +138,7 @@ function popupOnEachFeature(feature, layer) {
     if (feature.properties && feature.properties.popupContent) {
         layer.bindPopup(feature.properties.popupContent);
     }
-    if (feature.properties && feature.geometry.type == "Point"){
+    if (feature.properties.floor == "second" && feature.geometry.type == "Point"){
         markersArray.push(feature);
         let name = feature.properties.name;
         let neighbour = {};
@@ -287,7 +291,7 @@ const setEndPoint = () => {
    
     getClosestPointFrom(endRefPointMarker);
     if (endRefPoint) {endRefPoint.remove()};
-    endRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {color: 'white'}).addTo(map);
+    endRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {color: 'white'}).addTo(secondFloorMap);
     endRefPoint.bindPopup('Your End point is here').openPopup();
     end = distancesToClosestRefPointArray[0][2];
     setStartPoint();

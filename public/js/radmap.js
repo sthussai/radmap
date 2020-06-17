@@ -91,7 +91,10 @@
   !*** ./resources/js/geojson.js ***!
   \*********************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+var _require = __webpack_require__(/*! ./radmap */ "./resources/js/radmap.js"),
+    controls = _require.controls;
 
 var pathGroup = L.layerGroup().addTo(secondFloorMap);
 var myLayer = null;
@@ -157,7 +160,7 @@ function ajaxGetGeoJson() {
     success: function success(data) {
       myLayer = L.geoJSON(data, {
         filter: function filter(feature) {
-          return feature.properties.floor;
+          return feature.properties.test;
         },
         onEachFeature: popupOnEachFeature,
         pointToLayer: function pointToLayer(feature, latlng) {
@@ -196,7 +199,7 @@ function ajaxGetGeoJsonFirstFloor() {
     success: function success(data) {
       myLayer = L.geoJSON(data, {
         filter: function filter(feature) {
-          return feature.properties.floor;
+          return !feature.properties.secondFloor;
         },
         onEachFeature: popupOnEachFeature,
         pointToLayer: function pointToLayer(feature, latlng) {
@@ -206,14 +209,8 @@ function ajaxGetGeoJsonFirstFloor() {
           switch (feature.properties.floor) {
             case 'first':
               return {
-                color: "#ff0000",
-                fillColor: "orange"
-              };
-
-            case 'second':
-              return {
-                color: "#0000ff",
-                fillColor: "lightblue"
+                color: "green",
+                fillColor: "lightgreen"
               };
           }
         }
@@ -224,8 +221,11 @@ function ajaxGetGeoJsonFirstFloor() {
       console.log(xhr);
     }
   });
-} //ajaxGetGeoJsonFirstFloor();
+}
 
+ajaxGetGeoJsonFirstFloor();
+/* $(controls.getContainer()).mouseenter(function(){
+  }); */
 
 function popupOnEachFinalLocation(feature, layer) {
   if (feature.properties && feature.properties.popupContent) {
@@ -245,7 +245,7 @@ function popupOnEachFeature(feature, layer) {
     layer.bindPopup(feature.properties.popupContent);
   }
 
-  if (feature.properties && feature.geometry.type == "Point") {
+  if (feature.properties.floor == "second" && feature.geometry.type == "Point") {
     markersArray.push(feature);
     var name = feature.properties.name;
     var neighbour = {};
@@ -412,7 +412,7 @@ var setEndPoint = function setEndPoint() {
   ;
   endRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {
     color: 'white'
-  }).addTo(map);
+  }).addTo(secondFloorMap);
   endRefPoint.bindPopup('Your End point is here').openPopup();
   end = distancesToClosestRefPointArray[0][2];
   setStartPoint();
@@ -465,9 +465,12 @@ $('#hidebtn').click(function () {
 /*!********************************!*\
   !*** ./resources/js/radmap.js ***!
   \********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! exports provided: controls */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "controls", function() { return controls; });
 var arr = [0, 0, 0];
 var currentCoord = '';
 var prevCoord = '';
@@ -525,11 +528,17 @@ var overlays = {
 var controls = L.control.layers(baseMaps, overlays, {
   collapsed: false
 }).addTo(map);
-var controlsElement = controls.getContainer();
-console.log(controlsElement);
-ajaxGetGeoJsonFirstFloor();
-var stairsMarker1stFloor = L.marker([53.520605, -113.524552]).bindPopup('Stairs to go up to 2nd Floor Level').addTo(firstFloorMap);
-var stairsMarker2ndFloor = L.marker([53.520518, -113.524601]).bindPopup('Stairs to go down to 1st Floor Level').addTo(secondFloorMap); //var pixel = map.project(urhere.getLatLng(), 19);
+
+var secondFloorPopupMsg = $('<p>Stairs to go to 1st Floor Level <br> <button>1st Floor</button> </p>').click(function () {
+  map.removeLayer(secondFloorMap);
+  map.addLayer(firstFloorMap);
+})[0];
+var firstFloorPopupMsg = $('<p>Stairs to go to 2nd Floor Level <br> <button>2nd Floor</button> </p>').click(function () {
+  map.removeLayer(firstFloorMap);
+  map.addLayer(secondFloorMap);
+})[0];
+var stairsMarker1stFloor = L.marker([53.520605, -113.524552]).bindPopup(firstFloorPopupMsg).addTo(firstFloorMap);
+var stairsMarker2ndFloor = L.marker([53.520518, -113.524601]).bindPopup(secondFloorPopupMsg).addTo(secondFloorMap); //var pixel = map.project(urhere.getLatLng(), 19);
 
 var coordsBetweenCafeteriaAndStairs1stFloor = [[-113.523939, 53.520919], //cafeteria starting point
 [-113.523937, 53.521032], //2nd point
@@ -836,7 +845,7 @@ var copyToClipboard = function copyToClipboard(str) {
 
 function onMapDblClick(t) {
   coordPopup.setLatLng(t.latlng).setContent("You clicked the map at " + t.latlng.toString()).openOn(map);
-  coordString = t.latlng.lat + ', ' + t.latlng.lng;
+  var coordString = t.latlng.lat + ', ' + t.latlng.lng;
   coordString = t.latlng.lng + ', ' + t.latlng.lat;
   copyToClipboard(coordString);
   console.log("Copied the Coordinates to Clipboard: " + coordString);
@@ -868,6 +877,7 @@ function stopLocating() {
 var baseLayerChange = false;
 
 function changeInfoDivMessage() {
+  console.log(map.hasLayer(firstFloorMap));
   baseLayerChange = !baseLayerChange;
 
   if (baseLayerChange) {
