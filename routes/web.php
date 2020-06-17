@@ -23,21 +23,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/radmap', function () {
-    return view('radmap');
-});
-
 Route::get('/about', function () {
     return view('about');
 });
-Route::get('/feedback', function () {
-    return view('feedback');
-});
-Route::post('/feedback', function () {
-    return view('feedback');
-});
 
 
+Route::get('/feedback', 'FeedbackController@index');
+Route::post('/feedback', 'FeedbackController@store');
+
+
+Route::get('/radmap', 'RadMapController@main');
 Route::get('/radmaptest', 'RadMapController@test');
 
 Route::get('/reactradmap', function () {
