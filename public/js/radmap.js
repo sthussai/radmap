@@ -437,17 +437,6 @@ var getClosestPointFrom = function getClosestPointFrom(PointMarker) {
   });
   return distancesToClosestRefPointArray;
 };
-
-$('#infoDiv').click(function () {
-  myLayer.bringToBack();
-});
-$('#hidebtn').click(function () {
-  console.log('markersObject');
-  console.log(markersObject);
-  console.log('markers Array');
-  console.log(markersArray);
-  myLayer.bringToFront();
-});
 /* let graph = {
 	"Point 14": { "Point 13": 1},
 	"Point 13": { "Point 14": 1, "Point 10": 1, "Point 17": 2 },
@@ -483,19 +472,28 @@ var p; //previous location
 var pp; //past location
 
 var coordPopup = L.popup();
-var showInfo = true;
-$("#infoDiv").hide();
-$(window).on("load", function () {
-  $("#infoDiv").slideDown();
-  console.log("hello");
+$('#fontSizeSelect').change(function () {
+  console.log($('#fontSizeSelect').val());
+  document.getElementById("infoDiv").style.fontSize = $('#fontSizeSelect').val();
+  document.getElementById("findBtn").style.fontSize = $('#fontSizeSelect').val();
+  document.getElementById("stopBtn").style.fontSize = $('#fontSizeSelect').val();
+  closeNav();
 });
-$("#hidebtn").click(function () {
+var showInfo = true;
+document.getElementById("map").style.marginTop = document.getElementById("infoDivContainer").offsetHeight;
+$("#hideBtn").hide();
+$(window).on("load", function () {
+  $("#hideBtn").slideDown();
+});
+$("#hideBtn").click(function () {
   $("#infoDiv").slideToggle(100);
 
   if (showInfo) {
-    $("#hidebtn").text("Show");
+    $("#hideBtn").html("<i class='fa fa-arrow-down w3-margin-right'></i><b>Show</b>");
+    document.getElementById("map").style.marginTop = 0;
   } else {
-    $("#hidebtn").text("Hide");
+    $("#hideBtn").html("<i class='fa fa-arrow-up w3-margin-right'></i><b>Hide</b>");
+    document.getElementById("map").style.marginTop = document.getElementById("infoDiv").offsetHeight;
   }
 
   showInfo = !showInfo;
@@ -508,6 +506,17 @@ $('#stopBtn').click(function () {
 });
 $('#menuBtn').click(function () {
   openNav();
+}); //demo default is false
+
+$("#demoBtn").click(function () {
+  demo = !demo;
+  console.log('demo ' + demo);
+
+  if (demo) {
+    $("#demoBtn").text("Demo ON - Turn OFF?");
+  } else {
+    $("#demoBtn").text("Demo Movement OFF ");
+  }
 });
 /* 		googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
             maxZoom: 20,
@@ -525,9 +534,7 @@ var baseMaps = {
 var overlays = {
   "Markers": markers
 };
-var controls = L.control.layers(baseMaps, overlays, {
-  collapsed: false
-}).addTo(map);
+var controls = L.control.layers(baseMaps).addTo(map);
 
 var secondFloorPopupMsg = $('<p>Stairs to go to 1st Floor Level <br> <button>1st Floor</button> </p>').click(function () {
   map.removeLayer(secondFloorMap);
@@ -776,6 +783,7 @@ function onLocationFound(e) {
   }
 
   counter++;
+  console.log('demo = ' + demo);
   console.log('counter = ' + counter);
   var radius = e.accuracy / 2;
 

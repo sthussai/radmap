@@ -64,22 +64,6 @@ body {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .leaflet-fade-anim .leaflet-tile,
 .leaflet-zoom-anim .leaflet-zoom-animated {
     will-change: auto !important;
@@ -90,7 +74,7 @@ body {
     /* Hidden by default */
     position: fixed;
     /* Fixed/sticky position */
-    bottom: 20px;
+    bottom: 30px;
     /* Place the button at the bottom of the page */
     right: 10px;
     /* Place the button 30px from the right */
@@ -122,7 +106,7 @@ body {
 .menuBtn {
     display: block;
     /* Hidden by default */
-    position: fixed;
+    position: absolute;
     /* Fixed/sticky position */
     top: 80px;
     /* Place the button at the bottom of the page */
@@ -210,6 +194,32 @@ body {
     }
 }
 
+
+  /* START Map Navigation Bar Styling */
+  .overlaynav {
+    height: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.9);
+    overflow-x: hidden;
+    transition: 0.5s;
+    overflow-y: scroll
+  }
+
+  .overlaynav-content {
+    position: relative;
+    top: 10%;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    margin: 30px auto;
+  }
+
+
 .overlaynav .closebtn {
     position: absolute;
     top: 20px;
@@ -217,10 +227,18 @@ body {
     font-size: 60px;
 }
 
+@media only screen and (max-width: 600px) {
+    .overlaynav .closebtn{
+        top: 10px;
+    right: 10px;
+    font-size: 40px;
+    }
+  }
+
 .overlaynav a {
     padding: 8px;
     text-decoration: none;
-    font-size: 36px;
+    font-size: 24px;
     color: #818181;
     display: block;
     transition: 0.3s;

@@ -1,20 +1,33 @@
 @extends('layouts.map')
 
 @section('content')
+<style>
+	#infoDivContainer{
+		width: 100%;
+	}
+	#infoDiv{
+				z-index: 1000; 
+				width: 80%; 
+				max-width: 600px; 
+				top:0px;
+				margin: 0px auto ;
+				text-align: center;
+			}
+		</style>
 
 	@include('components.rad-loader')
+	<div id="infoDivContainer" class="w3-center ">
+		<div id="infoDiv" class="w3-black w3-padding " style=" font-size: {{$fontSize}}; ">
+			Viewing Second Floor Map of University Hospital
+		</div>
+	</div>
 
 	<div id="map">
+	<div class="w3-center" style="margin: 0px auto; position:absolute; z-index: 1000; width: 100% ">
+				<span id="hideBtn" class="w3-grey w3-button"> <i class="fa fa-arrow-up w3-margin-right"></i><b>Hide</b></span>
+			</div>
 
-		<div class="w3-display-container " style="z-index: 1000">
-		<div class="w3-display-topmiddle">
-			<div id="infoDiv" class="w3-black w3-padding " style="font-size: {{$fontSize}};">Viewing Second Floor Map of University Hospital
-			</div>
-			<div class="w3-center">
-				<span id="hidebtn" class="w3-grey w3-button">Hide</span>
-			</div>
-		</div>
-		</div>
+
 
 
 		<button id="findBtn" class="myBtn" style="font-size:{{$fontSize}}"
@@ -36,7 +49,8 @@
 
 	var center = "{{$centerCoords}}";
 	var centerZoom = "{{$centerZoom}}";
-	var demo = "{{$demo ? $demo : false}}";
+//	var demo = "{{$demo ? $demo : false}}";
+	var demo = false;
 	var markerColor = "{{$color}}";
 	center = center.split(",");
 	//console.log('center = ' + center);

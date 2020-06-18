@@ -324,25 +324,6 @@ const getClosestPointFrom = (PointMarker) => {
 
 
 
-
-
-
-$('#infoDiv').click(function(){
-myLayer.bringToBack();
-});
-
-
-$('#hidebtn').click(function(){
-    console.log('markersObject');
-    console.log(markersObject);
-    console.log('markers Array');
-    console.log(markersArray);
-    myLayer.bringToFront();
-
-});
-
-
-
 /* let graph = {
 	"Point 14": { "Point 13": 1},
 	"Point 13": { "Point 14": 1, "Point 10": 1, "Point 17": 2 },

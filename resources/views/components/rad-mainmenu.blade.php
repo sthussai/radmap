@@ -1,7 +1,7 @@
 <div id="myNav1" class="overlaynav" onclick="">
 
     <!-- Button to close the overlay navigation -->
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×
+    <a href="javascript:void(0)" class="closebtn w3-margin-bottom w3-hover-white" onclick="closeNav()">×
     </a>
 
     <!-- Overlay content -->
@@ -22,9 +22,9 @@
 
 
         <div class="tabContent w3-margin-top" id="Links">
-            <a href="/" onclick="closeNav()" class="w3-hover-white">Home</a>
-            <a href="/about" onclick="closeNav()" class="w3-hover-white">About</a>
-            <a href="/feedback" onclick="closeNav()" class="w3-hover-white">Feedback</a>
+            <a href="/" onclick="closeNav()" class="w3-hover-white w3-text-white">Home</a>
+            <a href="/about" onclick="closeNav()" class="w3-hover-white w3-text-white">About</a>
+            <a href="/feedback" onclick="closeNav()" class="w3-hover-white w3-text-white">Feedback</a>            
             @auth
             <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
@@ -35,6 +35,15 @@
                                         @csrf
                                     </form>
             @endauth
+            <div class="w3-container w3-margin-top">
+                    <label class="w3-text-white w3-large">Change Font Size</label><br><br>
+                    <select id="fontSizeSelect" style="max-width: 250px; margin:auto" class="w3-select" name="fontSize">
+                        <option value="null" selected> </option>
+                        <option value="12px">Small Font</option>
+                        <option value="15px">Medium Font</option>
+                        <option value="20px">Large Font</option>
+                    </select>
+                </div>
         </div>
 
         <div class="tabContent" id="Directions">
@@ -66,6 +75,8 @@
 
             <br><br>
             <button id="allPathsBtn" class="w3-btn w3-text-white w3-hover-opacity">Show All Paths</button>
+            <br>
+            <button id="demoBtn" class="w3-btn w3-text-white w3-hover-opacity">Demo Movement On</button>
         </div>
 
         <div class="tabContent" id="Settings">
@@ -87,7 +98,7 @@
 
 
 
-        <form class="w3-padding-large" action="/cookie/set" method="GET">
+<!--         <form class="w3-padding-large" action="/cookie/set" method="GET"> -->
 
                 <div class="w3-container w3-margin-top">
                     <label class="w3-text-white w3-large">Location Marker Color</label><br><br>
@@ -95,21 +106,13 @@
                         type="color">
                 </div>
 
-                <div class="w3-container w3-margin-top">
-                    <label class="w3-text-white w3-large">Change Font Size</label><br><br>
-                    <select style="max-width: 250px; margin:auto" class="w3-select" name="fontSize">
-                        <option value="null" selected> </option>
-                        <option value="10px">Small Font</option>
-                        <option value="15px">Medium Font</option>
-                        <option value="20px">Large Font</option>
-                    </select>
-                </div>
 
-                <div class="w3-container w3-margin-top">
+
+<!--                 <div class="w3-container w3-margin-top">
                     <button class="w3-button w3-dark-grey" type="submit"><i class="fa fa-check w3-margin-right"></i>
                         Save</button>
-                </div>
-            </form>
+                </div> -->
+<!--             </form> -->
 
             <button class="w3-button w3-padding w3-white w3-large w3-margin-top" id="recenterMapBtn" 
                 title="Stop Location Sharing">Recenter Map</button> <br>
@@ -128,8 +131,9 @@
     L.DomEvent.on(navContent, 'click dblclick scroll', function(ev) {
         L.DomEvent.stopPropagation(ev);
         L.DomEvent.disableScrollPropagation(navContent);
-        console.log('stopped event');
+        
     });
+
 
 
     function menuTabChange(showTab) {
@@ -148,12 +152,16 @@
 
     function openNav() {
 			document.getElementById("myNav1").style.height = "100%";
-			document.getElementById("myNav1").click();
+            document.getElementById("myNav1").click();
+            map.dragging.disable();
+            console.log(map.dragging);
 		}
 
     /* Close when someone clicks on the "x" symbol inside the overlay Nav Bar */
     function closeNav() {
         document.getElementById("myNav1").style.height = "0%";
+        map.dragging.enable();
+        console.log(map.dragging);
     }
 
     function recenterMap() {
