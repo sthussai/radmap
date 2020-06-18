@@ -1,3 +1,8 @@
+const bodyScrollLock = require('body-scroll-lock');
+const disableBodyScroll = bodyScrollLock.disableBodyScroll;
+const enableBodyScroll = bodyScrollLock.enableBodyScroll;
+
+
 var arr = [0, 0, 0];
 var currentCoord = '';
 var prevCoord = '';

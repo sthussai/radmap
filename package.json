@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "@babel/plugin-proposal-class-properties": "^7.10.1",
+        "body-scroll-lock": "^3.0.3",
         "laravel-mix-react-css-modules": "^2.0.0",
         "leaflet": "^1.6.0",
         "radium": "^0.26.0",

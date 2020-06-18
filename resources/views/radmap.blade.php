@@ -13,7 +13,7 @@
 				margin: 0px auto ;
 				text-align: center;
 			}
-		</style>
+</style>
 
 	@include('components.rad-loader')
 	<div id="infoDivContainer" class="w3-center ">
@@ -49,7 +49,7 @@
 
 	var center = "{{$centerCoords}}";
 	var centerZoom = "{{$centerZoom}}";
-//	var demo = "{{$demo ? $demo : false}}";
+	//	var demo = "{{$demo ? $demo : false}}";
 	var demo = false;
 	var markerColor = "{{$color}}";
 	center = center.split(",");
@@ -109,7 +109,7 @@
 </script>
 
 
-<script src="{{ asset('js/radmap.js') }}"></script>	
+<script src="{{ secure_asset('js/radmap.js') }}"></script>	
 
 @endsection
 

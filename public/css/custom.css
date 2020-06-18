@@ -207,7 +207,7 @@ body {
     background-color: rgba(0, 0, 0, 0.9);
     overflow-x: hidden;
     transition: 0.5s;
-    overflow-y: scroll
+    overflow-y: hidden
   }
 
   .overlaynav-content {
@@ -217,9 +217,15 @@ body {
     max-width: 450px;
     text-align: center;
     margin: 30px auto;
+    -webkit-overflow-scrolling: touch;
   }
 
-
+  @media only screen and (max-width: 600px) {
+    .overlaynav-content{
+        top: 5px;
+    }
+  }
+/* 
 .overlaynav .closebtn {
     position: absolute;
     top: 20px;
@@ -233,7 +239,7 @@ body {
     right: 10px;
     font-size: 40px;
     }
-  }
+  } */
 
 .overlaynav a {
     padding: 8px;

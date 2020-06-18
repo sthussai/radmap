@@ -1,12 +1,9 @@
 <div id="myNav1" class="overlaynav" onclick="">
 
-    <!-- Button to close the overlay navigation -->
-    <a href="javascript:void(0)" class="closebtn w3-margin-bottom w3-hover-white" onclick="closeNav()">×
-    </a>
-
+    
     <!-- Overlay content -->
     <section class="overlaynav-content">
-
+        
         <div id='menu_items' class="w3-row w3-white w3-opacity " style='font-size:1.5em;'>
             <div class="w3-col s6">
                 <button class="w3-button  w3-block w3-hover-blue-grey  " onclick="menuTabChange('Settings')"><i
@@ -15,11 +12,19 @@
 
             <div class="w3-col  s6">
                 <button href="#plans" class="w3-button w3-block w3-hover-blue-grey  "
-                    onclick="menuTabChange('Directions')"><i class="fa fa-map w3-margin-right"></i>Directions</button>
+                onclick="menuTabChange('Directions')"><i class="fa fa-map w3-margin-right"></i>Directions</button>
             </div>
-
         </div>
+            <div class="w3-row">
 
+                <button onclick="menuTabChange('Links')" class="w3-col s6 w3-btn w3-text-white w3-hover-opacity"><i
+                        class="fa fa-bars w3-margin-right"></i>Main Menu</button>
+    
+                <button onclick="closeNav()" class="w3-col s6 w3-btn w3-text-white w3-hover-opacity"><i
+                        class="fa fa-close w3-margin-right"></i>Close Menu</button>
+            </div>
+            
+        
 
         <div class="tabContent w3-margin-top" id="Links">
             <a href="/" onclick="closeNav()" class="w3-hover-white w3-text-white">Home</a>
@@ -47,8 +52,7 @@
         </div>
 
         <div class="tabContent" id="Directions">
-            <button onclick="menuTabChange('Links')" class="w3-btn w3-text-white w3-hover-opacity"><i
-                    class="fa fa-bars w3-margin-right"></i>Main Menu</button>
+
             <div class="w3-container w3-margin-top">
                 <label class="w3-text-white w3-large ">Show Path to...</label><br><br>
                 <select id="directionsToInput" style="max-width: 250px; margin:auto" class="w3-select"
@@ -72,17 +76,12 @@
                 <br><br>
                 <button id="showPathsBtn" class="w3-button w3-dark-grey" autocomplete="off">Show Path</button>
             </div>
-
-            <br><br>
             <button id="allPathsBtn" class="w3-btn w3-text-white w3-hover-opacity">Show All Paths</button>
             <br>
             <button id="demoBtn" class="w3-btn w3-text-white w3-hover-opacity">Demo Movement On</button>
         </div>
 
         <div class="tabContent" id="Settings">
-            <button onclick="menuTabChange('Links')" class="w3-btn w3-text-white w3-hover-opacity"><i
-                    class="fa fa-bars w3-margin-right"></i>Main Menu</button>
-
                     
                     <div class="w3-container w3-margin-top">
                         <label class="w3-text-white w3-large ">Set Map Center and Zoom</label><br><br>
@@ -127,11 +126,14 @@
 
 
 <script>
+    
+
+
     var navContent = document.getElementById('myNav1');
     L.DomEvent.on(navContent, 'click dblclick scroll', function(ev) {
         L.DomEvent.stopPropagation(ev);
         L.DomEvent.disableScrollPropagation(navContent);
-        
+        console.log('stopped');
     });
 
 
