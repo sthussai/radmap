@@ -42,7 +42,7 @@
     
             @yield('content')
         
-    
+			<script src="{{ asset('js/radmap.js') }}"></script>	
 </body>
 
 </html>

@@ -4,7 +4,7 @@
     <br><br><br>
     </span>
     <!-- Overlay content -->
-    <section id="myNav1Content" class="overlaynav-content" style="border: 2px solid red;">
+    <section id="myNav1Content" class="overlaynav-content">
     <span id="topSpan" style="position: absolute; top: 0"></span>
     <button id="topBtn" type="button" style="position: absolute; top: 45%; right: 5%" onClick="topFunction()">
         <i class="fa fa-arrow-up"></i>
@@ -26,10 +26,10 @@
             <div class="w3-row">
 
                 <button onclick="menuTabChange('Links')" class="w3-col s6 w3-btn w3-text-white w3-hover-opacity"><i
-                        class="fa fa-bars w3-margin-right"></i>Main Menu</button>
+                        class="fa fa-bars w3-margin-right w3-large"></i>Main Menu</button>
     
-                <button onclick="closeNav()" class="w3-col s6 w3-btn w3-text-white w3-hover-opacity"><i
-                        class="fa fa-close w3-margin-right"></i>Close Menu</button>
+                <button onclick="closeNav()" class="w3-col s6 w3-btn w3-white w3-hover-opacity"><i
+                        class="fa fa-close w3-margin-right w3-large"></i>Close Menu</button>
             </div>
             
         <script>
@@ -127,9 +127,9 @@
                 </div> -->
 <!--             </form> -->
 
-            <button class="w3-button w3-padding w3-white w3-large w3-margin-top" id="recenterMapBtn" 
+            <button class="w3-button w3-padding w3-white w3-margin-top" id="recenterMapBtn" 
                 title="Stop Location Sharing">Recenter Map</button> <br>
-            <button class="w3-button w3-padding w3-white w3-large w3-margin-top" id="refreshMapBtn" 
+            <button class="w3-button w3-padding w3-white w3-margin-top" id="refreshMapBtn" 
                 title="Stop Location Sharing">Refresh Map</button>
         </div>
 

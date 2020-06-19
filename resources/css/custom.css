@@ -219,6 +219,23 @@ body {
     -webkit-overflow-scrolling: touch;
   }
 
+  #infoDivContainer{
+    width: 100%;
+}
+    #infoDiv{
+            z-index: 1000; 
+            width: 80%; 
+            max-width: 600px; 
+            top:0px;
+            margin: 0px auto ;
+            text-align: center;
+        }
+
+    @media only screen and (max-width: 600px) {
+        #infoDiv{
+            width: 100%;
+        }
+      }         
 /* 
 .overlaynav .closebtn {
     position: absolute;

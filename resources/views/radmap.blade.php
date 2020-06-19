@@ -1,19 +1,6 @@
 @extends('layouts.map')
 
 @section('content')
-<style>
-	#infoDivContainer{
-		width: 100%;
-	}
-	#infoDiv{
-				z-index: 1000; 
-				width: 80%; 
-				max-width: 600px; 
-				top:0px;
-				margin: 0px auto ;
-				text-align: center;
-			}
-</style>
 
 	@include('components.rad-loader')
 	<div id="infoDivContainer" class="w3-center ">
@@ -108,8 +95,6 @@
 
 </script>
 
-
-<script src="{{ asset('js/radmap.js') }}"></script>	
 
 @endsection
 
