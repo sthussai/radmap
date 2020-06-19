@@ -2,11 +2,11 @@
 
     
     <!-- Overlay content -->
-    <section class="overlaynav-content">
+    <section id="myNav1Content" class="overlaynav-content" style="border: 2px solid red">
         
-        <div id='menu_items' class="w3-row w3-white w3-opacity " style='font-size:1.5em;'>
+        <div id='menu_items' class="w3-row w3-white w3-opacity " style='font-size:1.5em; '>
             <div class="w3-col s6">
-                <button class="w3-button  w3-block w3-hover-blue-grey  " onclick="menuTabChange('Settings')"><i
+                <button id="settingsBtn" class="w3-button  w3-block w3-hover-blue-grey  " onclick="menuTabChange('Settings')"><i
                         class="fa fa-gear w3-margin-right"></i>Settings</button>
             </div>
 
@@ -82,7 +82,12 @@
         </div>
 
         <div class="tabContent" id="Settings">
-                    
+        <button type="button" style="position: absolute; top: 45%; right: 5%" onClick="topFunction()">
+        <i class="fa fa-arrow-up"></i>
+        </button>
+        <button type="button" style="position: absolute; top: 55%; right: 5%" onClick="bottomFunction()">
+        <i class="fa fa-arrow-down"></i>
+        </button>
                     <div class="w3-container w3-margin-top">
                         <label class="w3-text-white w3-large ">Set Map Center and Zoom</label><br><br>
                         <input value="{{$centerCoords}}" required name="centerCoords" id="centerCoordsInput" style="max-width: 200px; margin:auto"
@@ -127,7 +132,12 @@
 
 <script>
     
-
+    function topFunction() {
+        document.getElementById('settingsBtn').scrollIntoView();
+    }
+    function bottomFunction() {
+        document.getElementById('refreshMapBtn').scrollIntoView();
+}
 
     var navContent = document.getElementById('myNav1');
     L.DomEvent.on(navContent, 'click dblclick scroll', function(ev) {
@@ -151,19 +161,21 @@
 
     menuTabChange('Links');
 
-
+    document.body.style.overflowY = "hidden";
+    
     function openNav() {
-			document.getElementById("myNav1").style.height = "100%";
-            document.getElementById("myNav1").click();
+        document.getElementById("myNav1").style.height = "100%";
+            document.getElementById("myNav1Content").click();
             map.dragging.disable();
-            console.log(map.dragging);
+            document.body.style.overflowY = "scroll";
+            document.getElementById("myNav1Content").style.overflow = "scroll";
 		}
 
     /* Close when someone clicks on the "x" symbol inside the overlay Nav Bar */
     function closeNav() {
         document.getElementById("myNav1").style.height = "0%";
+        document.body.style.overflowY = "hidden";
         map.dragging.enable();
-        console.log(map.dragging);
     }
 
     function recenterMap() {

@@ -109,7 +109,7 @@
 </script>
 
 
-<script src="{{ secure_asset('js/radmap.js') }}"></script>	
+<script src="{{ asset('js/radmap.js') }}"></script>	
 
 @endsection
 

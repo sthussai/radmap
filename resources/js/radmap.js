@@ -332,7 +332,7 @@ $("#demoBtn").click(function(){
 			document.getElementById('btn-loader').style.display = 'block';
 			document.getElementById('findBtn').style.backgroundColor = '#555';
 			map.locate({
-				setView: true,
+				setView: false,
 				maxZoom: 19,
 				watch: true,
 				enableHighAccuracy: true,
@@ -345,7 +345,7 @@ $("#demoBtn").click(function(){
 
 
 		//locateMe(map);
-
+		let locationMarkersLayerGroup = L.layerGroup().addTo(map);
 		function onLocationError(e) {
 			alert(e.message);
 		}
@@ -355,35 +355,25 @@ $("#demoBtn").click(function(){
 
 			console.log('Located');
 
+			if (counter == 0 ){
+				document.getElementById('findBtn').style.display = 'none';
+				document.getElementById('stopBtn').style.display = 'block';	
+				map.setView(e.latlng, 18);
+			}
 			if (demo) {
 				var rand = Math.random() / 5000;
 				e.latlng.lat = e.latlng.lat + rand;
 				e.latlng.lng = e.latlng.lng + rand;
+			} 
+			
+			//if new latlng is same as previous in array, return
+			if(JSON.stringify(arr[2]) === JSON.stringify(e.latlng)){
+				console.log('new latlng is same as previous')
+				return;
 			}
-
+			locationMarkersLayerGroup.clearLayers();
 			counter++;
-			console.log('demo = ' + demo);
-			console.log('counter = ' + counter);
-
 			var radius = e.accuracy / 2;
-			if (counter == 1) {
-				document.getElementById('findBtn').style.display = 'none';
-				document.getElementById('stopBtn').style.display = 'block';
-				x = L.circleMarker(e.latlng, {
-						color: markerColor
-					})
-					.bindTooltip("You are within " + radius + " meters from this point")
-					.addTo(map).openTooltip(e.latlng);
-			} else {
-				x.remove();
-				x = L.circleMarker(e.latlng, {
-						color: markerColor
-					})
-					.bindPopup("Your current approximate location")
-					.addTo(map);
-			}
-
-
 			arr.push(e.latlng);
 			if (arr.length > 3) {
 				arr.shift();
@@ -393,42 +383,33 @@ $("#demoBtn").click(function(){
 			prevCoord = arr[1];
 			pastCoord = arr[0];
 
+			if (counter >= 1) {
 
+				x = L.circleMarker(e.latlng, {
+						color: markerColor
+					})
+					.bindPopup("You are within " + radius + " meters from this point")
+					.addTo(locationMarkersLayerGroup).openPopup(e.latlng);
+			}
 
-			if (counter == 2) {
+			if (counter >= 2) {
 				p = L.circleMarker(prevCoord, {
-						radius: 7,
+						radius: 2,
 						color: '#848D99'
 					})
 					.bindPopup("Your previous location")
-					.addTo(map);
-			} else if (counter > 2) {
-				p.remove();
-				p = L.circleMarker(prevCoord, {
-						radius: 7,
-						color: '#848D99'
-					})
-					.bindPopup("Your previous location")
-					.addTo(map);
+					.addTo(locationMarkersLayerGroup);
 			}
 
 
-			if (counter == 3) {
+			if (counter >= 3) {
 				pp = L.circleMarker(pastCoord, {
-						radius: 5,
+						radius: 1,
 						color: '#848D99'
 					})
 					.bindPopup("Your past location")
-					.addTo(map);
-			} else if (counter > 3) {
-				pp.remove();
-				pp = L.circleMarker(pastCoord, {
-						radius: 5,
-						color: '#848D99'
-					})
-					.bindPopup("Your past location")
-					.addTo(map);
-			}
+					.addTo(locationMarkersLayerGroup);
+			} 
 		}
 
 		map.on('locationfound', onLocationFound);
@@ -465,17 +446,6 @@ $("#demoBtn").click(function(){
 		function stopLocating() {
 			map.stopLocate();
 			console.log('Stopped Locating');
-			coordPopup.setLatLng(currentCoord).addTo(map)
-				.setContent("Stopped Location Sharing")
-				.openPopup(currentCoord);
-
-			x.remove();
-			if (counter >= 2) {
-				p.remove();
-			}
-			if (counter >= 3) {
-				pp.remove();
-			}
 			counter = 0;
 			document.getElementById('findBtn').style.display = 'block';
 			document.getElementById('findBtn').style.backgroundColor = '';

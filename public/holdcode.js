@@ -123,3 +123,195 @@ function drawMinimumDistanceLine(){
 
     finalPathLine = L.polyline(finalPathLineCoords,{color:'black'}).addTo(map);    
 }
+
+
+
+
+
+
+
+function onLocationFound(e) {
+    //			delete arrObject['Point1'];
+                if (counter==0){
+                    arrObject = {};
+                    console.log('Located, counter is ' + counter);
+                    console.log('arrObject is.. ' );
+                    console.log(arrObject);
+                    document.getElementById('findBtn').style.display = 'none';
+                    document.getElementById('stopBtn').style.display = 'block';
+                    counter ++;
+                }
+                radius = e.accuracy / 2;
+                console.log('Located, counter is ' + counter);
+            
+                if (counter==1){
+                    //pushes first e.latlng into object
+                    arrObject['Point1'] = e.latlng;
+                    console.log('e.latlng is..');
+                    console.log(e.latlng);
+                    console.log('Arr obj point 1 is..');
+                    console.log(arrObject);
+                    //adds first e.latlng to map
+                    x = L.circleMarker(arrObject['Point1'], {
+                        color: markerColor
+                    })
+                    .bindTooltip("You are within " + radius + " meters from this point")
+                    .addTo(map).openTooltip(arrObject['Point1']);
+                } 
+                return
+    
+    /* 			if (demo) {
+                    var rand = Math.random() / 5000;
+                    e.latlng.lat = e.latlng.lat + rand;
+                    e.latlng.lng = e.latlng.lng + rand;
+                } */			
+    if(counter == 2){
+    
+        var rand = Math.random() / 5000;
+        e.latlng.lat = e.latlng.lat + rand;
+        e.latlng.lng = e.latlng.lng + rand;
+    
+        if(JSON.stringify(arrObject['Point1']) === JSON.stringify(e.latlng)){
+            console.log('Coords already in object')
+            console.log(e.latlng);
+            console.log(arrObject['Point1']);
+            counter = 1;
+            console.log('Setting counter back to ' + counter);
+        }else {
+            console.log('Coords NOT in object')
+            console.log(e.latlng);
+            console.log(arrObject['Point1']);
+            console.log('so pushing to object...')
+            arrObject['Point2'] = arrObject['Point1'];
+            console.log('Set Point 2 equal to Point 1...')
+            arrObject['Point1'] = e.latlng;
+            console.log('Set Point 1 equal to new latlng...')
+            console.log(arrObject['Point1']);
+            console.log('ArrObject should now have two point objects...')
+            console.log(arrObject);
+            x.remove();
+            x = L.circleMarker(arrObject['Point1'], {
+                color: markerColor
+            })
+            .bindTooltip("You are within " + radius + " meters from this point")
+            .addTo(map).openTooltip(arrObject['Point1']);
+    
+            p = L.circleMarker(arrObject['Point2'], {
+                color: 'grey',
+                radius: 3
+            })
+            .bindTooltip("You are within " + radius + " meters from this point")
+            .addTo(map);
+    
+        }			
+        
+    
+    }
+    
+    
+    if(counter == 3){
+    
+        var rand = Math.random() / 5000;
+        e.latlng.lat = e.latlng.lat + rand;
+        e.latlng.lng = e.latlng.lng + rand;
+        
+        if(JSON.stringify(arrObject['Point1']) === JSON.stringify(e.latlng)){
+            console.log('Coords already in object')
+            console.log(e.latlng);
+            console.log(arrObject['Point1']);
+            counter = 2;
+            console.log('Setting counter back to ' + counter);
+            console.log('Will keep looping back the counter to 2 until new 3rd latltn found ');
+        }else {
+            console.log('3rd New Latlng NOT in object')
+            console.log('3rd latlng is ..');
+            console.log(e.latlng);
+            console.log('ArrObject is ..');
+            console.log(arrObject);
+            console.log('so pushing to object...')
+            arrObject['Point3'] = arrObject['Point2'];
+            console.log('Set NEW Point 3 equal to Point 2...')
+            arrObject['Point2'] = arrObject['Point1'];
+            console.log('Set Point 2 equal to Point 1...')
+            arrObject['Point1'] = e.latlng;
+            console.log('Set Point 1 equal to new latlng...')
+            console.log(arrObject['Point1']);
+            console.log('ArrObject should now have THREE point objects...')
+            console.log(arrObject);
+            x.remove();
+            p.remove();
+            x = L.circleMarker(arrObject['Point1'], {
+                color: markerColor
+            })
+            .bindTooltip("You are within " + radius + " meters from this point")
+            .addTo(map).openTooltip(arrObject['Point1']);
+    
+            p = L.circleMarker(arrObject['Point2'], {
+                color: 'grey',
+                radius: 3
+            })
+            .bindTooltip("You are within " + radius + " meters from this point")
+            .addTo(map);
+    
+            pp = L.circleMarker(arrObject['Point3'], {
+                color: 'red',
+                radius: 2
+            })
+            .bindTooltip("You are within " + radius + " meters from this point")
+            .addTo(map);
+    
+        }			
+        
+    
+    }
+    
+    
+    if(counter > 3){
+    
+        if(JSON.stringify(arrObject['Point1']) === JSON.stringify(e.latlng)){
+            console.log('Coords already in object... latlng equal arrObject point 1')
+            console.log('latlng' + e.latlng);
+            console.log(arrObject);
+        }else {
+            console.log('New Latlng NOT in object')
+            arrObject['Point3'] = arrObject['Point2'];
+            console.log('Set NEW Point 3 equal to Point 2...')
+            arrObject['Point2'] = arrObject['Point1'];
+            console.log('Set Point 2 equal to Point 1...')
+            arrObject['Point1'] = e.latlng;
+            console.log('Set Point 1 equal to new latlng...')
+            console.log(arrObject['Point1']);
+            x.remove();
+            p.remove();
+            pp.remove();
+            x = L.circleMarker(arrObject['Point1'], {
+                color: markerColor
+            })
+            .bindTooltip("You are within " + radius + " meters from this point")
+            .addTo(map).openTooltip(arrObject['Point1']);
+    
+            p = L.circleMarker(arrObject['Point2'], {
+                color: 'grey',
+                radius: 3
+            })
+            .bindTooltip("previous")
+            .addTo(map);
+    
+            pp = L.circleMarker(arrObject['Point3'], {
+                color: 'red',
+                radius: 2
+            })
+            .bindTooltip("past")
+            .addTo(map);
+    
+        }
+    
+    }
+    
+    
+    // if counter is 4 or more 
+    // AND if next latlat is not equal to point 1, then set point 3 == point 2, point 2 == 1 and point 1 == latlng
+    
+    counter ++;			
+                
+            }
