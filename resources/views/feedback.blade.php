@@ -62,7 +62,7 @@
         </form>
 
         <div class="links" style="margin:20px">
-          <a href="/">Back</a>
+          <a href="/">Home</a>
         </div>
 
       </div>

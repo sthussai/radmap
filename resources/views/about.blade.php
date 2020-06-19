@@ -5,9 +5,8 @@
 @section('content')
 
 
-    <div id="mainDiv" class="flex-center position-ref full-height">
+    <div id="mainDiv" >
     <!-- Content loaded via AJAX -->
-
     </div>
 
     

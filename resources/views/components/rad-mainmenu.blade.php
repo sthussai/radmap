@@ -1,10 +1,18 @@
 <div id="myNav1" class="overlaynav" onclick="">
 
-    
+    <span class="w3-hide-small">
+    <br><br><br>
+    </span>
     <!-- Overlay content -->
-    <section id="myNav1Content" class="overlaynav-content" style="border: 2px solid red">
-        
-        <div id='menu_items' class="w3-row w3-white w3-opacity " style='font-size:1.5em; '>
+    <section id="myNav1Content" class="overlaynav-content" style="border: 2px solid red;">
+    <span id="topSpan" style="position: absolute; top: 0"></span>
+    <button id="topBtn" type="button" style="position: absolute; top: 45%; right: 5%" onClick="topFunction()">
+        <i class="fa fa-arrow-up"></i>
+        </button>
+        <button id="bottomBtn" type="button" style="position: absolute; top: 55%; right: 5%" onClick="bottomFunction()">
+        <i class="fa fa-arrow-down"></i>
+        </button>
+        <div id='menu_items' class="w3-row w3-white w3-opacity " style='font-size:1.5em;  '>
             <div class="w3-col s6">
                 <button id="settingsBtn" class="w3-button  w3-block w3-hover-blue-grey  " onclick="menuTabChange('Settings')"><i
                         class="fa fa-gear w3-margin-right"></i>Settings</button>
@@ -24,7 +32,13 @@
                         class="fa fa-close w3-margin-right"></i>Close Menu</button>
             </div>
             
-        
+        <script>
+            $("#myNav1Content").click(function(event){
+  event.stopPropagation();
+  console.log("The myNav1Content element was clicked.");
+});
+
+        </script>
 
         <div class="tabContent w3-margin-top" id="Links">
             <a href="/" onclick="closeNav()" class="w3-hover-white w3-text-white">Home</a>
@@ -42,7 +56,7 @@
             @endauth
             <div class="w3-container w3-margin-top">
                     <label class="w3-text-white w3-large">Change Font Size</label><br><br>
-                    <select id="fontSizeSelect" style="max-width: 250px; margin:auto" class="w3-select" name="fontSize">
+                    <select id="fontSizeSelect" style="max-width: 200px; margin:auto" class="w3-select" name="fontSize">
                         <option value="null" selected> </option>
                         <option value="12px">Small Font</option>
                         <option value="15px">Medium Font</option>
@@ -55,7 +69,7 @@
 
             <div class="w3-container w3-margin-top">
                 <label class="w3-text-white w3-large ">Show Path to...</label><br><br>
-                <select id="directionsToInput" style="max-width: 250px; margin:auto" class="w3-select"
+                <select id="directionsToInput" style="max-width: 200px; margin:auto" class="w3-select"
                     name="directionsTo">
                     <option value="null" selected> </option>
                     <option value="kayeEdmontonClinic">Kaye Edmonton Clinic</option>
@@ -65,7 +79,7 @@
                 </select>
                 <br><br>
                 <label class="w3-text-white w3-large ">From</label><br><br>
-                <select id="directionsFromInput" style="max-width: 250px; margin:auto" class="w3-select"
+                <select id="directionsFromInput" style="max-width: 200px; margin:auto" class="w3-select"
                     name="directionsFrom">
                     <option value="null" selected> </option>
                     <option value="kayeEdmontonClinic">Kaye Edmonton Clinic</option>
@@ -82,12 +96,7 @@
         </div>
 
         <div class="tabContent" id="Settings">
-        <button type="button" style="position: absolute; top: 45%; right: 5%" onClick="topFunction()">
-        <i class="fa fa-arrow-up"></i>
-        </button>
-        <button type="button" style="position: absolute; top: 55%; right: 5%" onClick="bottomFunction()">
-        <i class="fa fa-arrow-down"></i>
-        </button>
+        
                     <div class="w3-container w3-margin-top">
                         <label class="w3-text-white w3-large ">Set Map Center and Zoom</label><br><br>
                         <input value="{{$centerCoords}}" required name="centerCoords" id="centerCoordsInput" style="max-width: 200px; margin:auto"
@@ -133,7 +142,7 @@
 <script>
     
     function topFunction() {
-        document.getElementById('settingsBtn').scrollIntoView();
+        document.getElementById('topSpan').scrollIntoView();
     }
     function bottomFunction() {
         document.getElementById('refreshMapBtn').scrollIntoView();
@@ -165,16 +174,13 @@
     
     function openNav() {
         document.getElementById("myNav1").style.height = "100%";
-            document.getElementById("myNav1Content").click();
+            //document.getElementById("myNav1Content").click();
             map.dragging.disable();
-            document.body.style.overflowY = "scroll";
-            document.getElementById("myNav1Content").style.overflow = "scroll";
 		}
 
     /* Close when someone clicks on the "x" symbol inside the overlay Nav Bar */
     function closeNav() {
         document.getElementById("myNav1").style.height = "0%";
-        document.body.style.overflowY = "hidden";
         map.dragging.enable();
     }
 
