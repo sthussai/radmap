@@ -344,6 +344,8 @@ var _require = __webpack_require__(/*! ./radmap */ "./resources/js/radmap.js"),
     controls = _require.controls;
 
 var pathGroup = L.layerGroup().addTo(secondFloorMap);
+var secondFloorMarkerGroup = L.layerGroup().addTo(secondFloorMap);
+var firstFloorMarkerGroup = L.layerGroup().addTo(firstFloorMap);
 var myLayer = null;
 var startRefPointMarker = L.marker([53.51993090722499, -113.52201819419861], {
   draggable: true
@@ -354,7 +356,6 @@ var endRefPointMarker = L.marker([53.52060200173207, -113.52428197860719], {
 var firstRefPoint = null;
 var endRefPoint = null;
 var distancesToClosestRefPointArray = [];
-var ltlnFinalLocationsArray = [];
 var geojsonMarkerOptions = {
   radius: 8,
   fillColor: "grey",
@@ -369,58 +370,26 @@ var markersArray = [];
 var start = "Point 14";
 var end = "Point 5";
 
-function ajaxGetGeoJsonFinalLocations() {
-  $.ajax({
-    dataType: "json",
-    url: '/finalLocationData.json',
-    success: function success(data) {
-      //    console.log(data);
-      myLayer = L.geoJSON(data, {
-        onEachFeature: popupOnEachFinalLocation,
-        pointToLayer: function pointToLayer(feature, latlng) {
-          return L.circleMarker(latlng, geojsonMarkerOptions);
-        },
-        style: function style(feature) {
-          switch (feature.properties.floor) {
-            case 'location':
-              return {
-                color: "black",
-                fillColor: "grey"
-              };
-          }
-        }
-      }).addTo(secondFloorMap);
-    },
-    error: function error(xhr) {
-      console.log('Error - probably with parsing JSON data');
-      console.log(xhr);
-    }
-  });
-}
-
-ajaxGetGeoJsonFinalLocations();
-
-function ajaxGetGeoJson() {
+function ajaxGetGeoJsonSecondFloor() {
   $.ajax({
     dataType: "json",
     url: '/data.json',
     success: function success(data) {
       myLayer = L.geoJSON(data, {
-        filter: function filter(feature) {
-          return feature.properties.test;
-        },
         onEachFeature: popupOnEachFeature,
         pointToLayer: function pointToLayer(feature, latlng) {
           return L.circleMarker(latlng, geojsonMarkerOptions);
         },
         style: function style(feature) {
-          switch (feature.properties.floor) {
-            case 'first':
+          switch (feature.properties.location) {
+            case 'final':
               return {
-                color: "#ff0000",
-                fillColor: "orange"
+                color: "black",
+                fillColor: "grey"
               };
+          }
 
+          switch (feature.properties.floor) {
             case 'second':
               return {
                 color: "#0000ff",
@@ -428,7 +397,7 @@ function ajaxGetGeoJson() {
               };
           }
         }
-      }).addTo(secondFloorMap);
+      }).addTo(secondFloorMarkerGroup);
     },
     error: function error(xhr) {
       console.log('Error - probably with parsing JSON data');
@@ -437,7 +406,7 @@ function ajaxGetGeoJson() {
   });
 }
 
-ajaxGetGeoJson();
+ajaxGetGeoJsonSecondFloor();
 
 function ajaxGetGeoJsonFirstFloor() {
   $.ajax({
@@ -461,7 +430,7 @@ function ajaxGetGeoJsonFirstFloor() {
               };
           }
         }
-      }).addTo(firstFloorMap);
+      }).addTo(firstFloorMarkerGroup);
     },
     error: function error(xhr) {
       console.log('Error - probably with parsing JSON data');
@@ -473,19 +442,6 @@ function ajaxGetGeoJsonFirstFloor() {
 ajaxGetGeoJsonFirstFloor();
 /* $(controls.getContainer()).mouseenter(function(){
   }); */
-
-function popupOnEachFinalLocation(feature, layer) {
-  if (feature.properties && feature.properties.popupContent) {
-    layer.bindPopup(feature.properties.popupContent);
-  }
-
-  if (feature.properties && feature.geometry.type == "Point") {
-    var lt = feature.geometry.coordinates[1];
-    var ln = feature.geometry.coordinates[0];
-    var ltln = [lt, ln];
-    ltlnFinalLocationsArray.push(ltln);
-  }
-}
 
 function popupOnEachFeature(feature, layer) {
   if (feature.properties && feature.properties.popupContent) {
@@ -504,6 +460,10 @@ function popupOnEachFeature(feature, layer) {
 
     if (feature.properties.neighbour3) {
       neighbour[feature.properties.neighbour3] = parseInt(feature.properties.neighbour3Distance);
+    }
+
+    if (feature.properties.neighbour4) {
+      neighbour[feature.properties.neighbour4] = parseInt(feature.properties.neighbour4Distance);
     }
 
     markersObject[name] = neighbour;

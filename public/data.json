@@ -10,8 +10,12 @@
       "properties": {
         "name": "Point 1",
         "floor": "second",
-        "popupContent": "Radz Hallway Point 1",
-        "secondFloor": true
+        "popupContent": "Point 1",
+        "secondFloor": true,
+        "neighbour1": "Point 10",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 2",
+        "neighbour2Distance": "1"
       }
     },
     {
@@ -23,8 +27,12 @@
       "properties": {
         "name": "Point 2",
         "floor": "second",
-        "popupContent": "Radz Hallway Point 2",
-        "secondFloor": true
+        "popupContent": "Point 2",
+        "secondFloor": true,
+        "neighbour1": "Point 1",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 3",
+        "neighbour2Distance": "1"
       }
     },
     {
@@ -39,12 +47,14 @@
         "popupContent": "Radz Hallway Point 3",
         "secondFloor": true,
         "test": true,
-        "neighbour1": "Point 5",
-        "neighbour1Distance": "1",
-        "neighbour2": "Point 17",
+        "neighbour1": "Point 2",
+        "neighbour1Distance": "10",
+        "neighbour2": "Point 4",
         "neighbour2Distance": "1",
-        "neighbour3": "Point 10",
-        "neighbour3Distance": "3"
+        "neighbour3": "Point 18",
+        "neighbour3Distance": "1",
+        "neighbour4": "Point 19",
+        "neighbour4Distance": "1"
       }
     },
     {
@@ -57,7 +67,12 @@
         "name": "Point 4",
         "floor": "second",
         "popupContent": "Point 4",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 3",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 5",
+        "neighbour2Distance": "1"
+
       }
     },
     {
@@ -69,13 +84,15 @@
       "properties": {
         "name": "Point 5",
         "floor": "second",
-        "popupContent": "<img src='https://static.pexels.com/photos/189349/pexels-photo-189349.jpeg' height='150px' width='150px'/><p>Sunset</p>",
+        "popupContent": "<img src='https://static.pexels.com/photos/189349/pexels-photo-189349.jpeg' height='150px' width='150px'/><p>Sunset Point 5</p>",
         "secondFloor": true,
         "test": true,
-        "neighbour1": "Point 3",
+        "neighbour1": "Point 4",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 7",
-        "neighbour2Distance": "1"
+        "neighbour2": "Point 6",
+        "neighbour2Distance": "1",
+        "neighbour3": "Point 28",
+        "neighbour3Distance": "1"  
       }
     },
     {
@@ -88,7 +105,11 @@
         "name": "Point 6",
         "floor": "second",
         "popupContent": "Point 6",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 5",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 7",
+        "neighbour2Distance": "1"
       }
     },
     {
@@ -103,7 +124,7 @@
         "popupContent": "Point 7",
         "secondFloor": true,
         "test": true,
-        "neighbour1": "Point 5",
+        "neighbour1": "Point 6",
         "neighbour1Distance": "1",
         "neighbour2": "Point 8",
         "neighbour2Distance": "1"
@@ -123,8 +144,10 @@
         "test": true,
         "neighbour1": "Point 7",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 10",
-        "neighbour2Distance": "2"
+        "neighbour2": "Point 9",
+        "neighbour2Distance": "1",
+        "neighbour3": "Point 29",
+        "neighbour3Distance": "1"
       }
     },
     {
@@ -137,7 +160,12 @@
         "name": "Point 9",
         "floor": "second",
         "popupContent": "Point 9",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 10",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 8",
+        "neighbour2Distance": "1"
+        
       }
     },
     {
@@ -152,12 +180,12 @@
         "popupContent": "Point 10",
         "secondFloor": true,
         "test": true,
-        "neighbour1": "Point 13",
+        "neighbour1": "Point 11",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 3",
+        "neighbour2": "Point 1",
         "neighbour2Distance": "10",
-        "neighbour3": "Point 8",
-        "neighbour3Distance": "2"
+        "neighbour3": "Point 9",
+        "neighbour3Distance": "1"
       }
     },
     {
@@ -170,20 +198,28 @@
         "name": "Point 11",
         "floor": "second",
         "popupContent": "Point 11",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 10",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 12",
+        "neighbour2Distance": "1"
       }
     },
     {
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [ -113.52336600422862, 53.52015364202565  ]
+        "coordinates": [ -113.52337136864664, 53.520281257098965  ]
       },
       "properties": {
         "name": "Point 12",
         "floor": "second",
         "popupContent": "Point 12",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 11",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 13",
+        "neighbour2Distance": "1"
       }
     },
     {
@@ -198,12 +234,12 @@
         "popupContent": "Point 13",
         "secondFloor": true,
         "test": true,
-        "neighbour1": "Point 10",
+        "neighbour1": "Point 12",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 17",
+        "neighbour2": "Point 14",
         "neighbour2Distance": "1",
-        "neighbour3": "Point 14",
-        "neighbour3Distance": "1"
+        "neighbour3": "Point 17",
+        "neighbour3Distance": "2"
       }
     },
     {
@@ -219,7 +255,9 @@
         "secondFloor": true,
         "test": true,
         "neighbour1": "Point 13",
-        "neighbour1Distance": "1"
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 15",
+        "neighbour2Distance": "1"
       }
     },
     {
@@ -232,7 +270,12 @@
         "name": "Point 15",
         "floor": "second",
         "popupContent": "Point 15",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 14",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 16",
+        "neighbour2Distance": "1"
+
       }
     },
     {
@@ -245,7 +288,11 @@
         "name": "Point 16",
         "floor": "second",
         "popupContent": "Point 16",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 15",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 26",
+        "neighbour2Distance": "1"
       }
     },
     {
@@ -260,10 +307,10 @@
         "popupContent": "Point 17",
         "secondFloor": true,
         "test": true,
-        "neighbour1": "Point 3",
+        "neighbour1": "Point 18",
         "neighbour1Distance": "1",
         "neighbour2": "Point 13",
-        "neighbour2Distance": "1"
+        "neighbour2Distance": "2"
       }
     },
     {
@@ -276,7 +323,11 @@
         "name": "Point 18",
         "floor": "second",
         "popupContent": "Point 18",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 17",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 3",
+        "neighbour2Distance": "1"
       }
     },
     {
@@ -289,7 +340,11 @@
         "name": "Point 19",
         "floor": "second",
         "popupContent": "Point 19",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 3",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 20",
+        "neighbour2Distance": "1"
       }
     },
     {
@@ -302,7 +357,11 @@
         "name": "Point 20",
         "floor": "second",
         "popupContent": "Point 20",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 19",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 21",
+        "neighbour2Distance": "1"
       }
     },
     {
@@ -315,7 +374,11 @@
         "name": "Point 21",
         "floor": "second",
         "popupContent": "Point 21",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 20",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 22",
+        "neighbour2Distance": "2"
       }
     },
     {
@@ -328,7 +391,11 @@
         "name": "Point 22",
         "floor": "second",
         "popupContent": "Point 22",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 21",
+        "neighbour1Distance": "2",
+        "neighbour2": "Point 23",
+        "neighbour2Distance": "1"
       }
     },
     {
@@ -341,7 +408,11 @@
         "name": "Point 23",
         "floor": "second",
         "popupContent": "Point 23",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 22",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 24",
+        "neighbour2Distance": "1"
       }
     },
     {
@@ -354,7 +425,11 @@
         "name": "Point 24",
         "floor": "second",
         "popupContent": "Point 24",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 23",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 25",
+        "neighbour2Distance": "1"
       }
     },
     {
@@ -367,57 +442,75 @@
         "name": "Point 25",
         "floor": "second",
         "popupContent": "Point 25",
-        "secondFloor": true
+        "secondFloor": true,
+        "neighbour1": "Point 24",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 27",
+        "neighbour2Distance": "1"
       }
     },
     {
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [ -113.523939, 53.520919  ]
+        "coordinates": [ -113.52220594882965, 53.51985505942433  ]
       },
       "properties": {
-        "name": "Point 4",
-        "floor": "first",
-        "popupContent": "Point 4 - Main Cafeteria Point 1"
+        "name": "Point 26",
+        "floor": "second",
+        "location": "final",
+        "popupContent": "Point 26 Location #1 - Patient Parking 2nd Floor",
+        "neighbour1": "Point 16",
+        "neighbour1Distance": "1"
       }
     },
     {
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [ -113.523937,53.521032  ]
+        "coordinates": [ -113.52677643299104, 53.518729084031214  ]
       },
       "properties": {
-        "name": "Point 5",
-        "floor": "first",
-        "popupContent": "Point 5 - Main Cafeteria Point 2"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [ -113.524552,53.52103  ]
-      },
-      "properties": {
-        "name": "Point 6",
-        "floor": "first",
-        "popupContent": "Point 6 - Main Cafeteria Point 3"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [ -113.524552,53.520605  ]
-      },
-      "properties": {
-        "name": "Point 7",
-        "floor": "first",
-        "popupContent": "Point 7 - Main Cafeteria Point 4"
+        "name": "Point 27",
+        "floor": "second",
+        "location": "final",
+        "popupContent": "Point 27 Location #2 - Kaye Clinic Radiology",
+        "neighbour1": "Point 25",
+        "neighbour1Distance": "1"
       }
     }
-  
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52426320314409, 53.52061292042114  ]
+      },
+      "properties": {
+        "name": "Point 28",
+        "floor": "second",
+        "location": "final",
+        "popupContent": "Point 28 Location #3 - Radiology UAH 2nd Floor",
+        "neighbour1": "Point 5",
+        "neighbour1Distance": "1"
+      }
+    }  
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.5230052471161, 53.52104423591322  ]
+      },
+      "properties": {
+        "name": "Point 29",
+        "floor": "second",
+        "location": "final",
+        "popupContent": "Point 29 Location #4 - Unit 2J2 2nd Floor",
+        "neighbour1": "Point 8",
+        "neighbour1Distance": "1"
+      }
+    }
+    
   ]
 }
