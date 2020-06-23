@@ -44,7 +44,7 @@
       "properties": {
         "name": "Point 3",
         "floor": "second",
-        "popupContent": "Radz Hallway Point 3",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3265.jpg' height='150px' width='150px'/><p>Point 3</p>",
         "secondFloor": true,
         "test": true,
         "neighbour1": "Point 2",
@@ -66,7 +66,7 @@
       "properties": {
         "name": "Point 4",
         "floor": "second",
-        "popupContent": "Point 4",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3267.jpg' height='150px' width='150px'/><p>Point 4</p>",
         "secondFloor": true,
         "neighbour1": "Point 3",
         "neighbour1Distance": "1",
@@ -84,7 +84,7 @@
       "properties": {
         "name": "Point 5",
         "floor": "second",
-        "popupContent": "<img src='https://static.pexels.com/photos/189349/pexels-photo-189349.jpeg' height='150px' width='150px'/><p>Sunset Point 5</p>",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3266.jpg' height='150px' width='150px'/><p>Point 5</p>",
         "secondFloor": true,
         "test": true,
         "neighbour1": "Point 4",
@@ -231,7 +231,7 @@
       "properties": {
         "name": "Point 13",
         "floor": "second",
-        "popupContent": "Point 13",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3259.jpg' height='150px' width='150px'/><p>Point 13</p>",
         "secondFloor": true,
         "test": true,
         "neighbour1": "Point 12",
@@ -251,7 +251,7 @@
       "properties": {
         "name": "Point 14",
         "floor": "second",
-        "popupContent": "Point 14",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3258.jpg' height='150px' width='150px'/><p>Point 14</p>",
         "secondFloor": true,
         "test": true,
         "neighbour1": "Point 13",
@@ -269,7 +269,7 @@
       "properties": {
         "name": "Point 15",
         "floor": "second",
-        "popupContent": "Point 15",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3257.jpg' height='150px' width='150px'/><p>Point 15</p>",
         "secondFloor": true,
         "neighbour1": "Point 14",
         "neighbour1Distance": "1",
@@ -287,7 +287,7 @@
       "properties": {
         "name": "Point 16",
         "floor": "second",
-        "popupContent": "Point 16",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3255.jpg' height='150px' width='150px'/><p>Point 16</p>",
         "secondFloor": true,
         "neighbour1": "Point 15",
         "neighbour1Distance": "1",
@@ -304,7 +304,7 @@
       "properties": {
         "name": "Point 17",
         "floor": "second",
-        "popupContent": "Point 17",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3263.jpg' height='150px' width='150px'/><p>Point 17</p>",
         "secondFloor": true,
         "test": true,
         "neighbour1": "Point 18",
@@ -322,7 +322,7 @@
       "properties": {
         "name": "Point 18",
         "floor": "second",
-        "popupContent": "Point 18",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3264.jpg' height='150px' width='150px'/><p>Point 18</p>",
         "secondFloor": true,
         "neighbour1": "Point 17",
         "neighbour1Distance": "1",
@@ -339,7 +339,7 @@
       "properties": {
         "name": "Point 19",
         "floor": "second",
-        "popupContent": "Point 19",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3269.jpg' height='150px' width='150px'/><p>Point 19</p>",
         "secondFloor": true,
         "neighbour1": "Point 3",
         "neighbour1Distance": "1",

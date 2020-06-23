@@ -92,7 +92,7 @@ const ajaxGetGeoJsonFirstFloor = () => {
                 },
                 style: function(feature) {
                     switch (feature.properties.floor) {
-                        case 'first': return {color: "green", fillColor: "lightgreen",};    
+                        case 'first': return {color: "green", fillColor: "lightgreen", radius: 5};    
                     }
                 },
 

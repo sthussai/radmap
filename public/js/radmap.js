@@ -199,7 +199,8 @@ var ajaxGetGeoJsonFirstFloor = function ajaxGetGeoJsonFirstFloor() {
             case 'first':
               return {
                 color: "green",
-                fillColor: "lightgreen"
+                fillColor: "lightgreen",
+                radius: 5
               };
           }
         }

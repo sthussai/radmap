@@ -50,7 +50,7 @@
       "properties": {
         "name": "Point 3",
         "floor": "first",
-        "popupContent": "Point 3",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3238.jpg' height='150px' width='150px'/><p>Point 3</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 2",
@@ -71,7 +71,7 @@
       "properties": {
         "name": "Point 4",
         "floor": "first",
-        "popupContent": "Point 4",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3236.jpg' height='150px' width='150px'/><p>Point 4</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 3",
@@ -94,7 +94,7 @@
       "properties": {
         "name": "Point 5",
         "floor": "first",
-        "popupContent": "Point 5",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3235.jpg' height='150px' width='150px'/><p>Point 5</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 4",
@@ -168,7 +168,7 @@
       "properties": {
         "name": "Point 9",
         "floor": "first",
-        "popupContent": "Point 9",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3227.jpg' height='150px' width='150px'/><p>Point 9</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 3",
@@ -189,7 +189,7 @@
       "properties": {
         "name": "Point 10",
         "floor": "first",
-        "popupContent": "Point 10",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3228.jpg' height='150px' width='150px'/><p>Point 10</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 9",
@@ -208,7 +208,7 @@
       "properties": {
         "name": "Point 12",
         "floor": "first",
-        "popupContent": "Point 12",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3230.jpg' height='150px' width='150px'/><p>Point 12</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 10",
@@ -229,7 +229,7 @@
       "properties": {
         "name": "Point 13",
         "floor": "first",
-        "popupContent": "Point 13",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3231.jpg' height='150px' width='150px'/><p>Point 13</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 12",
@@ -248,7 +248,7 @@
       "properties": {
         "name": "Point 14",
         "floor": "first",
-        "popupContent": "Point 14",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3233.jpg' height='150px' width='150px'/><p>Point 14</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 13",
@@ -267,7 +267,7 @@
       "properties": {
         "name": "Point 15",
         "floor": "first",
-        "popupContent": "Point 15",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3240.jpg' height='150px' width='150px'/><p>Point 15</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 12",
@@ -286,7 +286,7 @@
       "properties": {
         "name": "Point 16",
         "floor": "first",
-        "popupContent": "Point 16",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3242.jpg' height='150px' width='150px'/><p>Point 16</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 15",
@@ -305,7 +305,7 @@
       "properties": {
         "name": "Point 17",
         "floor": "first",
-        "popupContent": "Point 17",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3243.jpg' height='150px' width='150px'/><p>Point 17</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 16",
@@ -341,7 +341,7 @@
       "properties": {
         "name": "Point 19",
         "floor": "first",
-        "popupContent": "Point 19",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3273.jpg' height='150px' width='150px'/><p>Point 19</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 8",
@@ -362,7 +362,7 @@
       "properties": {
         "name": "Point 20",
         "floor": "first",
-        "popupContent": "Point 20",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3270.jpg' height='150px' width='150px'/><p>Point 20</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 19",
@@ -381,7 +381,7 @@
       "properties": {
         "name": "Point 21",
         "floor": "first",
-        "popupContent": "Point 21",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3278.jpg' height='150px' width='150px'/><p>Point 21</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 20",
@@ -398,7 +398,7 @@
       "properties": {
         "name": "Point 22",
         "floor": "first",
-        "popupContent": "Point 22",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3275.jpg' height='150px' width='150px'/><p>Point 22</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 19",
