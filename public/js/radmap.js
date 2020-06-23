@@ -86,253 +86,6 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./node_modules/body-scroll-lock/lib/bodyScrollLock.esm.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/body-scroll-lock/lib/bodyScrollLock.esm.js ***!
-  \*****************************************************************/
-/*! exports provided: disableBodyScroll, clearAllBodyScrollLocks, enableBodyScroll */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "disableBodyScroll", function() { return disableBodyScroll; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearAllBodyScrollLocks", function() { return clearAllBodyScrollLocks; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "enableBodyScroll", function() { return enableBodyScroll; });
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-// Older browsers don't support event options, feature detect it.
-
-// Adopted and modified solution from Bohdan Didukh (2017)
-// https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
-
-var hasPassiveEvents = false;
-if (typeof window !== 'undefined') {
-  var passiveTestOptions = {
-    get passive() {
-      hasPassiveEvents = true;
-      return undefined;
-    }
-  };
-  window.addEventListener('testPassive', null, passiveTestOptions);
-  window.removeEventListener('testPassive', null, passiveTestOptions);
-}
-
-var isIosDevice = typeof window !== 'undefined' && window.navigator && window.navigator.platform && (/iP(ad|hone|od)/.test(window.navigator.platform) || window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1);
-
-
-var locks = [];
-var documentListenerAdded = false;
-var initialClientY = -1;
-var previousBodyOverflowSetting = void 0;
-var previousBodyPaddingRight = void 0;
-
-// returns true if `el` should be allowed to receive touchmove events.
-var allowTouchMove = function allowTouchMove(el) {
-  return locks.some(function (lock) {
-    if (lock.options.allowTouchMove && lock.options.allowTouchMove(el)) {
-      return true;
-    }
-
-    return false;
-  });
-};
-
-var preventDefault = function preventDefault(rawEvent) {
-  var e = rawEvent || window.event;
-
-  // For the case whereby consumers adds a touchmove event listener to document.
-  // Recall that we do document.addEventListener('touchmove', preventDefault, { passive: false })
-  // in disableBodyScroll - so if we provide this opportunity to allowTouchMove, then
-  // the touchmove event on document will break.
-  if (allowTouchMove(e.target)) {
-    return true;
-  }
-
-  // Do not prevent if the event has more than one touch (usually meaning this is a multi touch gesture like pinch to zoom).
-  if (e.touches.length > 1) return true;
-
-  if (e.preventDefault) e.preventDefault();
-
-  return false;
-};
-
-var setOverflowHidden = function setOverflowHidden(options) {
-  // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
-  // the responsiveness for some reason. Setting within a setTimeout fixes this.
-  setTimeout(function () {
-    // If previousBodyPaddingRight is already set, don't set it again.
-    if (previousBodyPaddingRight === undefined) {
-      var _reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
-      var scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
-
-      if (_reserveScrollBarGap && scrollBarGap > 0) {
-        previousBodyPaddingRight = document.body.style.paddingRight;
-        document.body.style.paddingRight = scrollBarGap + 'px';
-      }
-    }
-
-    // If previousBodyOverflowSetting is already set, don't set it again.
-    if (previousBodyOverflowSetting === undefined) {
-      previousBodyOverflowSetting = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-    }
-  });
-};
-
-var restoreOverflowSetting = function restoreOverflowSetting() {
-  // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
-  // the responsiveness for some reason. Setting within a setTimeout fixes this.
-  setTimeout(function () {
-    if (previousBodyPaddingRight !== undefined) {
-      document.body.style.paddingRight = previousBodyPaddingRight;
-
-      // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
-      // can be set again.
-      previousBodyPaddingRight = undefined;
-    }
-
-    if (previousBodyOverflowSetting !== undefined) {
-      document.body.style.overflow = previousBodyOverflowSetting;
-
-      // Restore previousBodyOverflowSetting to undefined
-      // so setOverflowHidden knows it can be set again.
-      previousBodyOverflowSetting = undefined;
-    }
-  });
-};
-
-// https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
-var isTargetElementTotallyScrolled = function isTargetElementTotallyScrolled(targetElement) {
-  return targetElement ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight : false;
-};
-
-var handleScroll = function handleScroll(event, targetElement) {
-  var clientY = event.targetTouches[0].clientY - initialClientY;
-
-  if (allowTouchMove(event.target)) {
-    return false;
-  }
-
-  if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
-    // element is at the top of its scroll.
-    return preventDefault(event);
-  }
-
-  if (isTargetElementTotallyScrolled(targetElement) && clientY < 0) {
-    // element is at the bottom of its scroll.
-    return preventDefault(event);
-  }
-
-  event.stopPropagation();
-  return true;
-};
-
-var disableBodyScroll = function disableBodyScroll(targetElement, options) {
-  if (isIosDevice) {
-    // targetElement must be provided, and disableBodyScroll must not have been
-    // called on this targetElement before.
-    if (!targetElement) {
-      // eslint-disable-next-line no-console
-      console.error('disableBodyScroll unsuccessful - targetElement must be provided when calling disableBodyScroll on IOS devices.');
-      return;
-    }
-
-    if (targetElement && !locks.some(function (lock) {
-      return lock.targetElement === targetElement;
-    })) {
-      var lock = {
-        targetElement: targetElement,
-        options: options || {}
-      };
-
-      locks = [].concat(_toConsumableArray(locks), [lock]);
-
-      targetElement.ontouchstart = function (event) {
-        if (event.targetTouches.length === 1) {
-          // detect single touch.
-          initialClientY = event.targetTouches[0].clientY;
-        }
-      };
-      targetElement.ontouchmove = function (event) {
-        if (event.targetTouches.length === 1) {
-          // detect single touch.
-          handleScroll(event, targetElement);
-        }
-      };
-
-      if (!documentListenerAdded) {
-        document.addEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
-        documentListenerAdded = true;
-      }
-    }
-  } else {
-    setOverflowHidden(options);
-    var _lock = {
-      targetElement: targetElement,
-      options: options || {}
-    };
-
-    locks = [].concat(_toConsumableArray(locks), [_lock]);
-  }
-};
-
-var clearAllBodyScrollLocks = function clearAllBodyScrollLocks() {
-  if (isIosDevice) {
-    // Clear all locks ontouchstart/ontouchmove handlers, and the references.
-    locks.forEach(function (lock) {
-      lock.targetElement.ontouchstart = null;
-      lock.targetElement.ontouchmove = null;
-    });
-
-    if (documentListenerAdded) {
-      document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
-      documentListenerAdded = false;
-    }
-
-    locks = [];
-
-    // Reset initial clientY.
-    initialClientY = -1;
-  } else {
-    restoreOverflowSetting();
-    locks = [];
-  }
-};
-
-var enableBodyScroll = function enableBodyScroll(targetElement) {
-  if (isIosDevice) {
-    if (!targetElement) {
-      // eslint-disable-next-line no-console
-      console.error('enableBodyScroll unsuccessful - targetElement must be provided when calling enableBodyScroll on IOS devices.');
-      return;
-    }
-
-    targetElement.ontouchstart = null;
-    targetElement.ontouchmove = null;
-
-    locks = locks.filter(function (lock) {
-      return lock.targetElement !== targetElement;
-    });
-
-    if (documentListenerAdded && locks.length === 0) {
-      document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
-
-      documentListenerAdded = false;
-    }
-  } else {
-    locks = locks.filter(function (lock) {
-      return lock.targetElement !== targetElement;
-    });
-    if (!locks.length) {
-      restoreOverflowSetting();
-    }
-  }
-};
-
-
-
-/***/ }),
-
 /***/ "./resources/js/geojson.js":
 /*!*********************************!*\
   !*** ./resources/js/geojson.js ***!
@@ -343,16 +96,32 @@ var enableBodyScroll = function enableBodyScroll(targetElement) {
 var _require = __webpack_require__(/*! ./radmap */ "./resources/js/radmap.js"),
     controls = _require.controls;
 
-var pathGroup = L.layerGroup().addTo(secondFloorMap);
-var secondFloorMarkerGroup = L.layerGroup().addTo(secondFloorMap);
-var firstFloorMarkerGroup = L.layerGroup().addTo(firstFloorMap);
-var myLayer = null;
+var refObj = {
+  'secondFloorParking': 'Point 26',
+  'kayeEdmontonClinic': 'Point 27',
+  'radiologyUAH': 'Point 28',
+  '2J2': 'Point 29',
+  'firstFloor': 'firstFloor',
+  'secondFloor': 'secondFloor',
+  'secondFloorMarkersObject': 'secondFloorMarkersObject'
+};
+var pathGroup = L.layerGroup().addTo(mapOverlay);
 var startRefPointMarker = L.marker([53.51993090722499, -113.52201819419861], {
   draggable: true
-}).bindPopup('Ur here for Demo 2').addTo(secondFloorMap);
+}).bindPopup('Drag To Start Location').addTo(mapOverlay);
 var endRefPointMarker = L.marker([53.52060200173207, -113.52428197860719], {
   draggable: true
-}).bindPopup('Final location').addTo(secondFloorMap);
+}).bindPopup('Drag To End Location').addTo(mapOverlay);
+map.on('baselayerchange', function () {
+  mapOverlay.clearLayers();
+  pathGroup.clearLayers();
+  startRefPointMarker.addTo(mapOverlay);
+  endRefPointMarker.addTo(mapOverlay);
+  pathGroup.addTo(mapOverlay);
+});
+var secondFloorMarkerGroup = L.layerGroup().addTo(secondFloorMapOverlay);
+var firstFloorMarkerGroup = L.layerGroup().addTo(firstFloorMapOverlay);
+mapOverlay.addTo(map);
 var firstRefPoint = null;
 var endRefPoint = null;
 var distancesToClosestRefPointArray = [];
@@ -365,17 +134,19 @@ var geojsonMarkerOptions = {
   fillOpacity: 0.8
 };
 var minDistanceLine = null;
-var markersObject = {};
-var markersArray = [];
+var firstFloorMarkersObject = {};
+var firstFloorMarkersArray = [];
+var secondFloorMarkersObject = {};
+var secondFloorMarkersArray = [];
 var start = "Point 14";
 var end = "Point 5";
 
-function ajaxGetGeoJsonSecondFloor() {
+var ajaxGetGeoJsonSecondFloor = function ajaxGetGeoJsonSecondFloor() {
   $.ajax({
     dataType: "json",
     url: '/data.json',
     success: function success(data) {
-      myLayer = L.geoJSON(data, {
+      L.geoJSON(data, {
         onEachFeature: popupOnEachFeature,
         pointToLayer: function pointToLayer(feature, latlng) {
           return L.circleMarker(latlng, geojsonMarkerOptions);
@@ -393,7 +164,8 @@ function ajaxGetGeoJsonSecondFloor() {
             case 'second':
               return {
                 color: "#0000ff",
-                fillColor: "lightblue"
+                fillColor: "lightblue",
+                radius: 5
               };
           }
         }
@@ -404,16 +176,17 @@ function ajaxGetGeoJsonSecondFloor() {
       console.log(xhr);
     }
   });
-}
+};
 
 ajaxGetGeoJsonSecondFloor();
 
-function ajaxGetGeoJsonFirstFloor() {
+var ajaxGetGeoJsonFirstFloor = function ajaxGetGeoJsonFirstFloor() {
   $.ajax({
     dataType: "json",
     url: '/firstFloorData.json',
     success: function success(data) {
-      myLayer = L.geoJSON(data, {
+      console.log('get first floor data');
+      L.geoJSON(data, {
         filter: function filter(feature) {
           return !feature.properties.secondFloor;
         },
@@ -437,19 +210,22 @@ function ajaxGetGeoJsonFirstFloor() {
       console.log(xhr);
     }
   });
-}
-
-ajaxGetGeoJsonFirstFloor();
+};
 /* $(controls.getContainer()).mouseenter(function(){
   }); */
 
-function popupOnEachFeature(feature, layer) {
+
+setTimeout(function () {
+  ajaxGetGeoJsonFirstFloor();
+}, 3000);
+
+var popupOnEachFeature = function popupOnEachFeature(feature, layer) {
   if (feature.properties && feature.properties.popupContent) {
     layer.bindPopup(feature.properties.popupContent);
   }
 
   if (feature.properties.floor == "second" && feature.geometry.type == "Point") {
-    markersArray.push(feature);
+    secondFloorMarkersArray.push(feature);
     var name = feature.properties.name;
     var neighbour = {};
     neighbour[feature.properties.neighbour1] = parseInt(feature.properties.neighbour1Distance);
@@ -466,9 +242,30 @@ function popupOnEachFeature(feature, layer) {
       neighbour[feature.properties.neighbour4] = parseInt(feature.properties.neighbour4Distance);
     }
 
-    markersObject[name] = neighbour;
+    secondFloorMarkersObject[name] = neighbour;
   }
-}
+
+  if (feature.properties.floor == "first" && feature.geometry.type == "Point") {
+    firstFloorMarkersArray.push(feature);
+    var _name = feature.properties.name;
+    var _neighbour = {};
+    _neighbour[feature.properties.neighbour1] = parseInt(feature.properties.neighbour1Distance);
+
+    if (feature.properties.neighbour2) {
+      _neighbour[feature.properties.neighbour2] = parseInt(feature.properties.neighbour2Distance);
+    }
+
+    if (feature.properties.neighbour3) {
+      _neighbour[feature.properties.neighbour3] = parseInt(feature.properties.neighbour3Distance);
+    }
+
+    if (feature.properties.neighbour4) {
+      _neighbour[feature.properties.neighbour4] = parseInt(feature.properties.neighbour4Distance);
+    }
+
+    firstFloorMarkersObject[_name] = _neighbour;
+  }
+};
 
 var minDistanceLineCoords = [];
 
@@ -569,15 +366,28 @@ var findShortestPath = function findShortestPath(graph, startNode, endNode) {
 var getNamesInOrder = function getNamesInOrder(path) {
   minDistanceLineCoords = [];
 
-  for (var i = 0; i < path.length; i++) {
-    markersArray.forEach(function (feature) {
-      if (feature.properties.name == path[i]) {
-        var lt = feature.geometry.coordinates[1];
-        var ln = feature.geometry.coordinates[0];
-        var ltln = [lt, ln];
-        minDistanceLineCoords.push(ltln);
-      }
-    });
+  if (map.hasLayer(firstFloorMap)) {
+    for (var i = 0; i < path.length; i++) {
+      firstFloorMarkersArray.forEach(function (feature) {
+        if (feature.properties.name == path[i]) {
+          var lt = feature.geometry.coordinates[1];
+          var ln = feature.geometry.coordinates[0];
+          var ltln = [lt, ln];
+          minDistanceLineCoords.push(ltln);
+        }
+      });
+    }
+  } else {
+    for (var i = 0; i < path.length; i++) {
+      secondFloorMarkersArray.forEach(function (feature) {
+        if (feature.properties.name == path[i]) {
+          var lt = feature.geometry.coordinates[1];
+          var ln = feature.geometry.coordinates[0];
+          var ltln = [lt, ln];
+          minDistanceLineCoords.push(ltln);
+        }
+      });
+    }
   }
 
   drawLine();
@@ -588,11 +398,75 @@ var drawLine = function drawLine() {
   minDistanceLine = L.polyline(minDistanceLineCoords, {
     color: "black"
   }).bindPopup('Minimum distance path ').addTo(pathGroup);
-}; // Takes ltln array and user location ltln as 'this' value, returns ltln of closest ref point
+};
 
+var locateOnce = false;
+var userLatLng = null;
+
+var locateMe = function locateMe() {
+  locateOnce = true;
+  map.locate({
+    setView: false
+  });
+  console.log('Locating once...');
+};
+
+$('#showPathsBtn').click(function () {
+  showRequestedPaths();
+}); //this function is called from the App's UI when the user requests directions by supplying 'To' and 'From' locations
+
+function showRequestedPaths() {
+  var directionToPath = document.getElementById("directionsToInput").value;
+  var directionFromPath = document.getElementById("directionsFromInput").value;
+  document.getElementById('directionsErrorDiv').innerText = '';
+
+  if (directionFromPath == "null" || directionToPath == "null" || directionFromPath == directionToPath) {
+    document.getElementById('directionsErrorDiv').innerText = "Please select valid and different 'To' and 'From' locations";
+    console.log('Invalid locations');
+    return;
+  }
+
+  closeNav();
+
+  if (directionFromPath == 'currentLocation') {
+    locateMe();
+    end = refObj[directionToPath];
+    return;
+  } else {
+    start = refObj[directionFromPath];
+    end = refObj[directionToPath];
+    findShortestPath(secondFloorMarkersObject, start, end);
+  }
+} //Supplies user's location to setStartPoint function
+//called from the showRequestedPaths function if user requests directions from "Current Location"
+
+
+var onLocationFoundOnce = function onLocationFoundOnce(e) {
+  if (locateOnce) {
+    console.log('One time fxn');
+    var userCoords = [53.52100017444731, -113.52254390716554];
+    userLatLng = L.circleMarker(userCoords, {
+      color: 'red'
+    }).bindPopup('Your Approximate Location').addTo(secondFloorMap);
+    setStartPoint();
+  }
+
+  locateOnce = false;
+};
+
+map.on('locationfound', onLocationFoundOnce); //sets the closest reference point as the START point using User's location or the given START point marker
+//uses the getClosestPointFrom function which returns a sorted array based on minimum distance and..
+//includes the reference point's coordinates and name 
+//Calls the minimum path finding algorithm 
 
 var setStartPoint = function setStartPoint() {
-  getClosestPointFrom(startRefPointMarker);
+  if (userLatLng) {
+    console.log('using user latlng');
+    getClosestPointFrom(userLatLng);
+  } else {
+    console.log('using ref point marker');
+    getClosestPointFrom(startRefPointMarker);
+  }
 
   if (firstRefPoint) {
     firstRefPoint.remove();
@@ -601,13 +475,20 @@ var setStartPoint = function setStartPoint() {
   ;
   firstRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {
     color: 'green'
-  }).addTo(secondFloorMap);
+  }).addTo(mapOverlay);
   firstRefPoint.bindPopup('Your closest reference point is here').openPopup();
   start = distancesToClosestRefPointArray[0][2];
-  findShortestPath(markersObject, start, end);
+
+  if (map.hasLayer(firstFloorMap)) {
+    findShortestPath(firstFloorMarkersObject, start, end);
+  } else {
+    findShortestPath(secondFloorMarkersObject, start, end);
+  }
 };
 
-startRefPointMarker.on('dragend', setStartPoint);
+startRefPointMarker.on('dragend', setStartPoint); //sets the closest reference point as the END point using the given end point marker
+//uses the getClosestPointFrom function which returns a sorted array based on minimum distance and..
+//includes the reference point's coordinates and name 
 
 var setEndPoint = function setEndPoint() {
   getClosestPointFrom(endRefPointMarker);
@@ -619,40 +500,58 @@ var setEndPoint = function setEndPoint() {
   ;
   endRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {
     color: 'white'
-  }).addTo(secondFloorMap);
+  }).addTo(mapOverlay);
   endRefPoint.bindPopup('Your End point is here').openPopup();
-  end = distancesToClosestRefPointArray[0][2];
+  end = distancesToClosestRefPointArray[0][2]; // passing in Point name ie. 'Point 1'
+
   setStartPoint();
 };
 
-endRefPointMarker.on('dragend', setEndPoint);
+endRefPointMarker.on('dragend', setEndPoint); //Takes a given UserLocation/Start/End marker and finds the closest reference point 
+//by subtracting the given point's latlng from each point in first floor OR second floor markers array 
+//returns a sorted array of distances with the lowest distance first (ie. closest ref point) 
 
 var getClosestPointFrom = function getClosestPointFrom(PointMarker) {
   distancesToClosestRefPointArray = [];
-  markersArray.forEach(function (feature) {
-    var lt = feature.geometry.coordinates[1];
-    var ln = feature.geometry.coordinates[0];
-    var ltln = [lt, ln];
-    var name = feature.properties.name;
-    var ltlnDistance = map.distance(ltln, PointMarker.getLatLng());
-    ltlnDistance = Math.round(ltlnDistance * 100) / 100;
-    ltlnDistance = [ltlnDistance, ltln, name];
-    distancesToClosestRefPointArray.push(ltlnDistance);
-  });
+
+  if (map.hasLayer(firstFloorMap)) {
+    firstFloorMarkersArray.forEach(function (feature) {
+      var lt = feature.geometry.coordinates[1];
+      var ln = feature.geometry.coordinates[0];
+      var ltln = [lt, ln];
+      var name = feature.properties.name;
+      var ltlnDistance = map.distance(ltln, PointMarker.getLatLng());
+      ltlnDistance = Math.round(ltlnDistance * 100) / 100;
+      ltlnDistance = [ltlnDistance, ltln, name];
+      distancesToClosestRefPointArray.push(ltlnDistance);
+    });
+  } else {
+    secondFloorMarkersArray.forEach(function (feature) {
+      var lt = feature.geometry.coordinates[1];
+      var ln = feature.geometry.coordinates[0];
+      var ltln = [lt, ln];
+      var name = feature.properties.name;
+      var ltlnDistance = map.distance(ltln, PointMarker.getLatLng());
+      ltlnDistance = Math.round(ltlnDistance * 100) / 100;
+      ltlnDistance = [ltlnDistance, ltln, name];
+      distancesToClosestRefPointArray.push(ltlnDistance);
+    });
+  }
+
   distancesToClosestRefPointArray.sort(function (a, b) {
     return a[0] - b[0];
   });
   return distancesToClosestRefPointArray;
 };
 /* let graph = {
-	"Point 14": { "Point 13": 1},
-	"Point 13": { "Point 14": 1, "Point 10": 1, "Point 17": 2 },
-	"Point 10": { "Point 8": 2, "Point 3": 3, "Point 13": 1 },
-	"Point 17": { "Point 3": 1, "Point 13": 1 },
-	"Point 8": { "Point 7": 2, "Point 10": 2 },
-	"Point 7": { "Point 5": 1 , "Point 8": 2},
-	"Point 3": { "Point 5": 1, "Point 17": 1, "Point 10": 3  },
-	"Point 5": {"Point 3": 1, "Point 7": 1 },
+"Point 14": { "Point 13": 1},
+"Point 13": { "Point 14": 1, "Point 10": 1, "Point 17": 2 },
+"Point 10": { "Point 8": 2, "Point 3": 3, "Point 13": 1 },
+"Point 17": { "Point 3": 1, "Point 13": 1 },
+"Point 8": { "Point 7": 2, "Point 10": 2 },
+"Point 7": { "Point 5": 1 , "Point 8": 2},
+"Point 3": { "Point 5": 1, "Point 17": 1, "Point 10": 3  },
+"Point 5": {"Point 3": 1, "Point 7": 1 },
 }; */
 
 /***/ }),
@@ -667,10 +566,6 @@ var getClosestPointFrom = function getClosestPointFrom(PointMarker) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "controls", function() { return controls; });
-var bodyScrollLock = __webpack_require__(/*! body-scroll-lock */ "./node_modules/body-scroll-lock/lib/bodyScrollLock.esm.js");
-
-var disableBodyScroll = bodyScrollLock.disableBodyScroll;
-var enableBodyScroll = bodyScrollLock.enableBodyScroll;
 var arr = [0, 0, 0];
 var currentCoord = '';
 var prevCoord = '';
@@ -683,6 +578,13 @@ var p; //previous location
 var pp; //past location
 
 var coordPopup = L.popup();
+var pedwaylatlngs = [[53.52037, -113.525395], [53.520363, -113.526096], [53.519151, -113.526086], [53.519151, -113.526406]];
+var pedway = L.polyline(pedwaylatlngs, {
+  color: '#50C7E9',
+  weight: 8,
+  lineCap: 'butt'
+}).bindPopup('Second Floor Pedway Between UofA Hospital and Kaye Edmonton Clinic');
+pedway.addTo(secondFloorMapOverlay);
 $('#fontSizeSelect').change(function () {
   console.log($('#fontSizeSelect').val());
   document.getElementById("infoDiv").style.fontSize = $('#fontSizeSelect').val();
@@ -729,11 +631,6 @@ $("#demoBtn").click(function () {
     $("#demoBtn").text("Demo Movement OFF ");
   }
 });
-/* 		googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-        }).addTo(map); */
-
 var parkingMarker = L.marker([53.51978872112979, -113.52213084697725]).bindPopup('Parking'),
     radiologyMarker = L.marker([53.52067209847866, -113.52413713932039]).bindPopup('Radiology Department'),
     helpDeskMarker = L.marker([53.521326, -113.524185]).bindPopup('Help Desk');
@@ -747,175 +644,16 @@ var overlays = {
 };
 var controls = L.control.layers(baseMaps).addTo(map);
 
-var secondFloorPopupMsg = $('<p>Stairs to go to 1st Floor Level <br> <button>1st Floor</button> </p>').click(function () {
+var secondFloorPopupMsg = $('<p>Elevator to go to 1st Floor Level <br> <button>1st Floor</button> </p>').click(function () {
   map.removeLayer(secondFloorMap);
   map.addLayer(firstFloorMap);
 })[0];
-var firstFloorPopupMsg = $('<p>Stairs to go to 2nd Floor Level <br> <button>2nd Floor</button> </p>').click(function () {
+var firstFloorPopupMsg = $('<p>Elevator to go to 2nd Floor Level <br> <button>2nd Floor</button> </p>').click(function () {
   map.removeLayer(firstFloorMap);
   map.addLayer(secondFloorMap);
 })[0];
-var stairsMarker1stFloor = L.marker([53.520605, -113.524552]).bindPopup(firstFloorPopupMsg).addTo(firstFloorMap);
-var stairsMarker2ndFloor = L.marker([53.520518, -113.524601]).bindPopup(secondFloorPopupMsg).addTo(secondFloorMap); //var pixel = map.project(urhere.getLatLng(), 19);
-
-var coordsBetweenCafeteriaAndStairs1stFloor = [[-113.523939, 53.520919], //cafeteria starting point
-[-113.523937, 53.521032], //2nd point
-[-113.524552, 53.52103], //3
-[-113.524552, 53.520605] //Stairs btw 1st and 2nd Floor
-];
-var pathBetweenCafeteriaAndStairs1stFloor = L.polyline(coordsBetweenCafeteriaAndStairs1stFloor, {
-  color: 'green',
-  weight: 5,
-  lineCap: 'butt'
-}).bindPopup('Path Between UofA Hospital Cafeteria And Kaye Clinic Radiology');
-var coordsBetweenStairsAndMRI1stFloor = [[53.520605, -113.524552], //Stairs btw 1st and 2nd Floor
-[53.520606, -113.524306], //Point 1 to MRI
-[53.520185, -113.524305], //Point 2 
-[53.520186, -113.524734], //Point 3  
-[53.520129, -113.524733] //Final point at MRI CLinic  
-];
-var pathBetweenStairsAndMRI1stFloor = L.polyline(coordsBetweenStairsAndMRI1stFloor, {
-  color: 'purple',
-  weight: 5,
-  lineCap: 'butt'
-}).bindPopup('Path to University Hospital MRI Clinic');
-var coordsBetweenStairsAndKayeClinic2ndFloor = [[53.520518, -113.524601], //Stairs btw 1st and 2nd Floor
-[53.520374, -113.524596], [53.52037, -113.525395], //Pedway point 1, 2nd floor UAH side
-[53.520363, -113.526096], [53.519151, -113.526086], [53.519151, -113.526406], //Pedway point 4, 2nd floor KEC side
-[53.519144, -113.526546], [53.518876, -113.526551] // KEC Radiology Ending point
-];
-var pathBetweenStairsAndKayeClinic2ndFloor = L.polyline(coordsBetweenStairsAndKayeClinic2ndFloor, {
-  color: 'green',
-  weight: 5,
-  lineCap: 'butt'
-}).bindPopup('Path Between UofA Hospital Cafeteria And Kaye Clinic Radiology');
-var coordsBetweenStairsAndRadiologyUAH2ndFloor = [[53.520518, -113.524601], //Stairs btw 1st and 2nd Floor
-[53.520518, -113.524294], // 2nd point between stairs and Radz UAH 2nd FLoor 
-[53.520617, -113.524293], //3rd point, in front of Radz UAH 2nd FLoor
-[53.520621, -113.524148] // Final point to UAH Radiology 2nd Floor
-];
-var pathBetweenStairsAndRadiologyUAH2ndFloor = L.polyline(coordsBetweenStairsAndRadiologyUAH2ndFloor, {
-  color: 'purple',
-  weight: 5,
-  lineCap: 'butt'
-}).bindPopup('Path UAH Radiology 2nd Floor');
-var coordsBetweenRadiologyUAH2ndFloorAnd2J2 = [[53.520617, -113.524293], //Point, in front of Radz UAH 2nd FLoor
-[53.521019, -113.524291], [53.521021, -113.523381], //3rd point at intersection to 2J2
-[53.521027, -113.523227] // Final point to 2J2 
-];
-var pathBetweenRadiologyUAH2ndFloorAnd2J2 = L.polyline(coordsBetweenRadiologyUAH2ndFloorAnd2J2, {
-  color: 'yellow',
-  weight: 5,
-  lineCap: 'butt'
-}).bindPopup('Path between UAH Radiology 2nd Floor and 2J2 ');
-var coordsBetweenUAH2ndFloorParkingAnd2J2 = [[53.519851, -113.522193], //Point at 2nd Floor parking
-[53.520163, -113.522705], [53.520166, -113.523375], // First Main intersection between 2nd Floor parking and UAH
-[53.521021, -113.523381] //3rd point at intersection to 2J2
-];
-var pathBetweenUAH2ndFloorParkingAnd2J2 = L.polyline(coordsBetweenUAH2ndFloorParkingAnd2J2, {
-  color: 'grey',
-  weight: 5,
-  lineCap: 'butt'
-}).bindPopup('Path between UAH 2nd Floor Parking and 2J2 ');
-var coordsBetweenUAH2ndFloorParkingAndRadiologyUAH = [[53.520166, -113.523375], // First Main intersection between 2nd Floor parking and UAH 
-[53.520166, -113.524297], // At intersection to Radz 2nd floor UAH
-[53.520518, -113.524294] // Point between stairs and Radz UAH 2nd FLoor
-];
-var pathBetweenUAH2ndFloorParkingAndRadiologyUAH = L.polyline(coordsBetweenUAH2ndFloorParkingAndRadiologyUAH, {
-  color: 'lightgreen',
-  weight: 5,
-  lineCap: 'butt'
-}).bindPopup('Path between UAH Radiology 2nd Floor and Parking 2nd Floor ');
-var firstFloorPaths = new L.layerGroup([pathBetweenCafeteriaAndStairs1stFloor, pathBetweenStairsAndMRI1stFloor]);
-var secondFloorPaths = new L.layerGroup([pathBetweenStairsAndKayeClinic2ndFloor, pathBetweenStairsAndRadiologyUAH2ndFloor, pathBetweenRadiologyUAH2ndFloorAnd2J2, pathBetweenUAH2ndFloorParkingAnd2J2, pathBetweenUAH2ndFloorParkingAndRadiologyUAH]);
-$('#allPathsBtn').click(function () {
-  toggleAllPaths();
-});
-var showingAllPaths = false;
-
-function toggleAllPaths() {
-  showingAllPaths = !showingAllPaths;
-
-  if (showingAllPaths) {
-    document.getElementById('allPathsBtn').innerText = 'Hide All Paths';
-    secondFloorPaths.addTo(secondFloorMap);
-    firstFloorPaths.addTo(firstFloorMap);
-    closeNav();
-  }
-
-  if (!showingAllPaths) {
-    document.getElementById('allPathsBtn').innerText = 'Show All Paths';
-    secondFloorPaths.remove();
-    firstFloorPaths.remove();
-    closeNav();
-  }
-}
-
-var firstFloorRequestedPathsLayerGroup = new L.layerGroup([]);
-var secondFloorRequestedPathsLayerGroup = new L.layerGroup([]);
-$('#showPathsBtn').click(function () {
-  showRequestedPaths();
-});
-
-function showRequestedPaths() {
-  closeNav();
-
-  if (showingAllPaths) {
-    toggleAllPaths();
-  }
-
-  ;
-  var directionToPath = document.getElementById("directionsToInput").value;
-  var directionFromPath = document.getElementById("directionsFromInput").value;
-  console.log(directionToPath);
-  console.log(directionFromPath);
-  firstFloorRequestedPathsLayerGroup.clearLayers();
-  secondFloorRequestedPathsLayerGroup.clearLayers();
-
-  if (directionToPath == 'kayeEdmontonClinic' && directionFromPath == 'radiologyUAH' || directionToPath == 'radiologyUAH' && directionFromPath == 'kayeEdmontonClinic') {
-    var requestedPathTo = pathBetweenStairsAndKayeClinic2ndFloor.setStyle({
-      color: 'black'
-    });
-    var requestedPathFrom = pathBetweenStairsAndRadiologyUAH2ndFloor.setStyle({
-      color: 'black'
-    });
-    requestedPathTo.addTo(secondFloorRequestedPathsLayerGroup);
-    requestedPathFrom.addTo(secondFloorRequestedPathsLayerGroup);
-    secondFloorRequestedPathsLayerGroup.addTo(secondFloorMap);
-  }
-
-  if (directionToPath == 'kayeEdmontonClinic' && directionFromPath == 'mainCafeteria' || directionToPath == 'mainCafeteria' && directionFromPath == 'kayeEdmontonClinic') {
-    var requestedPathTo = pathBetweenStairsAndKayeClinic2ndFloor.setStyle({
-      color: 'black'
-    });
-    var requestedPathFrom = pathBetweenCafeteriaAndStairs1stFloor.setStyle({
-      color: 'black'
-    });
-    requestedPathTo.addTo(secondFloorRequestedPathsLayerGroup);
-    requestedPathFrom.addTo(firstFloorRequestedPathsLayerGroup);
-    stairsMarker2ndFloor.remove();
-    stairsMarker2ndFloor.addTo(map).openPopup();
-    document.getElementById('infoDiv').innerText = 'Please use stairs or elevator to go to First Floor Level where path continues to Main Cafeteria';
-    firstFloorRequestedPathsLayerGroup.addTo(firstFloorMap);
-    secondFloorRequestedPathsLayerGroup.addTo(secondFloorMap);
-  }
-
-  if (directionToPath == 'kayeEdmontonClinic' && directionFromPath == '2J2') {
-    var requestedPathTo = pathBetweenStairsAndKayeClinic2ndFloor.setStyle({
-      color: 'black'
-    });
-    var requestedPathbetween = pathBetweenStairsAndRadiologyUAH2ndFloor.setStyle({
-      color: 'black'
-    });
-    var requestedPathFrom = pathBetweenRadiologyUAH2ndFloorAnd2J2.setStyle({
-      color: 'black'
-    });
-    requestedPathTo.addTo(secondFloorRequestedPathsLayerGroup);
-    requestedPathFrom.addTo(secondFloorRequestedPathsLayerGroup);
-    requestedPathbetween.addTo(secondFloorRequestedPathsLayerGroup);
-    secondFloorRequestedPathsLayerGroup.addTo(secondFloorMap);
-  }
-}
+var elevator1stFloor = L.marker([53.520654628040006, -113.52435708045961]).bindPopup(firstFloorPopupMsg).addTo(firstFloorMapOverlay);
+var elevator2ndFloor = L.marker([53.520654628040006, -113.52435708045961]).bindPopup(secondFloorPopupMsg).addTo(secondFloorMapOverlay); //var pixel = map.project(urhere.getLatLng(), 19);
 
 var divMarkerRadPats = new L.Marker([53.518570974858534, -113.52696150541308], {
   icon: new L.DivIcon({
@@ -933,7 +671,7 @@ var rectRadPatsBounds = [[53.51862112948697, -113.52706074714662], [53.518468883
 var rectRadPats = new L.rectangle(rectRadPatsBounds).bindTooltip('Radiology Patients Area');
 var rectRadStaffBounds = [[53.518619628257014, -113.52674692869188], [53.51846651102743, -113.52648943662645]];
 var rectRadStaff = new L.rectangle(rectRadStaffBounds).bindTooltip('Radiology Staff Area');
-var kayeClinicRadiologyGroup = new L.layerGroup([divMarkerRadPats, divMarkerRadStaff, rectRadPats, rectRadStaff]).addTo(secondFloorMap);
+var kayeClinicRadiologyGroup = new L.layerGroup([divMarkerRadPats, divMarkerRadStaff, rectRadPats, rectRadStaff]).addTo(secondFloorMapOverlay);
 var rect1Bounds = [[53.520515, -113.523949], [53.520484, -113.523893]];
 var rect1 = new L.rectangle(rect1Bounds).bindTooltip('2A1');
 var divMarker1 = new L.Marker(center, {
@@ -942,39 +680,41 @@ var divMarker1 = new L.Marker(center, {
     html: '<span class="w3-text-white">Hallway</span>'
   })
 });
-var pedwayRemoved;
+var overlaysRemoved = false;
 
 function onZoomShow() {
   var zoomx = map.getZoom();
   console.log('Zoom level is = ' + zoomx);
 
-  if (zoomx < 17 && !pedwayRemoved) {
-    pedway.remove();
-    kayeClinicRadiologyGroup.remove();
-    pedwayRemoved = true;
-    console.log('Pedway removed on zoom out');
+  if (zoomx < 17 && !overlaysRemoved) {
+    firstFloorMapOverlay.remove();
+    secondFloorMapOverlay.remove();
+    overlaysRemoved = true;
+    console.log('Overlays removed');
   }
 
-  if (zoomx >= 17 && pedwayRemoved) {
-    pedway.addTo(secondFloorMap);
-    kayeClinicRadiologyGroup.addTo(secondFloorMap);
-    pedwayRemoved = false;
-    console.log('Pedway added after being removed');
+  if (zoomx >= 17 && overlaysRemoved) {
+    firstFloorMapOverlay.addTo(firstFloorMap);
+    secondFloorMapOverlay.addTo(secondFloorMap);
+    overlaysRemoved = false;
+    console.log('Overlays added after being removed');
   }
 }
 
 map.on('zoomend', onZoomShow);
+var watchLocation = false;
 
 function locateMe() {
   document.getElementById('btn-loader').style.display = 'block';
   document.getElementById('findBtn').style.backgroundColor = '#555';
+  watchLocation = true;
   map.locate({
     setView: false,
     maxZoom: 19,
-    watch: true,
+    watch: watchLocation,
     enableHighAccuracy: true
   });
-  console.log('Locating true...');
+  console.log('Locating with watch option ON...');
 } //locateMe(map);
 
 
@@ -987,7 +727,12 @@ function onLocationError(e) {
 map.on('locationerror', onLocationError);
 
 function onLocationFound(e) {
-  console.log('Located');
+  if (!watchLocation) {
+    console.log('watch Location not true, returning from watch fxn');
+    return;
+  } else {
+    console.log('Located via location watch fxn');
+  }
 
   if (counter == 0) {
     document.getElementById('findBtn').style.display = 'none';
@@ -1043,6 +788,17 @@ function onLocationFound(e) {
 
 map.on('locationfound', onLocationFound);
 
+function stopLocating() {
+  watchLocation = false;
+  map.stopLocate();
+  console.log('Stopped Locating');
+  counter = 0;
+  document.getElementById('findBtn').style.display = 'block';
+  document.getElementById('findBtn').style.backgroundColor = '';
+  document.getElementById('btn-loader').style.display = 'none';
+  document.getElementById('stopBtn').style.display = 'none';
+}
+
 var copyToClipboard = function copyToClipboard(str) {
   var el = document.createElement('textarea');
   el.value = str;
@@ -1064,17 +820,6 @@ function onMapDblClick(t) {
 }
 
 map.on('dblclick', onMapDblClick);
-
-function stopLocating() {
-  map.stopLocate();
-  console.log('Stopped Locating');
-  counter = 0;
-  document.getElementById('findBtn').style.display = 'block';
-  document.getElementById('findBtn').style.backgroundColor = '';
-  document.getElementById('btn-loader').style.display = 'none';
-  document.getElementById('stopBtn').style.display = 'none';
-}
-
 var baseLayerChange = false;
 
 function changeInfoDivMessage() {

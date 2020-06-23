@@ -68,23 +68,28 @@
         <div class="tabContent" id="Directions">
 
             <div class="w3-container w3-margin-top">
-                <label class="w3-text-white w3-large ">Show Path to...</label><br><br>
+                <label class="w3-text-white w3-large ">Show Path to...</label><br>
+                <div id="directionsErrorDiv" class="w3-round w3-red"></div>
+                <br>
                 <select id="directionsToInput" style="max-width: 200px; margin:auto" class="w3-select"
                     name="directionsTo">
-                    <option value="null" selected> </option>
+                    <option value=null selected> </option>
                     <option value="kayeEdmontonClinic">Kaye Edmonton Clinic</option>
                     <option value="radiologyUAH">Radiology UAH</option>
                     <option value="mainCafeteria">Main Cafeteria</option>
+                    <option value="secondFloorParking">2nd FLoor Parking</option>
                     <option value="2J2">Unit 2J2</option>
                 </select>
                 <br><br>
                 <label class="w3-text-white w3-large ">From</label><br><br>
                 <select id="directionsFromInput" style="max-width: 200px; margin:auto" class="w3-select"
                     name="directionsFrom">
-                    <option value="null" selected> </option>
+                    <option value="null"></option>
+                    <option value="currentLocation" selected>Use my location </option>
                     <option value="kayeEdmontonClinic">Kaye Edmonton Clinic</option>
                     <option value="radiologyUAH">Radiology UAH</option>
                     <option value="mainCafeteria">Main Cafeteria</option>
+                    <option value="secondFloorParking">2nd FLoor Parking</option>
                     <option value="2J2">Unit 2J2</option>
                 </select>
                 <br><br>

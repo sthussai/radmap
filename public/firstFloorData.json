@@ -10,7 +10,7 @@
       "properties": {
         "name": "Point 1",
         "floor": "first",
-        "popupContent": "Point 1",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3222.jpg' height='150px' width='150px'/><p>Main Entrance Point 1</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 2",
@@ -29,13 +29,15 @@
       "properties": {
         "name": "Point 2",
         "floor": "first",
-        "popupContent": "Point 2",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3223.jpg' height='150px' width='150px'/><p>Main Entrance Point 2</p>",
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 1",
         "neighbour1Distance": "1",
         "neighbour2": "Point 3",
-        "neighbour2Distance": "1"
+        "neighbour2Distance": "1",
+        "neighbour3": "Point 8",
+        "neighbour3Distance": "1"
       }
     }
     ,
@@ -64,7 +66,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [ -113.52324664592743, 53.52127137263653  ]
+        "coordinates": [ -113.5232065675618, 53.52127006060828  ]
       },
       "properties": {
         "name": "Point 4",
@@ -72,10 +74,14 @@
         "popupContent": "Point 4",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 3",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
+        "neighbour2": "Point 5",
+        "neighbour2Distance": "1",
+        "neighbour3": "Point 6",
+        "neighbour3Distance": "1",
+        "neighbour4": "Point 14",
+        "neighbour4Distance": "1"
       }
     }
     ,
@@ -91,10 +97,8 @@
         "popupContent": "Point 5",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
-        "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
+        "neighbour1": "Point 4",
+        "neighbour1Distance": "1"
       }
     }
     ,
@@ -110,9 +114,9 @@
         "popupContent": "Point 6",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 4",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
+        "neighbour2": "Point 7",
         "neighbour2Distance": "1"
       }
     }
@@ -129,10 +133,8 @@
         "popupContent": "Point 7",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
-        "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
+        "neighbour1": "Point 6",
+        "neighbour1Distance": "1"
       }
     }
     ,
@@ -145,32 +147,15 @@
       "properties": {
         "name": "Point 8",
         "floor": "first",
-        "popupContent": "Point 8",
+        "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3225.jpg' height='150px' width='150px'/><p>Point 8</p>",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 2",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
-      }
-    }
-    ,
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [ -113.52451130747795, 53.52102285438584  ]
-      },
-      "properties": {
-        "name": "Point 8",
-        "floor": "first",
-        "popupContent": "Point 8",
-        "secondFloor": false,
-        "test": true,
-        "neighbour1": "Point 1",
-        "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
+        "neighbour2": "Point 9",
+        "neighbour2Distance": "2",
+        "neighbour3": "Point 19",
+        "neighbour3Distance": "1"
       }
     }
     ,
@@ -188,8 +173,10 @@
         "test": true,
         "neighbour1": "Point 3",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 10",
-        "neighbour2Distance": "1"
+        "neighbour2": "Point 8",
+        "neighbour2Distance": "2",
+        "neighbour3": "Point 10",
+        "neighbour3Distance": "1"
       }
     }
     ,
@@ -219,25 +206,6 @@
         "coordinates": [ -113.5233995318413, 53.52093662289389  ]
       },
       "properties": {
-        "name": "Point 11",
-        "floor": "first",
-        "popupContent": "Point 11",
-        "secondFloor": false,
-        "test": true,
-        "neighbour1": "Point 1",
-        "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
-      }
-    }
-    ,
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [ -113.5233995318413, 53.52093662289389  ]
-      },
-      "properties": {
         "name": "Point 12",
         "floor": "first",
         "popupContent": "Point 12",
@@ -245,8 +213,10 @@
         "test": true,
         "neighbour1": "Point 10",
         "neighbour1Distance": "2",
-        "neighbour2": "Point 15",
-        "neighbour2Distance": "1"
+        "neighbour2": "Point 13",
+        "neighbour2Distance": "1",
+        "neighbour3": "Point 15",
+        "neighbour3Distance": "1"
       }
     }
     ,
@@ -262,9 +232,9 @@
         "popupContent": "Point 13",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 12",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
+        "neighbour2": "Point 14",
         "neighbour2Distance": "1"
       }
     }
@@ -281,9 +251,9 @@
         "popupContent": "Point 14",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 13",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
+        "neighbour2": "Point 4",
         "neighbour2Distance": "1"
       }
     }
@@ -319,9 +289,9 @@
         "popupContent": "Point 16",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
-        "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
+        "neighbour1": "Point 15",
+        "neighbour1Distance": "2",
+        "neighbour2": "Point 17",
         "neighbour2Distance": "1"
       }
     }
@@ -338,9 +308,9 @@
         "popupContent": "Point 17",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 16",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
+        "neighbour2": "Point 18",
         "neighbour2Distance": "1"
       }
     }
@@ -357,10 +327,8 @@
         "popupContent": "Point 18",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
-        "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
+        "neighbour1": "Point 17",
+        "neighbour1Distance": "1"
       }
     }
     ,
@@ -376,10 +344,12 @@
         "popupContent": "Point 19",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 8",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
+        "neighbour2": "Point 20",
+        "neighbour2Distance": "1",
+        "neighbour3": "Point 22",
+        "neighbour3Distance": "1"
       }
     }
     ,
@@ -395,9 +365,9 @@
         "popupContent": "Point 20",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 19",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
+        "neighbour2": "Point 21",
         "neighbour2Distance": "1"
       }
     }
@@ -414,10 +384,8 @@
         "popupContent": "Point 21",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
-        "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
+        "neighbour1": "Point 20",
+        "neighbour1Distance": "1"
       }
     }
     ,
@@ -433,10 +401,12 @@
         "popupContent": "Point 22",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 19",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
+        "neighbour2": "Point 20",
+        "neighbour2Distance": "1",
+        "neighbour3": "Point 23",
+        "neighbour3Distance": "1"
       }
     }
     ,
@@ -452,9 +422,9 @@
         "popupContent": "Point 23",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
+        "neighbour1": "Point 22",
         "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
+        "neighbour2": "Point 24",
         "neighbour2Distance": "1"
       }
     }
@@ -471,10 +441,8 @@
         "popupContent": "Point 24",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 1",
-        "neighbour1Distance": "1",
-        "neighbour2": "Point 1",
-        "neighbour2Distance": "1"
+        "neighbour1": "Point 23",
+        "neighbour1Distance": "1"
       }
     }
   

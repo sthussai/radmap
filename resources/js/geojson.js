@@ -1,12 +1,28 @@
 const { controls } = require("./radmap");
+const refObj = {
+    'secondFloorParking' : 'Point 26',
+    'kayeEdmontonClinic' : 'Point 27',
+    'radiologyUAH' : 'Point 28',
+    '2J2' : 'Point 29',
+    'firstFloor' : 'firstFloor',
+    'secondFloor' : 'secondFloor',
+    'secondFloorMarkersObject' : 'secondFloorMarkersObject',
+}
 
-let pathGroup = L.layerGroup().addTo(secondFloorMap);
-let secondFloorMarkerGroup = L.layerGroup().addTo(secondFloorMap);
-let firstFloorMarkerGroup = L.layerGroup().addTo(firstFloorMap);
-let myLayer = null;
-let startRefPointMarker = L.marker([53.51993090722499, -113.52201819419861], {draggable:true}).bindPopup('Ur here for Demo 2').addTo(secondFloorMap);
-let endRefPointMarker = L.marker([53.52060200173207, -113.52428197860719], {draggable:true}).bindPopup('Final location').addTo(secondFloorMap);
-let firstRefPoint = null;
+let pathGroup = L.layerGroup().addTo(mapOverlay);
+let startRefPointMarker = L.marker([53.51993090722499, -113.52201819419861], {draggable:true}).bindPopup('Drag To Start Location').addTo(mapOverlay);
+let endRefPointMarker = L.marker([53.52060200173207, -113.52428197860719], {draggable:true}).bindPopup('Drag To End Location').addTo(mapOverlay);
+map.on('baselayerchange', function(){
+    mapOverlay.clearLayers();
+    pathGroup.clearLayers();
+    startRefPointMarker.addTo(mapOverlay);
+    endRefPointMarker.addTo(mapOverlay);
+    pathGroup.addTo(mapOverlay);
+})
+let secondFloorMarkerGroup = L.layerGroup().addTo(secondFloorMapOverlay);
+let firstFloorMarkerGroup = L.layerGroup().addTo(firstFloorMapOverlay);
+mapOverlay.addTo(map);
+let firstRefPoint = null; 
 let endRefPoint = null;
 let distancesToClosestRefPointArray = [];
 let geojsonMarkerOptions = {
@@ -20,19 +36,21 @@ let geojsonMarkerOptions = {
 
 let minDistanceLine = null;
 
-let markersObject = {};
+let firstFloorMarkersObject = {};
+let firstFloorMarkersArray = [];
 
-let markersArray = [];
+let secondFloorMarkersObject = {};
+let secondFloorMarkersArray = [];
 
 let start = "Point 14";
 let end = "Point 5";
 
-function ajaxGetGeoJsonSecondFloor() {
+const ajaxGetGeoJsonSecondFloor = () => {
     $.ajax({
         dataType: "json",
         url: '/data.json',
         success: function(data) {
-            myLayer = L.geoJSON(data, {
+            L.geoJSON(data, {
                 onEachFeature: popupOnEachFeature,
                 pointToLayer: function (feature, latlng) {
                     return L.circleMarker(latlng, geojsonMarkerOptions);
@@ -43,7 +61,7 @@ function ajaxGetGeoJsonSecondFloor() {
 
                     }
                     switch (feature.properties.floor) {
-                        case 'second':   return {color: "#0000ff",  fillColor: "lightblue",};
+                        case 'second':   return {color: "#0000ff",  fillColor: "lightblue", radius: 5};
                     }
                 },
 
@@ -58,12 +76,13 @@ function ajaxGetGeoJsonSecondFloor() {
 
 ajaxGetGeoJsonSecondFloor();
 
-function ajaxGetGeoJsonFirstFloor() {
+const ajaxGetGeoJsonFirstFloor = () => {
     $.ajax({
         dataType: "json",
         url: '/firstFloorData.json',
         success: function(data) {
-            myLayer = L.geoJSON(data, {
+            console.log('get first floor data')
+            L.geoJSON(data, {
                 filter: function(feature) {
                     return !feature.properties.secondFloor;
                 },
@@ -87,18 +106,20 @@ function ajaxGetGeoJsonFirstFloor() {
 }
 
 
-ajaxGetGeoJsonFirstFloor();
 /* $(controls.getContainer()).mouseenter(function(){
   }); */
 
+setTimeout(() => {
+    ajaxGetGeoJsonFirstFloor();    
+}, 3000);
 
-function popupOnEachFeature(feature, layer) {
+let popupOnEachFeature = (feature, layer) => {
 
     if (feature.properties && feature.properties.popupContent) {
         layer.bindPopup(feature.properties.popupContent);
     }
     if (feature.properties.floor == "second" && feature.geometry.type == "Point"){
-        markersArray.push(feature);
+        secondFloorMarkersArray.push(feature);
         let name = feature.properties.name;
         let neighbour = {};
         neighbour[feature.properties.neighbour1] = parseInt(feature.properties.neighbour1Distance);
@@ -111,13 +132,31 @@ function popupOnEachFeature(feature, layer) {
         if(feature.properties.neighbour4){
             neighbour[feature.properties.neighbour4] = parseInt(feature.properties.neighbour4Distance);  
         }
-        markersObject[name] = neighbour; 
+        secondFloorMarkersObject[name] = neighbour; 
+
+    }
+    if (feature.properties.floor == "first" && feature.geometry.type == "Point"){
+        firstFloorMarkersArray.push(feature);
+        let name = feature.properties.name;
+        let neighbour = {};
+        neighbour[feature.properties.neighbour1] = parseInt(feature.properties.neighbour1Distance);
+        if(feature.properties.neighbour2){
+            neighbour[feature.properties.neighbour2] = parseInt(feature.properties.neighbour2Distance);  
+        }
+        if(feature.properties.neighbour3){
+            neighbour[feature.properties.neighbour3] = parseInt(feature.properties.neighbour3Distance);  
+        }
+        if(feature.properties.neighbour4){
+            neighbour[feature.properties.neighbour4] = parseInt(feature.properties.neighbour4Distance);  
+        }
+        firstFloorMarkersObject[name] = neighbour; 
 
     }
 
 }
 
 var minDistanceLineCoords = [];
+
 
 let shortestDistanceNode = (distances, visited) => {
     // create a default value for shortest
@@ -139,7 +178,7 @@ let shortestDistanceNode = (distances, visited) => {
       
   };
 
-  let findShortestPath = (graph, startNode, endNode) => {
+    let findShortestPath = (graph, startNode, endNode) => {
  
       // track distances from the start node using a hash object
       let distances = {};
@@ -216,77 +255,169 @@ let shortestDistanceNode = (distances, visited) => {
 
     const getNamesInOrder = (path) => {
         minDistanceLineCoords =[];
-        for ( var i = 0; i<path.length; i++){
-        markersArray.forEach(function (feature){
-                if(feature.properties.name == path[i]){
-                      let lt = feature.geometry.coordinates[1];
-                      let ln = feature.geometry.coordinates[0];
-                      let ltln = [lt, ln];
-                      minDistanceLineCoords.push(ltln);  
-                    }                   
-              });
+        if(map.hasLayer(firstFloorMap)){     
+            for ( var i = 0; i<path.length; i++){
+            firstFloorMarkersArray.forEach(function (feature){
+                    if(feature.properties.name == path[i]){
+                          let lt = feature.geometry.coordinates[1];
+                          let ln = feature.geometry.coordinates[0];
+                          let ltln = [lt, ln];
+                          minDistanceLineCoords.push(ltln);  
+                        }                   
+                  });
+            }
+        } else{
+            for ( var i = 0; i<path.length; i++){
+                secondFloorMarkersArray.forEach(function (feature){
+                        if(feature.properties.name == path[i]){
+                              let lt = feature.geometry.coordinates[1];
+                              let ln = feature.geometry.coordinates[0];
+                              let ltln = [lt, ln];
+                              minDistanceLineCoords.push(ltln);  
+                            }                   
+                      });
+                }
         }
         drawLine();    
     }   
-
+    
    const drawLine = () => {
-    pathGroup.clearLayers();
+       pathGroup.clearLayers();
     minDistanceLine = L.polyline(minDistanceLineCoords, {color:"black"})
     .bindPopup('Minimum distance path ')                
     .addTo(pathGroup);
 }
 
-// Takes ltln array and user location ltln as 'this' value, returns ltln of closest ref point
+let locateOnce = false;
+let userLatLng = null;
+const locateMe = () => {
+    locateOnce = true;
+    map.locate({
+        setView: false
+    });
+    console.log('Locating once...');
+}
+
+$('#showPathsBtn').click(function(){
+    showRequestedPaths();
+});
+
+
+//this function is called from the App's UI when the user requests directions by supplying 'To' and 'From' locations
+function showRequestedPaths(){
+    var directionToPath = document.getElementById("directionsToInput").value;
+    var directionFromPath = document.getElementById("directionsFromInput").value;
+    document.getElementById('directionsErrorDiv').innerText = '';
+    if (directionFromPath =="null" || directionToPath =="null" || directionFromPath == directionToPath ){
+        document.getElementById('directionsErrorDiv').innerText="Please select valid and different 'To' and 'From' locations"
+        console.log('Invalid locations'); 
+        return;}
+    closeNav();
+    if(directionFromPath == 'currentLocation'){
+        locateMe();
+        end = refObj[directionToPath];
+        return;
+    } else {
+        start = refObj[directionFromPath];
+        end = refObj[directionToPath];
+        findShortestPath(secondFloorMarkersObject, start, end);
+    }
+
+}
+
+//Supplies user's location to setStartPoint function
+//called from the showRequestedPaths function if user requests directions from "Current Location"
+const onLocationFoundOnce = (e) => {
+if (locateOnce) {
+    console.log('One time fxn');
+    let userCoords = [ 53.52100017444731, -113.52254390716554]
+    userLatLng = L.circleMarker(userCoords, {color: 'red'}).bindPopup('Your Approximate Location').addTo(secondFloorMap);
+    setStartPoint();
+}
+locateOnce = false
+}
+
+map.on('locationfound', onLocationFoundOnce);    
+
+//sets the closest reference point as the START point using User's location or the given START point marker
+//uses the getClosestPointFrom function which returns a sorted array based on minimum distance and..
+//includes the reference point's coordinates and name 
+//Calls the minimum path finding algorithm 
 const setStartPoint = () => {
-    
-    getClosestPointFrom(startRefPointMarker);
+    if(userLatLng) {
+    console.log('using user latlng'); getClosestPointFrom(userLatLng)
+    } else { console.log('using ref point marker'); getClosestPointFrom(startRefPointMarker);} 
+
     if (firstRefPoint) {firstRefPoint.remove()};
-    firstRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {color: 'green'}).addTo(secondFloorMap);
+    firstRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {color: 'green'}).addTo(mapOverlay);
     firstRefPoint.bindPopup('Your closest reference point is here').openPopup();
     start = distancesToClosestRefPointArray[0][2];
-    findShortestPath(markersObject, start, end);
+    if(map.hasLayer(firstFloorMap)){    
+        findShortestPath(firstFloorMarkersObject, start, end);
+    } else {
+        findShortestPath(secondFloorMarkersObject, start, end);
+    }
 }
 
 startRefPointMarker.on('dragend', setStartPoint);
 
+
+//sets the closest reference point as the END point using the given end point marker
+//uses the getClosestPointFrom function which returns a sorted array based on minimum distance and..
+//includes the reference point's coordinates and name 
 const setEndPoint = () => {
-   
+    
     getClosestPointFrom(endRefPointMarker);
     if (endRefPoint) {endRefPoint.remove()};
-    endRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {color: 'white'}).addTo(secondFloorMap);
+    endRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {color: 'white'}).addTo(mapOverlay);
     endRefPoint.bindPopup('Your End point is here').openPopup();
-    end = distancesToClosestRefPointArray[0][2];
+    end = distancesToClosestRefPointArray[0][2]; // passing in Point name ie. 'Point 1'
     setStartPoint();
 }
 
 endRefPointMarker.on('dragend', setEndPoint);
 
+//Takes a given UserLocation/Start/End marker and finds the closest reference point 
+//by subtracting the given point's latlng from each point in first floor OR second floor markers array 
+//returns a sorted array of distances with the lowest distance first (ie. closest ref point) 
 const getClosestPointFrom = (PointMarker) => {
     distancesToClosestRefPointArray = [];
+    if(map.hasLayer(firstFloorMap)){        
+        firstFloorMarkersArray.forEach(function (feature){
+            let lt = feature.geometry.coordinates[1];
+            let ln = feature.geometry.coordinates[0];
+            let ltln = [lt, ln];
+            let name = feature.properties.name;
+            let ltlnDistance = map.distance(ltln, PointMarker.getLatLng());
+            ltlnDistance = Math.round((ltlnDistance) * 100) / 100;
+            ltlnDistance = [ltlnDistance, ltln, name];
+            distancesToClosestRefPointArray.push(ltlnDistance);
+         });
+    } else {
+        secondFloorMarkersArray.forEach(function (feature){
+            let lt = feature.geometry.coordinates[1];
+            let ln = feature.geometry.coordinates[0];
+            let ltln = [lt, ln];
+            let name = feature.properties.name;
+            let ltlnDistance = map.distance(ltln, PointMarker.getLatLng());
+            ltlnDistance = Math.round((ltlnDistance) * 100) / 100;
+            ltlnDistance = [ltlnDistance, ltln, name];
+            distancesToClosestRefPointArray.push(ltlnDistance);
+         });
+    }
+     
+     distancesToClosestRefPointArray.sort(function(a, b){return a[0] - b[0]});
 
-    markersArray.forEach(function (feature){
-        let lt = feature.geometry.coordinates[1];
-        let ln = feature.geometry.coordinates[0];
-        let ltln = [lt, ln];
-        let name = feature.properties.name;
-        let ltlnDistance = map.distance(ltln, PointMarker.getLatLng());
-        ltlnDistance = Math.round((ltlnDistance) * 100) / 100;
-        ltlnDistance = [ltlnDistance, ltln, name];
-        distancesToClosestRefPointArray.push(ltlnDistance);
-     });
+     return distancesToClosestRefPointArray;
+    }
+    
 
-    distancesToClosestRefPointArray.sort(function(a, b){return a[0] - b[0]});
+    
 
-    return distancesToClosestRefPointArray;
-}
-
-
-
-
-
-
-
-/* let graph = {
+    
+    
+    
+    /* let graph = {
 	"Point 14": { "Point 13": 1},
 	"Point 13": { "Point 14": 1, "Point 10": 1, "Point 17": 2 },
 	"Point 10": { "Point 8": 2, "Point 3": 3, "Point 13": 1 },

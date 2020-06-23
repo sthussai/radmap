@@ -484,7 +484,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [ -113.52426320314409, 53.52061292042114  ]
+        "coordinates": [ -113.52407142519954, 53.5206164628691  ]
       },
       "properties": {
         "name": "Point 28",
@@ -509,6 +509,24 @@
         "popupContent": "Point 29 Location #4 - Unit 2J2 2nd Floor",
         "neighbour1": "Point 8",
         "neighbour1Distance": "1"
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52435708045961, 53.520654628040006  ]
+      },
+      "properties": {
+        "name": "Point 30",
+        "floor": "second",
+        "location": "final",
+        "popupContent": "Point 30 Elevator",
+        "neighbour1": "Point 5",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 6",
+        "neighbour2Distance": "1"
       }
     }
     
