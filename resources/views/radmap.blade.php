@@ -11,7 +11,7 @@
 
 	<div id="map">
 	<div class="w3-center" style="margin: 0px auto; position:absolute; z-index: 1000; width: 100% ">
-				<span id="hideBtn" class="w3-grey w3-button"> <i class="fa fa-arrow-up w3-margin-right"></i><b>Hide</b></span>
+				<span id="hideBtn" style="display: none;" class="w3-grey w3-button"> <i class="fa fa-arrow-up w3-margin-right"></i><b>Hide</b></span>
 			</div>
 
 
@@ -26,6 +26,9 @@
 
 		<button id="menuBtn" class="menuBtn" style="background-color:{{$color}}" title="Open Menu">
 			<i class="fa fa-bars "></i></button>
+
+		<button id="clearPathBtn" class="menuBtn" style="position: relative; margin-top: 35px; " title="Open Menu">
+			<i class="fa fa-undo "></i></button>
 
 	@include('components.rad-mainmenu')
 
@@ -84,16 +87,32 @@
 	});
 
 	
-/* 	Swal.fire({
-	title: 'Error!',
-	text: 'Do you want to continue',
-	icon: 'info',
-	input: 'radio',
-	inputPlaceholder: 'Select Floor Level',
-	timer: 	3000,
-	timerProgressBar: true
-  }) */
 
+
+ const changeFloorModal = () => {
+	 	 
+	 Swal.fire({
+	 title: 'RadMap',
+		text: 'Which floor map would you like to view?',
+		icon: 'question',
+		confirmButtonText: 'First Floor',
+		showCancelButton: true,
+		cancelButtonText: 'Second Floor',
+	  }).then((result) => {
+		  if (result.value) {
+			  console.log(result.value);
+			  map.removeLayer(secondFloorMap);
+			  map.addLayer(firstFloorMap);
+		  } ;
+	 
+		}); 
+} 
+
+changeFloorModal()
+
+$('#infoDiv').click(function(){
+	changeFloorModal()
+});
   /* 		googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
                 maxZoom: 20,
                 subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
