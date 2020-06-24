@@ -96,28 +96,66 @@
 var _require = __webpack_require__(/*! ./radmap */ "./resources/js/radmap.js"),
     controls = _require.controls;
 
+var greenPin = L.icon({
+  iconUrl: 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/icon/greenPin.png',
+  iconSize: [17, 35],
+  // size of the icon
+  iconAnchor: [10, 40],
+  // point of the icon which will correspond to marker's location
+  popupAnchor: [-3, -46] // point from which the popup should open relative to the iconAnchor
+
+});
+var redPin = L.icon({
+  iconUrl: 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/icon/redPin.png',
+  iconSize: [17, 35],
+  // size of the icon
+  iconAnchor: [10, 40],
+  // point of the icon which will correspond to marker's location
+  popupAnchor: [-3, -46] // point from which the popup should open relative to the iconAnchor
+
+});
 var refObj = {
-  'secondFloorParking': 'Point 26',
-  'kayeEdmontonClinic': 'Point 27',
-  'radiologyUAH': 'Point 28',
-  '2J2': 'Point 29',
+  'secondFloorParking': ['secondFloor', 'Point 26', [53.51985505942433, -113.52220594882965]],
+  'kayeEdmontonClinic': ['secondFloor', 'Point 27', [53.518729084031214, -113.52677643299104]],
+  'radiologyUAH': ['secondFloor', 'Point 28', [53.5206164628691, -113.52407142519954]],
+  '2J2': ['secondFloor', 'Point 29', [53.52104423591322, -113.5230052471161]],
+  'mainCafeteria': ['firstFloor', 'Point 10', [53.52092864347813, -113.52389037609102]],
+  'adultEmergency': ['firstFloor', 'Point 18', [53.52054835468738, -113.52213084697725]],
+  'pediatricsEmergency': ['firstFloor', 'Point 17', [53.52069906018151, -113.52239906787874]],
+  'firstFloorElevator': ['firstFloor', 'Point 25', [53.520654628040006, -113.52435708045961]],
+  'secondFloorElevator': ['secondFloor', 'Point 30', [53.520654628040006, -113.52435708045961]],
   'firstFloor': 'firstFloor',
   'secondFloor': 'secondFloor',
   'secondFloorMarkersObject': 'secondFloorMarkersObject'
 };
+var Toast = Swal.mixin({
+  toast: true,
+  background: 'black',
+  position: 'bottom',
+  showConfirmButton: false,
+  timer: 2500
+});
 var pathGroup = L.layerGroup().addTo(mapOverlay);
-var startRefPointMarker = L.marker([53.51993090722499, -113.52201819419861], {
-  draggable: true
+var startPointMarker = L.marker([53.52061534234248, -113.52407008409502], {
+  draggable: true,
+  icon: greenPin
 }).bindPopup('Drag To Start Location').addTo(mapOverlay);
-var endRefPointMarker = L.marker([53.52060200173207, -113.52428197860719], {
-  draggable: true
+var endPointMarker = L.marker([53.52060200173207, -113.52428197860719], {
+  draggable: true,
+  icon: redPin
 }).bindPopup('Drag To End Location').addTo(mapOverlay);
-map.on('baselayerchange', function () {
+
+var clearPathFxn = function clearPathFxn() {
   mapOverlay.clearLayers();
   pathGroup.clearLayers();
-  startRefPointMarker.addTo(mapOverlay);
-  endRefPointMarker.addTo(mapOverlay);
+  startPointMarker.addTo(mapOverlay);
+  endPointMarker.addTo(mapOverlay);
   pathGroup.addTo(mapOverlay);
+};
+
+map.on('baselayerchange', clearPathFxn);
+$('#clearPathBtn').on('click', function () {
+  clearPathFxn();
 });
 var secondFloorMarkerGroup = L.layerGroup().addTo(secondFloorMapOverlay);
 var firstFloorMarkerGroup = L.layerGroup().addTo(firstFloorMapOverlay);
@@ -361,6 +399,8 @@ var findShortestPath = function findShortestPath(graph, startNode, endNode) {
 
   console.log("results");
   console.log(results);
+  console.log("distancesToClosestRefPointArray");
+  console.log(distancesToClosestRefPointArray);
   getNamesInOrder(results.path);
 };
 
@@ -410,6 +450,9 @@ var locateMe = function locateMe() {
     setView: false
   });
   console.log('Locating once...');
+  Toast.fire({
+    title: '<span class="w3-text-white">Locating...</span>'
+  });
 };
 
 $('#showPathsBtn').click(function () {
@@ -431,12 +474,29 @@ function showRequestedPaths() {
 
   if (directionFromPath == 'currentLocation') {
     locateMe();
-    end = refObj[directionToPath];
-    return;
+    endPointMarker.setLatLng(refObj[directionToPath][2]).bindPopup('Your End Location').openPopup();
+    end = refObj[directionToPath][1];
   } else {
-    start = refObj[directionFromPath];
-    end = refObj[directionToPath];
-    findShortestPath(secondFloorMarkersObject, start, end);
+    console.log(refObj[directionFromPath][0]);
+    console.log(refObj[directionToPath][0]);
+
+    if (refObj[directionFromPath][0] != refObj[directionToPath][0]) {
+      console.log('heading to a different Floor From ' + [directionFromPath][0] + ' to ' + [directionToPath][0]);
+      endPointMarker.setLatLng(refObj['firstFloorElevator'][2]).bindPopup('Your End Location').openPopup();
+      end = refObj['firstFloorElevator'][1];
+      return;
+    }
+
+    start = refObj[directionFromPath][1];
+    end = refObj[directionToPath][1];
+    endPointMarker.setLatLng(refObj[directionToPath][2]).bindPopup('Your End Location').openPopup();
+    startPointMarker.setLatLng(refObj[directionFromPath][2]).bindPopup('Your Start Location').openPopup();
+
+    if (map.hasLayer(firstFloorMap)) {
+      findShortestPath(firstFloorMarkersObject, start, end);
+    } else {
+      findShortestPath(secondFloorMarkersObject, start, end);
+    }
   }
 } //Supplies user's location to setStartPoint function
 //called from the showRequestedPaths function if user requests directions from "Current Location"
@@ -444,11 +504,8 @@ function showRequestedPaths() {
 
 var onLocationFoundOnce = function onLocationFoundOnce(e) {
   if (locateOnce) {
-    console.log('One time fxn');
     var userCoords = [53.52100017444731, -113.52254390716554];
-    userLatLng = L.circleMarker(userCoords, {
-      color: 'red'
-    }).bindPopup('Your Approximate Location').addTo(secondFloorMap);
+    startPointMarker.setLatLng(userCoords).bindPopup('Your Approximate Location').openPopup();
     setStartPoint();
   }
 
@@ -458,16 +515,10 @@ var onLocationFoundOnce = function onLocationFoundOnce(e) {
 map.on('locationfound', onLocationFoundOnce); //sets the closest reference point as the START point using User's location or the given START point marker
 //uses the getClosestPointFrom function which returns a sorted array based on minimum distance and..
 //includes the reference point's coordinates and name 
-//Calls the minimum path finding algorithm 
+//Calls the minimum path finding function 
 
 var setStartPoint = function setStartPoint() {
-  if (userLatLng) {
-    console.log('using user latlng');
-    getClosestPointFrom(userLatLng);
-  } else {
-    console.log('using ref point marker');
-    getClosestPointFrom(startRefPointMarker);
-  }
+  getClosestPointFrom(startPointMarker);
 
   if (firstRefPoint) {
     firstRefPoint.remove();
@@ -487,12 +538,12 @@ var setStartPoint = function setStartPoint() {
   }
 };
 
-startRefPointMarker.on('dragend', setStartPoint); //sets the closest reference point as the END point using the given end point marker
+startPointMarker.on('dragend', setStartPoint); //sets the closest reference point as the END point using the given end point marker
 //uses the getClosestPointFrom function which returns a sorted array based on minimum distance and..
 //includes the reference point's coordinates and name 
 
 var setEndPoint = function setEndPoint() {
-  getClosestPointFrom(endRefPointMarker);
+  getClosestPointFrom(endPointMarker);
 
   if (endRefPoint) {
     endRefPoint.remove();
@@ -500,7 +551,7 @@ var setEndPoint = function setEndPoint() {
 
   ;
   endRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {
-    color: 'white'
+    color: 'red'
   }).addTo(mapOverlay);
   endRefPoint.bindPopup('Your End point is here').openPopup();
   end = distancesToClosestRefPointArray[0][2]; // passing in Point name ie. 'Point 1'
@@ -508,7 +559,7 @@ var setEndPoint = function setEndPoint() {
   setStartPoint();
 };
 
-endRefPointMarker.on('dragend', setEndPoint); //Takes a given UserLocation/Start/End marker and finds the closest reference point 
+endPointMarker.on('dragend', setEndPoint); //Takes a given UserLocation/Start/End marker and finds the closest reference point 
 //by subtracting the given point's latlng from each point in first floor OR second floor markers array 
 //returns a sorted array of distances with the lowest distance first (ie. closest ref point) 
 
@@ -595,7 +646,6 @@ $('#fontSizeSelect').change(function () {
 });
 var showInfo = true;
 document.getElementById("map").style.marginTop = document.getElementById("infoDivContainer").offsetHeight;
-$("#hideBtn").hide();
 $(window).on("load", function () {
   $("#hideBtn").slideDown();
 });
@@ -821,13 +871,9 @@ function onMapDblClick(t) {
 }
 
 map.on('dblclick', onMapDblClick);
-var baseLayerChange = false;
 
 function changeInfoDivMessage() {
-  console.log(map.hasLayer(firstFloorMap));
-  baseLayerChange = !baseLayerChange;
-
-  if (baseLayerChange) {
+  if (map.hasLayer(firstFloorMap)) {
     document.getElementById('infoDiv').innerText = 'Viewing First Floor Map of University Hospital';
   } else {
     document.getElementById('infoDiv').innerText = 'Viewing Second Floor Map of University Hospital';

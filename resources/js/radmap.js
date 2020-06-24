@@ -35,7 +35,7 @@ $('#fontSizeSelect').change(function(){
 
 var showInfo = true;
 document.getElementById("map").style.marginTop = document.getElementById("infoDivContainer").offsetHeight;
-$("#hideBtn").hide();
+
 $(window).on("load", function() {
 	$("#hideBtn").slideDown();
 });
@@ -312,12 +312,9 @@ $("#demoBtn").click(function(){
 		map.on('dblclick', onMapDblClick);
 
 
-
-		var baseLayerChange = false;	
+		
 		function changeInfoDivMessage(){
-			console.log(map.hasLayer(firstFloorMap));
-			baseLayerChange =! baseLayerChange;
-			if(baseLayerChange) {document.getElementById('infoDiv').innerText = 'Viewing First Floor Map of University Hospital';}
+			if(map.hasLayer(firstFloorMap)) {document.getElementById('infoDiv').innerText = 'Viewing First Floor Map of University Hospital';}
 			else{document.getElementById('infoDiv').innerText = 'Viewing Second Floor Map of University Hospital';}
 		}
 

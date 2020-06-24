@@ -445,6 +445,23 @@
         "neighbour1Distance": "1"
       }
     }
-  
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52435708045961, 53.520654628040006  ]
+      },
+      "properties": {
+        "name": "Point 25",
+        "floor": "second",
+        "location": "final",
+        "popupContent": "Point 25 Elevator",
+        "neighbour1": "Point 19",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 22",
+        "neighbour2Distance": "1"
+      }
+    }
   ]
 }

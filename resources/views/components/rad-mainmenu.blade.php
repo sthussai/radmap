@@ -25,21 +25,13 @@
         </div>
             <div class="w3-row">
 
-                <button onclick="menuTabChange('Links')" class="w3-col s6 w3-btn w3-text-white w3-hover-opacity"><i
+                <button onclick="menuTabChange('Links')" class="w3-col s6 w3-btn w3-white w3-hover-opacity"><i
                         class="fa fa-bars w3-margin-right w3-large"></i>Main Menu</button>
     
                 <button onclick="closeNav()" class="w3-col s6 w3-btn w3-white w3-hover-opacity"><i
                         class="fa fa-close w3-margin-right w3-large"></i>Close Menu</button>
             </div>
             
-        <script>
-            $("#myNav1Content").click(function(event){
-  event.stopPropagation();
-  console.log("The myNav1Content element was clicked.");
-});
-
-        </script>
-
         <div class="tabContent w3-margin-top" id="Links">
             <a href="/" onclick="closeNav()" class="w3-hover-white w3-text-white">Home</a>
             <a href="/about" onclick="closeNav()" class="w3-hover-white w3-text-white">About</a>
@@ -74,11 +66,15 @@
                 <select id="directionsToInput" style="max-width: 200px; margin:auto" class="w3-select"
                     name="directionsTo">
                     <option value=null selected> </option>
+                    <option disabled class="w3-black w3-input">Second Floor Locations</option>
                     <option value="kayeEdmontonClinic">Kaye Edmonton Clinic</option>
                     <option value="radiologyUAH">Radiology UAH</option>
-                    <option value="mainCafeteria">Main Cafeteria</option>
-                    <option value="secondFloorParking">2nd FLoor Parking</option>
                     <option value="2J2">Unit 2J2</option>
+                    <option value="secondFloorParking">2nd FLoor Parking</option>
+                    <option disabled class="w3-black w3-input">First Floor Locations</option>
+                    <option value="mainCafeteria">Main Cafeteria</option>
+                    <option value="adultEmergency">Adult Emergency</option>
+                    <option value="pediatricsEmergency">Pediatrics Emergency</option>
                 </select>
                 <br><br>
                 <label class="w3-text-white w3-large ">From</label><br><br>
@@ -86,18 +82,21 @@
                     name="directionsFrom">
                     <option value="null"></option>
                     <option value="currentLocation" selected>Use my location </option>
+                    <option disabled class="w3-black w3-input">Second Floor Locations</option>
                     <option value="kayeEdmontonClinic">Kaye Edmonton Clinic</option>
                     <option value="radiologyUAH">Radiology UAH</option>
-                    <option value="mainCafeteria">Main Cafeteria</option>
-                    <option value="secondFloorParking">2nd FLoor Parking</option>
                     <option value="2J2">Unit 2J2</option>
+                    <option value="secondFloorParking">2nd FLoor Parking</option>
+                    <option disabled class="w3-black w3-input">First Floor Locations</option>
+                    <option value="mainCafeteria">Main Cafeteria</option>
+                    <option value="adultEmergency">Adult Emergency</option>
+                    <option value="pediatricsEmergency">Pediatrics Emergency</option>
                 </select>
                 <br><br>
                 <button id="showPathsBtn" class="w3-button w3-dark-grey" autocomplete="off">Show Path</button>
             </div>
-            <button id="allPathsBtn" class="w3-btn w3-text-white w3-hover-opacity">Show All Paths</button>
             <br>
-            <button id="demoBtn" class="w3-btn w3-text-white w3-hover-opacity">Demo Movement On</button>
+            <button id="demoBtn" class="w3-btn w3-text-white w3-hover-opacity">Demo Movement</button>
         </div>
 
         <div class="tabContent" id="Settings">
@@ -114,23 +113,12 @@
                 </div>
 
 
-
-
-<!--         <form class="w3-padding-large" action="/cookie/set" method="GET"> -->
-
                 <div class="w3-container w3-margin-top">
                     <label class="w3-text-white w3-large">Location Marker Color</label><br><br>
                     <input name="color" style="max-width: 100px; margin:auto" class="w3-input w3-button w3-white"
                         type="color">
                 </div>
 
-
-
-<!--                 <div class="w3-container w3-margin-top">
-                    <button class="w3-button w3-dark-grey" type="submit"><i class="fa fa-check w3-margin-right"></i>
-                        Save</button>
-                </div> -->
-<!--             </form> -->
 
             <button class="w3-button w3-padding w3-white w3-margin-top" id="recenterMapBtn" 
                 title="Stop Location Sharing">Recenter Map</button> <br>
@@ -160,7 +148,9 @@
         console.log('stopped');
     });
 
-
+    $("#myNav1Content").click(function(event){
+  event.stopPropagation();
+});
 
     function menuTabChange(showTab) {
         var i, tabcontent, tablinks;
