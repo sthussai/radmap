@@ -103,6 +103,10 @@
 			  console.log(result.value);
 			  map.removeLayer(secondFloorMap);
 			  map.addLayer(firstFloorMap);
+		  } else {
+			console.log(result.value);
+			  map.removeLayer(firstFloorMap);
+			  map.addLayer(secondFloorMap);
 		  } ;
 	 
 		}); 

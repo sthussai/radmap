@@ -92,23 +92,6 @@ $("#demoBtn").click(function(){
 	export { controls };
 	
 
-	var secondFloorPopupMsg = $('<p>Elevator to go to 1st Floor Level <br> <button>1st Floor</button> </p>').click(function() {
-		map.removeLayer(secondFloorMap);
-		map.addLayer(firstFloorMap);
-	})[0];
-	var firstFloorPopupMsg = $('<p>Elevator to go to 2nd Floor Level <br> <button>2nd Floor</button> </p>').click(function() {
-		map.removeLayer(firstFloorMap);
-		map.addLayer(secondFloorMap);
-	})[0];
-
-	
-	var elevator1stFloor = L.marker([53.520654628040006, -113.52435708045961])
-	.bindPopup(firstFloorPopupMsg).addTo(firstFloorMapOverlay);
-	var elevator2ndFloor = L.marker([53.520654628040006, -113.52435708045961])
-	.bindPopup(secondFloorPopupMsg).addTo(secondFloorMapOverlay);
-	
-	//var pixel = map.project(urhere.getLatLng(), 19);
-	
 
 
 	

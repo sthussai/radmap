@@ -1,4 +1,5 @@
 const { controls } = require("./radmap");
+
 const greenPin = L.icon({
     iconUrl: 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/icon/greenPin.png',
 
@@ -12,6 +13,37 @@ const redPin = L.icon({
     iconAnchor:   [10, 40], // point of the icon which will correspond to marker's location
     popupAnchor:  [-3, -46] // point from which the popup should open relative to the iconAnchor
 });
+
+const switchFloorLevels = () => {
+    if(map.hasLayer(firstFloorMap)){
+    map.removeLayer(firstFloorMap);
+    map.addLayer(secondFloorMap);
+    } else {
+        map.removeLayer(secondFloorMap);
+        map.addLayer(firstFloorMap);
+    }
+}
+
+$('#switchFloorBtn').click(function(){
+switchFloorLevels();    
+$('#directionsInfoDiv').addClass('w3-hide');
+});
+
+const secondFloorPopupMsg = $('<p>Elevator to go to 1st Floor Level <br> <button>1st Floor</button> </p>').click(function() {
+    switchFloorLevels()
+})[0];
+const firstFloorPopupMsg = $('<p>Elevator to go to 2nd Floor Level <br> <button>2nd Floor</button> </p>').click(function() {
+    switchFloorLevels()
+})[0];
+
+
+const elevator1stFloor = L.marker([53.520654628040006, -113.52435708045961])
+.bindPopup(firstFloorPopupMsg).addTo(firstFloorMapOverlay);
+const elevator2ndFloor = L.marker([53.520654628040006, -113.52435708045961])
+.bindPopup(secondFloorPopupMsg).addTo(secondFloorMapOverlay);
+
+
+
 const refObj = {
     'secondFloorParking' : ['secondFloor', 'Point 26', [53.51985505942433, -113.52220594882965]],
     'kayeEdmontonClinic' : ['secondFloor', 'Point 27', [53.518729084031214, -113.52677643299104]],
@@ -20,11 +52,68 @@ const refObj = {
     'mainCafeteria' : ['firstFloor', 'Point 10', [53.52092864347813, -113.52389037609102]],
     'adultEmergency' : ['firstFloor', 'Point 18', [53.52054835468738, -113.52213084697725]],
     'pediatricsEmergency' : ['firstFloor', 'Point 17', [53.52069906018151, -113.52239906787874]],
+    'MRI' : ['firstFloor', 'Point 26', [53.52010627846002, -113.52474868297578]],
     'firstFloorElevator' : ['firstFloor', 'Point 25', [53.520654628040006, -113.52435708045961]],
     'secondFloorElevator' : ['secondFloor', 'Point 30', [53.520654628040006, -113.52435708045961]],
     'firstFloor' : 'firstFloor',
     'secondFloor' : 'secondFloor',
     'secondFloorMarkersObject' : 'secondFloorMarkersObject',
+    'floorLevel' : {}
+}
+
+const floorRecorder = () =>{
+    if(map.hasLayer(firstFloorMap)){
+        refObj.floorLevel.slug = 'firstFloor'
+        refObj.floorLevel.name = 'first floor'
+    } else {refObj.floorLevel.slug = 'secondFloor';
+    refObj.floorLevel.name = 'second floor' }
+    console.log('refObj.floorLevel');
+    console.log(refObj.floorLevel);
+}
+floorRecorder();
+map.on('baselayerchange', floorRecorder);
+
+const halfPathsObj = {
+'secondFloorParking' :[
+    [53.520654628040006, -113.52435708045961], // Floor 2 Stairs point
+    [53.52060906758032, -113.52429807186127],
+    [53.52015986544371, -113.52429538965228],
+    [53.52015505807627, -113.52305352687837],
+    [53.52016242320309, -113.52270081639291],
+    [53.51985505942433, -113.52220594882965], //Point 26
+],
+'kayeEdmontonClinic' :[
+[53.520654628040006, -113.52435708045961], //Floor 2 Stairs point
+[53.52060906758032, -113.52429807186127],
+[53.52051491174373, -113.5243007540703],
+[53.520518, -113.524601],
+[53.520374, -113.524596],
+[53.52037, -113.525395],
+[53.520363, -113.526096],
+[53.519151, -113.526086],
+[53.519151, -113.526406],
+[53.51913920619323, -113.52676570415497],
+[53.518729084031214, -113.52677643299104]
+],
+'radiologyUAH' :[
+[53.520654628040006, -113.52435708045961], //Floor 2 Stairs point
+[53.52060906758032, -113.52429807186127],
+[53.5206164628691, -113.52407142519954]],
+'2J2' :[
+    [53.520654628040006, -113.52435708045961], //Floor 2 Stairs point
+    [53.52071795444837, -113.52429807186127],
+    [53.5210141850337, -113.52428734302521],
+    [53.5210178856064, -113.5233834385872],
+    [53.52104423591322, -113.5230052471161],
+],
+'mainCafeteria' :[
+    [53.520654628040006, -113.52435708045961], //Floor 1 Stairs point
+    [53.5210178856064, -113.5233834385872],
+[53.520730582814394, -113.52337807416917],
+[53.520417728976874, -113.52337807416917],
+],
+'adultEmergency' :[],
+'pediatricsEmergency' :[],
 }
 
 const Toast = Swal.mixin({
@@ -59,7 +148,7 @@ mapOverlay.addTo(map);
 let firstRefPoint = null; 
 let endRefPoint = null;
 let distancesToClosestRefPointArray = [];
-let geojsonMarkerOptions = {
+const geojsonMarkerOptions = {
     radius: 8,
     fillColor: "grey",
     color: "#000",
@@ -147,7 +236,7 @@ setTimeout(() => {
     ajaxGetGeoJsonFirstFloor();    
 }, 3000);
 
-let popupOnEachFeature = (feature, layer) => {
+const popupOnEachFeature = (feature, layer) => {
 
     if (feature.properties && feature.properties.popupContent) {
         layer.bindPopup(feature.properties.popupContent);
@@ -326,7 +415,6 @@ let shortestDistanceNode = (distances, visited) => {
 }
 
 let locateOnce = false;
-let userLatLng = null;
 const locateMe = () => {
     locateOnce = true;
     map.locate({
@@ -343,29 +431,34 @@ $('#showPathsBtn').click(function(){
 });
 
 
+
 //this function is called from the App's UI when the user requests directions by supplying 'To' and 'From' locations
-function showRequestedPaths(){
-    var directionToPath = document.getElementById("directionsToInput").value;
-    var directionFromPath = document.getElementById("directionsFromInput").value;
-    document.getElementById('directionsErrorDiv').innerText = '';
+const showRequestedPaths =  () => {
+    const directionToPath = document.getElementById("directionsToInput").value;
+    const directionFromPath = document.getElementById("directionsFromInput").value;
+    $('#directionsInfoDiv').addClass('w3-hide');
+    $('#directionsErrorDiv').addClass('w3-hide');
     if (directionFromPath =="null" || directionToPath =="null" || directionFromPath == directionToPath ){
-        document.getElementById('directionsErrorDiv').innerText="Please select valid and different 'To' and 'From' locations"
-        console.log('Invalid locations'); 
-        return;}
+        $('#directionsErrorDiv').removeClass('w3-hide'); 
+        console.log('Locations should not be empty or same'); 
+        return;} 
+
+    if(refObj[directionFromPath][0] != refObj['floorLevel']['slug']){
+            console.log('Need to switch map floors'); 
+            $('#directionsInfoDiv').removeClass('w3-hide'); 
+        return;
+    }
     closeNav();
+    if(refObj[directionFromPath][0] != refObj[directionToPath][0]){
+        return differenceFloorsPathFxn(directionToPath, directionFromPath);
+    }
     if(directionFromPath == 'currentLocation'){
         locateMe();
         endPointMarker.setLatLng(refObj[directionToPath][2]).bindPopup('Your End Location').openPopup();
         end = refObj[directionToPath][1];
     } else {
         console.log(refObj[directionFromPath][0]);
-        console.log(refObj[directionToPath][0]);
-        if(refObj[directionFromPath][0] != refObj[directionToPath][0]){
-            console.log('heading to a different Floor From ' + [directionFromPath][0] + ' to ' + [directionToPath][0]);
-            endPointMarker.setLatLng(refObj['firstFloorElevator'][2]).bindPopup('Your End Location').openPopup();
-            end = refObj['firstFloorElevator'][1];
-            return
-        }
+        console.log(refObj[directionToPath][0]);       
         start = refObj[directionFromPath][1];
         end = refObj[directionToPath][1];
         endPointMarker.setLatLng(refObj[directionToPath][2]).bindPopup('Your End Location').openPopup();
@@ -378,6 +471,33 @@ function showRequestedPaths(){
     }
 
 }
+
+let halfPathLine = null;
+
+function differenceFloorsPathFxn(directionToPath, directionFromPath){
+    console.log('heading to a different Floor From');
+    console.log(refObj[directionFromPath][0]); 
+    console.log('to ');
+    console.log(refObj[directionToPath][0]); 
+    return
+    start = refObj[directionFromPath][1];
+    end = refObj['firstFloorElevator'][1];
+    let halfPathsCoords = halfPathsObj[directionToPath];
+    halfPathLine && secondFloorMapOverlay.removeLayer(halfPathLine);
+halfPathLine = L.polyline(halfPathsCoords, {color:'black'}).addTo(secondFloorMapOverlay);
+console.log('halfpathline');
+console.log(halfPathLine);
+    if(map.hasLayer(firstFloorMap)){
+        elevator1stFloor.openPopup();    
+        findShortestPath(firstFloorMarkersObject, start, end);
+    } else {
+        elevator2ndFloor.openPopup();
+        findShortestPath(secondFloorMarkersObject, start, end);
+    }
+    return
+}
+
+
 
 //Supplies user's location to setStartPoint function
 //called from the showRequestedPaths function if user requests directions from "Current Location"
@@ -462,7 +582,12 @@ const getClosestPointFrom = (PointMarker) => {
     }
     
 
-    
+
+    $('#hideBtn').click(function(){
+        console.log('hideBtn clicked');
+    })
+
+
     
     
     

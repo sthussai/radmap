@@ -348,7 +348,7 @@
         "neighbour1Distance": "1",
         "neighbour2": "Point 20",
         "neighbour2Distance": "1",
-        "neighbour3": "Point 22",
+        "neighbour3": "Point 25",
         "neighbour3Distance": "1"
       }
     }
@@ -401,7 +401,7 @@
         "popupContent": "<img src='https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/hospital_photos/IMG_3275.jpg' height='150px' width='150px'/><p>Point 22</p>",
         "secondFloor": false,
         "test": true,
-        "neighbour1": "Point 19",
+        "neighbour1": "Point 25",
         "neighbour1Distance": "1",
         "neighbour2": "Point 20",
         "neighbour2Distance": "1",
@@ -442,7 +442,9 @@
         "secondFloor": false,
         "test": true,
         "neighbour1": "Point 23",
-        "neighbour1Distance": "1"
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 26",
+        "neighbour2Distance": "1"
       }
     }
     ,
@@ -454,7 +456,7 @@
       },
       "properties": {
         "name": "Point 25",
-        "floor": "second",
+        "floor": "first",
         "location": "final",
         "popupContent": "Point 25 Elevator",
         "neighbour1": "Point 19",
@@ -463,5 +465,21 @@
         "neighbour2Distance": "1"
       }
     }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52474868297578, 53.52010627846002  ]
+      },
+      "properties": {
+        "name": "Point 26",
+        "floor": "first",
+        "location": "final",
+        "popupContent": "Point 26 MRI Clinic",
+        "neighbour1": "Point 24",
+        "neighbour1Distance": "1"
+      }
+    } 
   ]
 }

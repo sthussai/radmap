@@ -322,10 +322,10 @@ function onLocationFound(e) {
 
 
             var coordsBetweenCafeteriaAndStairs1stFloor = [
-                [-113.523939, 53.520919 ], //cafeteria starting point
-                [-113.523937,53.521032], //2nd point
-                [-113.524552,53.52103], //3
-                [-113.524552,53.520605], //Stairs btw 1st and 2nd Floor
+                [53.520919, -113.523939], //cafeteria starting point
+                [53.521032, -113.523937], //2nd point
+                [53.52103, -113.524552], //3
+                [53.520605, -113.524552], //Stairs btw 1st and 2nd Floor
                 
             ];
             var pathBetweenCafeteriaAndStairs1stFloor = L.polyline(coordsBetweenCafeteriaAndStairs1stFloor, {

@@ -60,24 +60,10 @@
         <div class="tabContent" id="Directions">
 
             <div class="w3-container w3-margin-top">
-                <label class="w3-text-white w3-large ">Show Path to...</label><br>
-                <div id="directionsErrorDiv" class="w3-round w3-red"></div>
+                <label class="w3-text-white w3-large ">Show Path From...</label><br>
+                <div id="directionsErrorDiv" class="w3-round w3-padding w3-red ">Please select valid and different 'To' and 'From' locations</div>
+                <div id="directionsInfoDiv" class="w3-round w3-padding w3-light-blue w3-hide">Your selected 'From' location is on a different floor. <button id='switchFloorBtn'>Switch Floor Levels</button></div>
                 <br>
-                <select id="directionsToInput" style="max-width: 200px; margin:auto" class="w3-select"
-                    name="directionsTo">
-                    <option value=null selected> </option>
-                    <option disabled class="w3-black w3-input">Second Floor Locations</option>
-                    <option value="kayeEdmontonClinic">Kaye Edmonton Clinic</option>
-                    <option value="radiologyUAH">Radiology UAH</option>
-                    <option value="2J2">Unit 2J2</option>
-                    <option value="secondFloorParking">2nd FLoor Parking</option>
-                    <option disabled class="w3-black w3-input">First Floor Locations</option>
-                    <option value="mainCafeteria">Main Cafeteria</option>
-                    <option value="adultEmergency">Adult Emergency</option>
-                    <option value="pediatricsEmergency">Pediatrics Emergency</option>
-                </select>
-                <br><br>
-                <label class="w3-text-white w3-large ">From</label><br><br>
                 <select id="directionsFromInput" style="max-width: 200px; margin:auto" class="w3-select"
                     name="directionsFrom">
                     <option value="null"></option>
@@ -91,6 +77,23 @@
                     <option value="mainCafeteria">Main Cafeteria</option>
                     <option value="adultEmergency">Adult Emergency</option>
                     <option value="pediatricsEmergency">Pediatrics Emergency</option>
+                    <option value="MRI">MRI Clinic</option>
+                </select>
+                <br><br>
+                <label class="w3-text-white w3-large ">To</label><br><br>                
+                <select id="directionsToInput" style="max-width: 200px; margin:auto" class="w3-select"
+                    name="directionsTo">
+                    <option value=null selected> </option>
+                    <option disabled class="w3-black w3-input">Second Floor Locations</option>
+                    <option value="kayeEdmontonClinic">Kaye Edmonton Clinic</option>
+                    <option value="radiologyUAH">Radiology UAH</option>
+                    <option value="2J2">Unit 2J2</option>
+                    <option value="secondFloorParking">2nd FLoor Parking</option>
+                    <option disabled class="w3-black w3-input">First Floor Locations</option>
+                    <option value="mainCafeteria">Main Cafeteria</option>
+                    <option value="adultEmergency">Adult Emergency</option>
+                    <option value="pediatricsEmergency">Pediatrics Emergency</option>
+                    <option value="MRI">MRI Clinic</option>
                 </select>
                 <br><br>
                 <button id="showPathsBtn" class="w3-button w3-dark-grey" autocomplete="off">Show Path</button>
@@ -177,6 +180,8 @@
     function closeNav() {
         document.getElementById("myNav1").style.height = "0%";
         map.dragging.enable();
+        $('#directionsErrorDiv').addClass('w3-hide');
+        $('#directionsInfoDiv').addClass('w3-hide');
     }
 
     function recenterMap() {
