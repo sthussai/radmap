@@ -92,7 +92,9 @@
         "neighbour2": "Point 6",
         "neighbour2Distance": "1",
         "neighbour3": "Point 28",
-        "neighbour3Distance": "1"  
+        "neighbour3Distance": "1",  
+        "neighbour4": "Point 30",
+        "neighbour4Distance": "1"  
       }
     },
     {
@@ -109,7 +111,9 @@
         "neighbour1": "Point 5",
         "neighbour1Distance": "1",
         "neighbour2": "Point 7",
-        "neighbour2Distance": "1"
+        "neighbour2Distance": "1",
+        "neighbour4": "Point 30",
+        "neighbour4Distance": "1"  
       }
     },
     {

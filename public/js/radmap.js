@@ -96,6 +96,9 @@
 var _require = __webpack_require__(/*! ./radmap */ "./resources/js/radmap.js"),
     controls = _require.controls;
 
+var _require2 = __webpack_require__(/*! ./halfPathsObject */ "./resources/js/halfPathsObject.js"),
+    halfPathsObj = _require2.halfPathsObj;
+
 var greenPin = L.icon({
   iconUrl: 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/icon/greenPin.png',
   iconSize: [17, 35],
@@ -123,8 +126,16 @@ var switchFloorLevels = function switchFloorLevels() {
     map.removeLayer(secondFloorMap);
     map.addLayer(firstFloorMap);
   }
-};
+}; //function to switch floors After pressing 'S'
 
+
+$(window).keydown(function (event) {
+  if (event.which == 83) {
+    //83 == Key Code for S
+    switchFloorLevels();
+    console.log('Switch Floors');
+  }
+});
 $('#switchFloorBtn').click(function () {
   switchFloorLevels();
   $('#directionsInfoDiv').addClass('w3-hide');
@@ -138,52 +149,74 @@ var firstFloorPopupMsg = $('<p>Elevator to go to 2nd Floor Level <br> <button>2n
 var elevator1stFloor = L.marker([53.520654628040006, -113.52435708045961]).bindPopup(firstFloorPopupMsg).addTo(firstFloorMapOverlay);
 var elevator2ndFloor = L.marker([53.520654628040006, -113.52435708045961]).bindPopup(secondFloorPopupMsg).addTo(secondFloorMapOverlay);
 var refObj = {
-  'secondFloorParking': ['secondFloor', 'Point 26', [53.51985505942433, -113.52220594882965]],
-  'kayeEdmontonClinic': ['secondFloor', 'Point 27', [53.518729084031214, -113.52677643299104]],
-  'radiologyUAH': ['secondFloor', 'Point 28', [53.5206164628691, -113.52407142519954]],
-  '2J2': ['secondFloor', 'Point 29', [53.52104423591322, -113.5230052471161]],
-  'mainCafeteria': ['firstFloor', 'Point 10', [53.52092864347813, -113.52389037609102]],
-  'adultEmergency': ['firstFloor', 'Point 18', [53.52054835468738, -113.52213084697725]],
-  'pediatricsEmergency': ['firstFloor', 'Point 17', [53.52069906018151, -113.52239906787874]],
-  'MRI': ['firstFloor', 'Point 26', [53.52010627846002, -113.52474868297578]],
-  'firstFloorElevator': ['firstFloor', 'Point 25', [53.520654628040006, -113.52435708045961]],
-  'secondFloorElevator': ['secondFloor', 'Point 30', [53.520654628040006, -113.52435708045961]],
+  'secondFloorParking': {
+    floorLevel: 'secondFloor',
+    pointName: 'Point 26',
+    pointCoords: [53.51985505942433, -113.52220594882965]
+  },
+  'kayeEdmontonClinic': {
+    floorLevel: 'secondFloor',
+    pointName: 'Point 27',
+    pointCoords: [53.518729084031214, -113.52677643299104]
+  },
+  'radiologyUAH': {
+    floorLevel: 'secondFloor',
+    pointName: 'Point 28',
+    pointCoords: [53.5206164628691, -113.52407142519954]
+  },
+  '2J2': {
+    floorLevel: 'secondFloor',
+    pointName: 'Point 29',
+    pointCoords: [53.52104423591322, -113.5230052471161]
+  },
+  'mainCafeteria': {
+    floorLevel: 'firstFloor',
+    pointName: 'Point 10',
+    pointCoords: [53.52092864347813, -113.52389037609102]
+  },
+  'adultEmergency': {
+    floorLevel: 'firstFloor',
+    pointName: 'Point 18',
+    pointCoords: [53.52054835468738, -113.52213084697725]
+  },
+  'pediatricsEmergency': {
+    floorLevel: 'firstFloor',
+    pointName: 'Point 17',
+    pointCoords: [53.52069906018151, -113.52239906787874]
+  },
+  'MRI': {
+    floorLevel: 'firstFloor',
+    pointName: 'Point 26',
+    pointCoords: [53.52010627846002, -113.52474868297578]
+  },
+  'firstFloorElevator': {
+    floorLevel: 'firstFloor',
+    pointName: 'Point 25',
+    pointCoords: [53.520654628040006, -113.52435708045961]
+  },
+  'secondFloorElevator': {
+    floorLevel: 'secondFloor',
+    pointName: 'Point 30',
+    pointCoords: [53.520654628040006, -113.52435708045961]
+  },
   'firstFloor': 'firstFloor',
   'secondFloor': 'secondFloor',
-  'secondFloorMarkersObject': 'secondFloorMarkersObject',
-  'floorLevel': {}
+  'currentFloorLevel': null
 };
 
 var floorRecorder = function floorRecorder() {
   if (map.hasLayer(firstFloorMap)) {
-    refObj.floorLevel.slug = 'firstFloor';
-    refObj.floorLevel.name = 'first floor';
+    refObj.currentFloorLevel = 'firstFloor';
   } else {
-    refObj.floorLevel.slug = 'secondFloor';
-    refObj.floorLevel.name = 'second floor';
+    refObj.currentFloorLevel = 'secondFloor';
   }
 
-  console.log('refObj.floorLevel');
-  console.log(refObj.floorLevel);
+  console.log('refObj.currentFloorLevel');
+  console.log(refObj.currentFloorLevel);
 };
 
 floorRecorder();
 map.on('baselayerchange', floorRecorder);
-var halfPathsObj = {
-  'secondFloorParking': [[53.520654628040006, -113.52435708045961], // Floor 2 Stairs point
-  [53.52060906758032, -113.52429807186127], [53.52015986544371, -113.52429538965228], [53.52015505807627, -113.52305352687837], [53.52016242320309, -113.52270081639291], [53.51985505942433, -113.52220594882965] //Point 26
-  ],
-  'kayeEdmontonClinic': [[53.520654628040006, -113.52435708045961], //Floor 2 Stairs point
-  [53.52060906758032, -113.52429807186127], [53.52051491174373, -113.5243007540703], [53.520518, -113.524601], [53.520374, -113.524596], [53.52037, -113.525395], [53.520363, -113.526096], [53.519151, -113.526086], [53.519151, -113.526406], [53.51913920619323, -113.52676570415497], [53.518729084031214, -113.52677643299104]],
-  'radiologyUAH': [[53.520654628040006, -113.52435708045961], //Floor 2 Stairs point
-  [53.52060906758032, -113.52429807186127], [53.5206164628691, -113.52407142519954]],
-  '2J2': [[53.520654628040006, -113.52435708045961], //Floor 2 Stairs point
-  [53.52071795444837, -113.52429807186127], [53.5210141850337, -113.52428734302521], [53.5210178856064, -113.5233834385872], [53.52104423591322, -113.5230052471161]],
-  'mainCafeteria': [[53.520654628040006, -113.52435708045961], //Floor 1 Stairs point
-  [53.5210178856064, -113.5233834385872], [53.520730582814394, -113.52337807416917], [53.520417728976874, -113.52337807416917]],
-  'adultEmergency': [],
-  'pediatricsEmergency': []
-};
 var Toast = Swal.mixin({
   toast: true,
   background: 'black',
@@ -191,7 +224,6 @@ var Toast = Swal.mixin({
   showConfirmButton: false,
   timer: 2500
 });
-var pathGroup = L.layerGroup().addTo(mapOverlay);
 var startPointMarker = L.marker([53.52061534234248, -113.52407008409502], {
   draggable: true,
   icon: greenPin
@@ -203,13 +235,26 @@ var endPointMarker = L.marker([53.52060200173207, -113.52428197860719], {
 
 var clearPathFxn = function clearPathFxn() {
   mapOverlay.clearLayers();
-  pathGroup.clearLayers();
   startPointMarker.addTo(mapOverlay);
   endPointMarker.addTo(mapOverlay);
-  pathGroup.addTo(mapOverlay);
+
+  if (secondFloorMapOverlay.hasLayer(halfPathLine)) {
+    secondFloorMapOverlay.removeLayer(halfPathLine);
+  }
+
+  if (firstFloorMapOverlay.hasLayer(halfPathLine)) {
+    firstFloorMapOverlay.removeLayer(halfPathLine);
+  }
+
+  if (secondFloorMapOverlay.hasLayer(minDistanceLine)) {
+    secondFloorMapOverlay.removeLayer(minDistanceLine);
+  }
+
+  if (firstFloorMapOverlay.hasLayer(minDistanceLine)) {
+    firstFloorMapOverlay.removeLayer(minDistanceLine);
+  }
 };
 
-map.on('baselayerchange', clearPathFxn);
 $('#clearPathBtn').on('click', function () {
   clearPathFxn();
 });
@@ -491,10 +536,15 @@ var getNamesInOrder = function getNamesInOrder(path) {
 };
 
 var drawLine = function drawLine() {
-  pathGroup.clearLayers();
   minDistanceLine = L.polyline(minDistanceLineCoords, {
     color: "black"
-  }).bindPopup('Minimum distance path ').addTo(pathGroup);
+  }).bindPopup('Minimum distance path ');
+
+  if (map.hasLayer(firstFloorMap)) {
+    minDistanceLine.addTo(firstFloorMapOverlay);
+  } else {
+    minDistanceLine.addTo(secondFloorMapOverlay);
+  }
 };
 
 var locateOnce = false;
@@ -513,6 +563,7 @@ var locateMe = function locateMe() {
 $('#showPathsBtn').click(function () {
   showRequestedPaths();
 }); //this function is called from the App's UI when the user requests directions by supplying 'To' and 'From' locations
+//validates users input and ensures user's 'From' location is on the same floor
 
 var showRequestedPaths = function showRequestedPaths() {
   var directionToPath = document.getElementById("directionsToInput").value;
@@ -526,29 +577,29 @@ var showRequestedPaths = function showRequestedPaths() {
     return;
   }
 
-  if (refObj[directionFromPath][0] != refObj['floorLevel']['slug']) {
+  if (refObj[directionFromPath]['floorLevel'] != refObj['currentFloorLevel']) {
     console.log('Need to switch map floors');
     $('#directionsInfoDiv').removeClass('w3-hide');
     return;
   }
 
   closeNav();
+  clearPathFxn();
 
-  if (refObj[directionFromPath][0] != refObj[directionToPath][0]) {
-    return differenceFloorsPathFxn(directionToPath, directionFromPath);
-  }
+  if (refObj[directionFromPath]['floorLevel'] != refObj[directionToPath]['floorLevel']) {
+    return differentFloorsPathFxn(directionToPath, directionFromPath);
+  } //else to and from locations on same floor
+
 
   if (directionFromPath == 'currentLocation') {
     locateMe();
-    endPointMarker.setLatLng(refObj[directionToPath][2]).bindPopup('Your End Location').openPopup();
-    end = refObj[directionToPath][1];
+    endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').openPopup();
+    end = refObj[directionToPath]['pointName'];
   } else {
-    console.log(refObj[directionFromPath][0]);
-    console.log(refObj[directionToPath][0]);
-    start = refObj[directionFromPath][1];
-    end = refObj[directionToPath][1];
-    endPointMarker.setLatLng(refObj[directionToPath][2]).bindPopup('Your End Location').openPopup();
-    startPointMarker.setLatLng(refObj[directionFromPath][2]).bindPopup('Your Start Location').openPopup();
+    start = refObj[directionFromPath]['pointName'];
+    end = refObj[directionToPath]['pointName'];
+    endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').openPopup();
+    startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').openPopup();
 
     if (map.hasLayer(firstFloorMap)) {
       findShortestPath(firstFloorMarkersObject, start, end);
@@ -560,32 +611,35 @@ var showRequestedPaths = function showRequestedPaths() {
 
 var halfPathLine = null;
 
-function differenceFloorsPathFxn(directionToPath, directionFromPath) {
+var differentFloorsPathFxn = function differentFloorsPathFxn(directionToPath, directionFromPath) {
   console.log('heading to a different Floor From');
-  console.log(refObj[directionFromPath][0]);
+  console.log(refObj[directionFromPath]['floorLevel']);
   console.log('to ');
-  console.log(refObj[directionToPath][0]);
-  return;
-  start = refObj[directionFromPath][1];
-  end = refObj['firstFloorElevator'][1];
+  console.log(refObj[directionToPath]['floorLevel']);
+  var currentFloorLevel = refObj.currentFloorLevel;
+  var start = refObj[directionFromPath]['pointName'];
+  var end = refObj[currentFloorLevel + 'Elevator']['pointName'];
   var halfPathsCoords = halfPathsObj[directionToPath];
-  halfPathLine && secondFloorMapOverlay.removeLayer(halfPathLine);
-  halfPathLine = L.polyline(halfPathsCoords, {
-    color: 'black'
-  }).addTo(secondFloorMapOverlay);
-  console.log('halfpathline');
-  console.log(halfPathLine);
+  console.log('firstFloorMarkersObject');
+  console.log(firstFloorMarkersObject);
+  console.log('secondFloorMarkersObject');
+  console.log(secondFloorMarkersObject);
 
   if (map.hasLayer(firstFloorMap)) {
+    halfPathLine = L.polyline(halfPathsCoords, {
+      color: 'black'
+    }).bindPopup('Your path continued..').addTo(secondFloorMapOverlay);
     elevator1stFloor.openPopup();
     findShortestPath(firstFloorMarkersObject, start, end);
   } else {
+    halfPathLine = L.polyline(halfPathsCoords, {
+      color: 'black'
+    }).bindPopup('Your path continued..').addTo(firstFloorMapOverlay);
     elevator2ndFloor.openPopup();
     findShortestPath(secondFloorMarkersObject, start, end);
+    console.log('finding from 2nd floor start to second floor elevator');
   }
-
-  return;
-} //Supplies user's location to setStartPoint function
+}; //Supplies user's location to setStartPoint function
 //called from the showRequestedPaths function if user requests directions from "Current Location"
 
 
@@ -605,6 +659,7 @@ map.on('locationfound', onLocationFoundOnce); //sets the closest reference point
 //Calls the minimum path finding function 
 
 var setStartPoint = function setStartPoint() {
+  clearPathFxn();
   getClosestPointFrom(startPointMarker);
 
   if (firstRefPoint) {
@@ -696,6 +751,39 @@ $('#hideBtn').click(function () {
 "Point 3": { "Point 5": 1, "Point 17": 1, "Point 10": 3  },
 "Point 5": {"Point 3": 1, "Point 7": 1 },
 }; */
+
+/***/ }),
+
+/***/ "./resources/js/halfPathsObject.js":
+/*!*****************************************!*\
+  !*** ./resources/js/halfPathsObject.js ***!
+  \*****************************************/
+/*! exports provided: halfPathsObj */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "halfPathsObj", function() { return halfPathsObj; });
+var halfPathsObj = {
+  'secondFloorParking': [[53.520654628040006, -113.52435708045961], // Floor 2 Stairs point
+  [53.52060906758032, -113.52429807186127], [53.52015986544371, -113.52429538965228], [53.52015505807627, -113.52305352687837], [53.52016242320309, -113.52270081639291], [53.51985505942433, -113.52220594882965] //Point 26
+  ],
+  'kayeEdmontonClinic': [[53.520654628040006, -113.52435708045961], //Floor 2 Stairs point
+  [53.52060906758032, -113.52429807186127], [53.52051491174373, -113.5243007540703], [53.520518, -113.524601], [53.520374, -113.524596], [53.52037, -113.525395], [53.520363, -113.526096], [53.519151, -113.526086], [53.519151, -113.526406], [53.51913920619323, -113.52676570415497], [53.518729084031214, -113.52677643299104]],
+  'radiologyUAH': [[53.520654628040006, -113.52435708045961], //Floor 2 Stairs point
+  [53.52060906758032, -113.52429807186127], [53.5206164628691, -113.52407142519954]],
+  '2J2': [[53.520654628040006, -113.52435708045961], //Floor 2 Stairs point
+  [53.52071795444837, -113.52429807186127], [53.5210141850337, -113.52428734302521], [53.5210178856064, -113.5233834385872], [53.52104423591322, -113.5230052471161]],
+  'mainCafeteria': [[53.520654628040006, -113.52435708045961], //Floor 1 Stairs point
+  [53.52102285438584, -113.52451130747795], [53.52103081592075, -113.52387830615044], [53.52092864347813, -113.52389037609102]],
+  'adultEmergency': [[53.520654628040006, -113.52435708045961], //Floor 1 Stairs point
+  [53.52102285438584, -113.52451130747795], [53.52103081592075, -113.52387830615044], [53.52092864347813, -113.52389037609102], [53.52093662289389, -113.5233995318413], [53.52085054367954, -113.52341026067737], [53.52084743136733, -113.52238699793818], [53.52069906018151, -113.52239906787874], [53.52054835468738, -113.52213084697725]],
+  'pediatricsEmergency': [[53.520654628040006, -113.52435708045961], //Floor 1 Stairs point
+  [53.52102285438584, -113.52451130747795], [53.52103081592075, -113.52387830615044], [53.52092864347813, -113.52389037609102], [53.52093662289389, -113.5233995318413], [53.52085054367954, -113.52341026067737], [53.52084743136733, -113.52238699793818], [53.52069906018151, -113.52239906787874]],
+  'MRI': [[53.520654628040006, -113.52435708045961], //Floor 1 Stairs point
+  [53.52059220519894, -113.52430880069733], [53.520185320607595, -113.52430611848834], [53.520184724693955, -113.52473124861717], [53.52010627846002, -113.52474868297578]]
+};
+
 
 /***/ }),
 

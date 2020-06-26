@@ -1,4 +1,5 @@
 const { controls } = require("./radmap");
+const { halfPathsObj } = require("./halfPathsObject");
 
 const greenPin = L.icon({
     iconUrl: 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/icon/greenPin.png',
@@ -24,6 +25,15 @@ const switchFloorLevels = () => {
     }
 }
 
+
+//function to switch floors After pressing 'S'
+$(window).keydown(function(event) {
+    if (event.which == 83) { //83 == Key Code for S
+        switchFloorLevels(); 
+        console.log('Switch Floors');
+    }
+});
+
 $('#switchFloorBtn').click(function(){
 switchFloorLevels();    
 $('#directionsInfoDiv').addClass('w3-hide');
@@ -45,76 +55,32 @@ const elevator2ndFloor = L.marker([53.520654628040006, -113.52435708045961])
 
 
 const refObj = {
-    'secondFloorParking' : ['secondFloor', 'Point 26', [53.51985505942433, -113.52220594882965]],
-    'kayeEdmontonClinic' : ['secondFloor', 'Point 27', [53.518729084031214, -113.52677643299104]],
-    'radiologyUAH' : ['secondFloor', 'Point 28', [53.5206164628691, -113.52407142519954]],
-    '2J2' : ['secondFloor', 'Point 29', [53.52104423591322, -113.5230052471161]],
-    'mainCafeteria' : ['firstFloor', 'Point 10', [53.52092864347813, -113.52389037609102]],
-    'adultEmergency' : ['firstFloor', 'Point 18', [53.52054835468738, -113.52213084697725]],
-    'pediatricsEmergency' : ['firstFloor', 'Point 17', [53.52069906018151, -113.52239906787874]],
-    'MRI' : ['firstFloor', 'Point 26', [53.52010627846002, -113.52474868297578]],
-    'firstFloorElevator' : ['firstFloor', 'Point 25', [53.520654628040006, -113.52435708045961]],
-    'secondFloorElevator' : ['secondFloor', 'Point 30', [53.520654628040006, -113.52435708045961]],
+    'secondFloorParking' : {floorLevel:'secondFloor', pointName: 'Point 26', pointCoords: [53.51985505942433, -113.52220594882965]},
+    'kayeEdmontonClinic' : {floorLevel:'secondFloor', pointName: 'Point 27', pointCoords: [53.518729084031214, -113.52677643299104]},
+    'radiologyUAH' : {floorLevel:'secondFloor', pointName: 'Point 28', pointCoords: [53.5206164628691, -113.52407142519954]},
+    '2J2' : {floorLevel:'secondFloor', pointName: 'Point 29', pointCoords: [53.52104423591322, -113.5230052471161]},
+    'mainCafeteria' : {floorLevel: 'firstFloor', pointName: 'Point 10', pointCoords: [53.52092864347813, -113.52389037609102]},
+    'adultEmergency' : {floorLevel: 'firstFloor', pointName: 'Point 18', pointCoords: [53.52054835468738, -113.52213084697725]},
+    'pediatricsEmergency' : {floorLevel: 'firstFloor', pointName: 'Point 17', pointCoords: [53.52069906018151, -113.52239906787874]},
+    'MRI' : {floorLevel: 'firstFloor', pointName: 'Point 26', pointCoords: [53.52010627846002, -113.52474868297578]},
+    'firstFloorElevator' : {floorLevel: 'firstFloor', pointName: 'Point 25', pointCoords: [53.520654628040006, -113.52435708045961]},
+    'secondFloorElevator' : {floorLevel: 'secondFloor', pointName: 'Point 30', pointCoords: [53.520654628040006, -113.52435708045961]},
     'firstFloor' : 'firstFloor',
     'secondFloor' : 'secondFloor',
-    'secondFloorMarkersObject' : 'secondFloorMarkersObject',
-    'floorLevel' : {}
+    'currentFloorLevel' : null
 }
 
 const floorRecorder = () =>{
     if(map.hasLayer(firstFloorMap)){
-        refObj.floorLevel.slug = 'firstFloor'
-        refObj.floorLevel.name = 'first floor'
-    } else {refObj.floorLevel.slug = 'secondFloor';
-    refObj.floorLevel.name = 'second floor' }
-    console.log('refObj.floorLevel');
-    console.log(refObj.floorLevel);
+        refObj.currentFloorLevel = 'firstFloor'
+    } else {refObj.currentFloorLevel = 'secondFloor';}
+    console.log('refObj.currentFloorLevel');
+    console.log(refObj.currentFloorLevel);
 }
 floorRecorder();
 map.on('baselayerchange', floorRecorder);
 
-const halfPathsObj = {
-'secondFloorParking' :[
-    [53.520654628040006, -113.52435708045961], // Floor 2 Stairs point
-    [53.52060906758032, -113.52429807186127],
-    [53.52015986544371, -113.52429538965228],
-    [53.52015505807627, -113.52305352687837],
-    [53.52016242320309, -113.52270081639291],
-    [53.51985505942433, -113.52220594882965], //Point 26
-],
-'kayeEdmontonClinic' :[
-[53.520654628040006, -113.52435708045961], //Floor 2 Stairs point
-[53.52060906758032, -113.52429807186127],
-[53.52051491174373, -113.5243007540703],
-[53.520518, -113.524601],
-[53.520374, -113.524596],
-[53.52037, -113.525395],
-[53.520363, -113.526096],
-[53.519151, -113.526086],
-[53.519151, -113.526406],
-[53.51913920619323, -113.52676570415497],
-[53.518729084031214, -113.52677643299104]
-],
-'radiologyUAH' :[
-[53.520654628040006, -113.52435708045961], //Floor 2 Stairs point
-[53.52060906758032, -113.52429807186127],
-[53.5206164628691, -113.52407142519954]],
-'2J2' :[
-    [53.520654628040006, -113.52435708045961], //Floor 2 Stairs point
-    [53.52071795444837, -113.52429807186127],
-    [53.5210141850337, -113.52428734302521],
-    [53.5210178856064, -113.5233834385872],
-    [53.52104423591322, -113.5230052471161],
-],
-'mainCafeteria' :[
-    [53.520654628040006, -113.52435708045961], //Floor 1 Stairs point
-    [53.5210178856064, -113.5233834385872],
-[53.520730582814394, -113.52337807416917],
-[53.520417728976874, -113.52337807416917],
-],
-'adultEmergency' :[],
-'pediatricsEmergency' :[],
-}
+
 
 const Toast = Swal.mixin({
     toast: true,
@@ -124,20 +90,21 @@ const Toast = Swal.mixin({
     timer: 2500,
   });
 
-let pathGroup = L.layerGroup().addTo(mapOverlay);
 let startPointMarker = L.marker([53.52061534234248, -113.52407008409502], {draggable:true, icon: greenPin}).bindPopup('Drag To Start Location').addTo(mapOverlay);
 let endPointMarker = L.marker([53.52060200173207, -113.52428197860719], {draggable:true, icon: redPin}).bindPopup('Drag To End Location').addTo(mapOverlay);
 
 const clearPathFxn = () =>{
     mapOverlay.clearLayers();
-    pathGroup.clearLayers();
     startPointMarker.addTo(mapOverlay);
     endPointMarker.addTo(mapOverlay);
-    pathGroup.addTo(mapOverlay);
-
+    if(secondFloorMapOverlay.hasLayer(halfPathLine)) {secondFloorMapOverlay.removeLayer(halfPathLine);}
+    if(firstFloorMapOverlay.hasLayer(halfPathLine)) {firstFloorMapOverlay.removeLayer(halfPathLine);}
+    if(secondFloorMapOverlay.hasLayer(minDistanceLine)) {secondFloorMapOverlay.removeLayer(minDistanceLine);}
+    if(firstFloorMapOverlay.hasLayer(minDistanceLine)) {firstFloorMapOverlay.removeLayer(minDistanceLine);}
+    
 }
 
-map.on('baselayerchange', clearPathFxn);
+
 $('#clearPathBtn').on('click', function (){
     clearPathFxn();
 })
@@ -408,10 +375,13 @@ let shortestDistanceNode = (distances, visited) => {
     }   
     
    const drawLine = () => {
-       pathGroup.clearLayers();
     minDistanceLine = L.polyline(minDistanceLineCoords, {color:"black"})
-    .bindPopup('Minimum distance path ')                
-    .addTo(pathGroup);
+    .bindPopup('Minimum distance path ');
+    if(map.hasLayer(firstFloorMap)){    
+    minDistanceLine.addTo(firstFloorMapOverlay);
+    } else {
+        minDistanceLine.addTo(secondFloorMapOverlay);
+    }    
 }
 
 let locateOnce = false;
@@ -433,6 +403,7 @@ $('#showPathsBtn').click(function(){
 
 
 //this function is called from the App's UI when the user requests directions by supplying 'To' and 'From' locations
+//validates users input and ensures user's 'From' location is on the same floor
 const showRequestedPaths =  () => {
     const directionToPath = document.getElementById("directionsToInput").value;
     const directionFromPath = document.getElementById("directionsFromInput").value;
@@ -441,28 +412,28 @@ const showRequestedPaths =  () => {
     if (directionFromPath =="null" || directionToPath =="null" || directionFromPath == directionToPath ){
         $('#directionsErrorDiv').removeClass('w3-hide'); 
         console.log('Locations should not be empty or same'); 
-        return;} 
-
-    if(refObj[directionFromPath][0] != refObj['floorLevel']['slug']){
+        return;
+    } 
+    if(refObj[directionFromPath]['floorLevel'] != refObj['currentFloorLevel']){
             console.log('Need to switch map floors'); 
             $('#directionsInfoDiv').removeClass('w3-hide'); 
         return;
     }
     closeNav();
-    if(refObj[directionFromPath][0] != refObj[directionToPath][0]){
-        return differenceFloorsPathFxn(directionToPath, directionFromPath);
+    clearPathFxn();
+    if(refObj[directionFromPath]['floorLevel'] != refObj[directionToPath]['floorLevel']){
+        return differentFloorsPathFxn(directionToPath, directionFromPath);
     }
+    //else to and from locations on same floor
     if(directionFromPath == 'currentLocation'){
         locateMe();
-        endPointMarker.setLatLng(refObj[directionToPath][2]).bindPopup('Your End Location').openPopup();
-        end = refObj[directionToPath][1];
-    } else {
-        console.log(refObj[directionFromPath][0]);
-        console.log(refObj[directionToPath][0]);       
-        start = refObj[directionFromPath][1];
-        end = refObj[directionToPath][1];
-        endPointMarker.setLatLng(refObj[directionToPath][2]).bindPopup('Your End Location').openPopup();
-        startPointMarker.setLatLng(refObj[directionFromPath][2]).bindPopup('Your Start Location').openPopup();
+        endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').openPopup();
+        end = refObj[directionToPath]['pointName'];
+    } else {   
+        start = refObj[directionFromPath]['pointName'];
+        end = refObj[directionToPath]['pointName'];
+        endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').openPopup();
+        startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').openPopup();
         if(map.hasLayer(firstFloorMap)){    
             findShortestPath(firstFloorMarkersObject, start, end);
         } else {
@@ -474,27 +445,30 @@ const showRequestedPaths =  () => {
 
 let halfPathLine = null;
 
-function differenceFloorsPathFxn(directionToPath, directionFromPath){
+const differentFloorsPathFxn = (directionToPath, directionFromPath) => {
     console.log('heading to a different Floor From');
-    console.log(refObj[directionFromPath][0]); 
+    console.log(refObj[directionFromPath]['floorLevel']); 
     console.log('to ');
-    console.log(refObj[directionToPath][0]); 
-    return
-    start = refObj[directionFromPath][1];
-    end = refObj['firstFloorElevator'][1];
-    let halfPathsCoords = halfPathsObj[directionToPath];
-    halfPathLine && secondFloorMapOverlay.removeLayer(halfPathLine);
-halfPathLine = L.polyline(halfPathsCoords, {color:'black'}).addTo(secondFloorMapOverlay);
-console.log('halfpathline');
-console.log(halfPathLine);
+    console.log(refObj[directionToPath]['floorLevel']);
+    const currentFloorLevel =  refObj.currentFloorLevel;
+    const start = refObj[directionFromPath]['pointName'];
+    const end = refObj[currentFloorLevel+'Elevator']['pointName'];
+    
+    const halfPathsCoords = halfPathsObj[directionToPath];
+    console.log('firstFloorMarkersObject');
+    console.log(firstFloorMarkersObject);
+    console.log('secondFloorMarkersObject');
+    console.log(secondFloorMarkersObject);
     if(map.hasLayer(firstFloorMap)){
+        halfPathLine = L.polyline(halfPathsCoords, {color:'black'}).bindPopup('Your path continued..').addTo(secondFloorMapOverlay);
         elevator1stFloor.openPopup();    
         findShortestPath(firstFloorMarkersObject, start, end);
     } else {
+        halfPathLine = L.polyline(halfPathsCoords, {color:'black'}).bindPopup('Your path continued..').addTo(firstFloorMapOverlay);
         elevator2ndFloor.openPopup();
         findShortestPath(secondFloorMarkersObject, start, end);
+        console.log('finding from 2nd floor start to second floor elevator')
     }
-    return
 }
 
 
@@ -517,6 +491,7 @@ map.on('locationfound', onLocationFoundOnce);
 //includes the reference point's coordinates and name 
 //Calls the minimum path finding function 
 const setStartPoint = () => {
+    clearPathFxn();
     getClosestPointFrom(startPointMarker);
     if (firstRefPoint) {firstRefPoint.remove()};
     firstRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {color: 'green'}).addTo(mapOverlay);

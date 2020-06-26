@@ -61,7 +61,7 @@
 
             <div class="w3-container w3-margin-top">
                 <label class="w3-text-white w3-large ">Show Path From...</label><br>
-                <div id="directionsErrorDiv" class="w3-round w3-padding w3-red ">Please select valid and different 'To' and 'From' locations</div>
+                <div id="directionsErrorDiv" class="w3-round w3-padding w3-red w3-hide">Please select valid and different 'To' and 'From' locations</div>
                 <div id="directionsInfoDiv" class="w3-round w3-padding w3-light-blue w3-hide">Your selected 'From' location is on a different floor. <button id='switchFloorBtn'>Switch Floor Levels</button></div>
                 <br>
                 <select id="directionsFromInput" style="max-width: 200px; margin:auto" class="w3-select"
@@ -190,6 +190,7 @@
 
     }	
 
+
         //function to close Navigation After pressing 'ESc'
     $(window).keydown(function(event) {
         if (event.which == 27) { //27 == Key Code for ESc
@@ -205,6 +206,15 @@
         if (event.which == 77) { //77 == Key Code for M
             openNav();
             console.log('Open nav');
+        }
+    });
+
+    //function to open Directions After pressing 'D'
+    $(window).keydown(function(event) {
+        if (event.which == 68) { //68 == Key Code for D
+            openNav();
+            menuTabChange('Directions');
+            console.log('Open Directions tab');
         }
     });
 
