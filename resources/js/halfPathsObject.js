@@ -67,4 +67,55 @@ const halfPathsObj = {
     ]
     }
 
-    export {halfPathsObj};
+    const greenPin = L.icon({
+        iconUrl: 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/icon/greenPin.png',
+    
+        iconSize:     [17, 35], // size of the icon
+        iconAnchor:   [10, 40], // point of the icon which will correspond to marker's location
+        popupAnchor:  [-3, -46] // point from which the popup should open relative to the iconAnchor
+    });
+    const redPin = L.icon({
+        iconUrl: 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/icon/redPin.png',
+        iconSize:     [17, 35], // size of the icon
+        iconAnchor:   [10, 40], // point of the icon which will correspond to marker's location
+        popupAnchor:  [-3, -46] // point from which the popup should open relative to the iconAnchor
+    });
+
+    const geojsonMarkerOptions = {
+        radius: 8,
+        fillColor: "grey",
+        color: "#000",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+    };
+    
+    const Toast = Swal.mixin({
+        toast: true,
+        background: 'black',
+        position: 'bottom',
+        showConfirmButton: false,
+        timer: 2500,
+      });
+
+      
+
+const refObj = {
+    'secondFloorParking' : {floorLevel:'secondFloor', pointName: 'Point 26', pointCoords: [53.51985505942433, -113.52220594882965]},
+    'kayeEdmontonClinic' : {floorLevel:'secondFloor', pointName: 'Point 27', pointCoords: [53.518729084031214, -113.52677643299104]},
+    'radiologyUAH' : {floorLevel:'secondFloor', pointName: 'Point 28', pointCoords: [53.5206164628691, -113.52407142519954]},
+    '2J2' : {floorLevel:'secondFloor', pointName: 'Point 29', pointCoords: [53.52104423591322, -113.5230052471161]},
+    'mainCafeteria' : {floorLevel: 'firstFloor', pointName: 'Point 10', pointCoords: [53.52092864347813, -113.52389037609102]},
+    'adultEmergency' : {floorLevel: 'firstFloor', pointName: 'Point 18', pointCoords: [53.52054835468738, -113.52213084697725]},
+    'pediatricsEmergency' : {floorLevel: 'firstFloor', pointName: 'Point 17', pointCoords: [53.52069906018151, -113.52239906787874]},
+    'MRI' : {floorLevel: 'firstFloor', pointName: 'Point 26', pointCoords: [53.52010627846002, -113.52474868297578]},
+    'firstFloorElevator' : {floorLevel: 'firstFloor', pointName: 'Point 25', pointCoords: [53.520654628040006, -113.52435708045961]},
+    'secondFloorElevator' : {floorLevel: 'secondFloor', pointName: 'Point 30', pointCoords: [53.520654628040006, -113.52435708045961]},
+    'firstFloor' : 'firstFloor',
+    'secondFloor' : 'secondFloor',
+    'currentFloorLevel' : null
+}
+
+    
+
+    export {halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj};
