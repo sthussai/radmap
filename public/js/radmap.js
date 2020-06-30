@@ -192,14 +192,26 @@ var endPointMarker = L.marker([53.52060200173207, -113.52428197860719], {
 }).bindPopup('Drag To End Location').addTo(currentFloorOverlay());
 
 var clearPathFxn = function clearPathFxn() {
-  if (firstRefPoint) {
-    currentFloorOverlay().removeLayer(firstRefPoint);
+  if (firstFloorMapOverlay.hasLayer(firstRefPoint)) {
+    firstFloorMapOverlay.removeLayer(firstRefPoint);
   }
 
   ;
 
-  if (endRefPoint) {
-    currentFloorOverlay().removeLayer(endRefPoint);
+  if (secondFloorMapOverlay.hasLayer(firstRefPoint)) {
+    secondFloorMapOverlay.removeLayer(firstRefPoint);
+  }
+
+  ;
+
+  if (firstFloorMapOverlay.hasLayer(endRefPoint)) {
+    firstFloorMapOverlay.removeLayer(endRefPoint);
+  }
+
+  ;
+
+  if (secondFloorMapOverlay.hasLayer(endRefPoint)) {
+    secondFloorMapOverlay.removeLayer(endRefPoint);
   }
 
   ;
@@ -219,9 +231,6 @@ var clearPathFxn = function clearPathFxn() {
   if (secondFloorMapOverlay.hasLayer(startPointMarker)) {
     secondFloorMapOverlay.removeLayer(startPointMarker);
   }
-
-  startPointMarker.addTo(currentFloorOverlay());
-  endPointMarker.addTo(currentFloorOverlay());
 
   if (firstFloorMapOverlay.hasLayer(halfPathLine)) {
     firstFloorMapOverlay.removeLayer(halfPathLine);
@@ -254,6 +263,7 @@ var endRefPoint = null;
 var distancesToClosestRefPointArray = [];
 var minDistanceLine = null;
 var halfPathLine = null;
+var end = null;
 
 var ajaxGetGeoJson = function ajaxGetGeoJson(url, floor, markerGroup) {
   $.ajax({
@@ -345,8 +355,6 @@ var popupOnEachFeature = function popupOnEachFeature(feature, layer) {
     firstFloorMarkersObject[_name] = _neighbour;
   }
 };
-
-var minDistanceLineCoords = [];
 
 var shortestDistanceNode = function shortestDistanceNode(distances, visited) {
   // create a default value for shortest
@@ -442,7 +450,7 @@ var findShortestPath = function findShortestPath(graph, startNode, endNode) {
 };
 
 var getNamesInOrder = function getNamesInOrder(path) {
-  minDistanceLineCoords = [];
+  var minDistanceLineCoords = [];
 
   if (map.hasLayer(firstFloorMap)) {
     for (var i = 0; i < path.length; i++) {
@@ -468,32 +476,14 @@ var getNamesInOrder = function getNamesInOrder(path) {
     }
   }
 
-  drawLine();
+  drawLine(minDistanceLineCoords);
 };
 
-var drawLine = function drawLine() {
+var drawLine = function drawLine(minDistanceLineCoords) {
   minDistanceLine = L.polyline(minDistanceLineCoords, {
     color: "black"
   }).bindPopup('Minimum distance path ');
-
-  if (map.hasLayer(firstFloorMap)) {
-    minDistanceLine.addTo(firstFloorMapOverlay);
-  } else {
-    minDistanceLine.addTo(secondFloorMapOverlay);
-  }
-};
-
-var locateOnce = false;
-
-var locateMe = function locateMe() {
-  locateOnce = true;
-  map.locate({
-    setView: false
-  });
-  console.log('Locating once...');
-  Toast.fire({
-    title: '<span class="w3-text-white">Locating...</span>'
-  });
+  minDistanceLine.addTo(currentFloorOverlay());
 };
 
 $('#showPathsBtn').click(function () {
@@ -506,15 +496,22 @@ var validateDirectionsInput = function validateDirectionsInput(directionToPath, 
   if (directionFromPath == "null" || directionToPath == "null" || directionFromPath == directionToPath) {
     console.log('Locations should not be empty or same');
     return $('#directionsErrorDiv').removeClass('w3-hide');
-  } else if (refObj[directionFromPath]['floorLevel'] != refObj.currentFloorLevel) {
-    console.log('Need to switch map floors');
-    return $('#directionsInfoDiv').removeClass('w3-hide');
-  } else {
+  }
+
+  if (directionFromPath == 'currentLocation') {
     return 'checked';
   }
-}; //this function is called from the App's UI when the user requests directions by supplying 'To' and 'From' locations
-//validates users input and ensures user's 'From' location is on the same floor
 
+  if (refObj[directionFromPath]['floorLevel'] != refObj.currentFloorLevel) {
+    console.log('Need to switch map floors');
+    return $('#directionsInfoDiv').removeClass('w3-hide');
+  }
+
+  return 'checked';
+};
+
+var traversingFloors = false; //this function is called from the App's UI when the user requests directions by supplying 'To' and 'From' locations
+//validates users input and ensures user's 'From' location is on the same floor
 
 var showRequestedPaths = function showRequestedPaths() {
   var directionToPath = document.getElementById("directionsToInput").value;
@@ -528,29 +525,37 @@ var showRequestedPaths = function showRequestedPaths() {
   closeNav();
   clearPathFxn();
 
-  if (refObj[directionToPath]['floorLevel'] != refObj.currentFloorLevel) {
+  if (refObj[directionToPath]['floorLevel'] != refObj.currentFloorLevel && directionFromPath == 'currentLocation') {
+    console.log('using current location and going to different floor');
     drawOtherFloorPath(directionToPath);
+    endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location');
     var currentFloorLevelElevator = refObj.currentFloorLevel + 'Elevator';
-    var _start = refObj[directionFromPath]['pointName'];
-    var _end = refObj[currentFloorLevelElevator]['pointName'];
-    findShortestPath(currentFloorMarkersObject(), _start, _end);
-    startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').addTo(currentFloorOverlay());
-    endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(otherFloorOverlay());
-    return;
+    end = refObj[currentFloorLevelElevator]['pointName'];
+    traversingFloors = true;
+    return locateMe();
   } //else to and from locations on same floor
+  else if (directionFromPath == 'currentLocation') {
+      locateMe();
+      endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location');
+      return end = refObj[directionToPath]['pointName'];
+    } else if (refObj[directionToPath]['floorLevel'] != refObj.currentFloorLevel) {
+      drawOtherFloorPath(directionToPath);
 
+      var _currentFloorLevelElevator = refObj.currentFloorLevel + 'Elevator';
 
-  if (directionFromPath == 'currentLocation') {
-    locateMe();
-    endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(currentFloorOverlay()).openPopup();
-    end = refObj[directionToPath]['pointName'];
-  } else {
-    start = refObj[directionFromPath]['pointName'];
-    end = refObj[directionToPath]['pointName'];
-    endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(currentFloorOverlay()).openPopup();
-    startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').addTo(currentFloorOverlay()).openPopup();
-    findShortestPath(currentFloorMarkersObject(), start, end);
-  }
+      var _end = refObj[_currentFloorLevelElevator]['pointName'];
+      var _start = refObj[directionFromPath]['pointName'];
+      findShortestPath(currentFloorMarkersObject(), _start, _end);
+      startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').addTo(currentFloorOverlay());
+      endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(otherFloorOverlay());
+      return;
+    } else {
+      start = refObj[directionFromPath]['pointName'];
+      end = refObj[directionToPath]['pointName'];
+      endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(currentFloorOverlay()).openPopup();
+      startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').addTo(currentFloorOverlay()).openPopup();
+      findShortestPath(currentFloorMarkersObject(), start, end);
+    }
 };
 
 var drawOtherFloorPath = function drawOtherFloorPath(directionToPath) {
@@ -558,42 +563,79 @@ var drawOtherFloorPath = function drawOtherFloorPath(directionToPath) {
   var halfPathsCoords = halfPathsObj[directionToPath];
 
   if (refObj.currentFloorLevel == 'firstFloor') {
-    halfPathLine = L.polyline(halfPathsCoords, {
-      color: 'black'
-    }).bindPopup('Your path continued..').addTo(secondFloorMapOverlay);
     elevator1stFloor.openPopup();
   } else {
-    halfPathLine = L.polyline(halfPathsCoords, {
-      color: 'black'
-    }).bindPopup('Your path continued..').addTo(firstFloorMapOverlay);
     elevator2ndFloor.openPopup();
     console.log('finding from 2nd floor start to second floor elevator');
   }
+
+  halfPathLine = L.polyline(halfPathsCoords, {
+    color: 'black'
+  }).bindPopup('Your path continued..').addTo(otherFloorOverlay());
+};
+
+var locateOnce = false;
+
+var locateMe = function locateMe() {
+  locateOnce = true;
+  map.locate({
+    setView: false
+  });
+  console.log('Locating once...');
+  Toast.fire({
+    title: '<span class="w3-text-white">Locating...</span>'
+  });
 }; //Supplies user's location to setStartPoint function
 //called from the showRequestedPaths function if user requests directions from "Current Location"
 
 
 var onLocationFoundOnce = function onLocationFoundOnce(e) {
   if (locateOnce) {
-    var userCoords = [53.52100017444731, -113.52254390716554];
-    startPointMarker.setLatLng(userCoords).bindPopup('Your Approximate Location').openPopup();
+    var userCoords = [53.521015, -113.524421];
+    startPointMarker.setLatLng(userCoords).bindPopup('Your Approximate Location', {
+      autoClose: false
+    }).addTo(currentFloorOverlay()).openPopup();
+
+    if (traversingFloors) {
+      console.log('traversingFloors = ' + traversingFloors);
+      console.log('should add end marker to other floor');
+      endPointMarker.addTo(otherFloorOverlay().openPopup());
+    } else {
+      endPointMarker.addTo(currentFloorOverlay()).openPopup();
+      console.log('adding end marker to current floor');
+    }
+
     setStartPoint();
   }
 
   locateOnce = false;
+  traversingFloors = false;
 };
 
 map.on('locationfound', onLocationFoundOnce); //sets the closest reference point as the START point using User's location or the given START point marker
 //uses the getClosestPointFrom function which returns a sorted array based on minimum distance and..
 //includes the reference point's coordinates and name 
-//Calls the minimum path finding function 
+//Calls the minimum path finding function
+
+var startMarkerDragged = false;
 
 var setStartPoint = function setStartPoint() {
-  clearPathFxn();
+  if (startMarkerDragged || endMarkerDragged) {
+    clearPathFxn();
+    startPointMarker.addTo(currentFloorOverlay());
+    endPointMarker.addTo(currentFloorOverlay());
+  }
+
   getClosestPointFrom(startPointMarker);
 
-  if (firstRefPoint) {
-    currentFloorOverlay().removeLayer(firstRefPoint);
+  if (firstFloorMapOverlay.hasLayer(firstRefPoint)) {
+    firstFloorMapOverlay.removeLayer(firstRefPoint);
+  }
+
+  ;
+
+  if (secondFloorMapOverlay.hasLayer(firstRefPoint)) {
+    secondFloorMapOverlay.removeLayer(firstRefPoint);
   }
 
   ;
@@ -601,30 +643,32 @@ var setStartPoint = function setStartPoint() {
     color: 'green'
   }).addTo(currentFloorOverlay());
   firstRefPoint.bindPopup('Your closest reference point is here').openPopup();
-
-  if (typeof endRefPoint === 'null') {
-    return endPointMarker.openPopup();
-  }
-
-  endRefPoint.addTo(currentFloorOverlay());
   var start = distancesToClosestRefPointArray[0][2];
-
-  if (typeof end === 'undefined') {
-    return endPointMarker.openPopup();
-  }
-
   findShortestPath(currentFloorMarkersObject(), start, end);
+  startMarkerDragged = false;
+  endMarkerDragged = false;
 };
 
-startPointMarker.on('dragend', setStartPoint); //sets the closest reference point as the END point using the given end point marker
+startPointMarker.on('dragend', function () {
+  startMarkerDragged = true;
+  setEndPoint();
+}); //sets the closest reference point as the END point using the given end point marker
 //uses the getClosestPointFrom function which returns a sorted array based on minimum distance and..
 //includes the reference point's coordinates and name 
+
+var endMarkerDragged = false;
 
 var setEndPoint = function setEndPoint() {
   getClosestPointFrom(endPointMarker);
 
-  if (endRefPoint) {
-    currentFloorOverlay().removeLayer(endRefPoint);
+  if (firstFloorMapOverlay.hasLayer(endRefPoint)) {
+    firstFloorMapOverlay.removeLayer(endRefPoint);
+  }
+
+  ;
+
+  if (secondFloorMapOverlay.hasLayer(endRefPoint)) {
+    secondFloorMapOverlay.removeLayer(endRefPoint);
   }
 
   ;
@@ -636,7 +680,10 @@ var setEndPoint = function setEndPoint() {
   setStartPoint();
 };
 
-endPointMarker.on('dragend', setEndPoint); //Takes a given UserLocation/Start/End marker and finds the closest reference point 
+endPointMarker.on('dragend', function () {
+  endMarkerDragged = true;
+  setEndPoint();
+}); //Takes a given UserLocation/Start/End marker and finds the closest reference point 
 //by subtracting the given point's latlng from each point in first floor OR second floor markers array 
 //returns a sorted array of distances with the lowest distance first (ie. closest ref point) 
 
@@ -797,8 +844,7 @@ var refObj = {
     pointCoords: [53.520654628040006, -113.52435708045961]
   },
   'firstFloor': 'firstFloor',
-  'secondFloor': 'secondFloor',
-  'currentFloorLevel': null
+  'secondFloor': 'secondFloor'
 };
 
 
@@ -808,12 +854,9 @@ var refObj = {
 /*!********************************!*\
   !*** ./resources/js/radmap.js ***!
   \********************************/
-/*! exports provided: controls */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "controls", function() { return controls; });
 var arr = [0, 0, 0];
 var currentCoord = '';
 var prevCoord = '';
@@ -878,19 +921,6 @@ $("#demoBtn").click(function () {
     $("#demoBtn").text("Demo Movement OFF ");
   }
 });
-var parkingMarker = L.marker([53.51978872112979, -113.52213084697725]).bindPopup('Parking'),
-    radiologyMarker = L.marker([53.52067209847866, -113.52413713932039]).bindPopup('Radiology Department'),
-    helpDeskMarker = L.marker([53.521326, -113.524185]).bindPopup('Help Desk');
-var markers = L.layerGroup([parkingMarker, radiologyMarker, helpDeskMarker]);
-var baseMaps = {
-  "1st Floor": firstFloorMap,
-  "2nd Floor": secondFloorMap
-};
-var overlays = {
-  "Markers": markers
-};
-var controls = L.control.layers(baseMaps).addTo(map);
-
 var divMarkerRadPats = new L.Marker([53.518570974858534, -113.52696150541308], {
   icon: new L.DivIcon({
     className: '',
@@ -908,14 +938,6 @@ var rectRadPats = new L.rectangle(rectRadPatsBounds).bindTooltip('Radiology Pati
 var rectRadStaffBounds = [[53.518619628257014, -113.52674692869188], [53.51846651102743, -113.52648943662645]];
 var rectRadStaff = new L.rectangle(rectRadStaffBounds).bindTooltip('Radiology Staff Area');
 var kayeClinicRadiologyGroup = new L.layerGroup([divMarkerRadPats, divMarkerRadStaff, rectRadPats, rectRadStaff]).addTo(secondFloorMapOverlay);
-var rect1Bounds = [[53.520515, -113.523949], [53.520484, -113.523893]];
-var rect1 = new L.rectangle(rect1Bounds).bindTooltip('2A1');
-var divMarker1 = new L.Marker(center, {
-  icon: new L.DivIcon({
-    className: 'my-div-icon',
-    html: '<span class="w3-text-white">Hallway</span>'
-  })
-});
 var overlaysRemoved = false;
 
 function onZoomShow() {

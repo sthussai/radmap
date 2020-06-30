@@ -435,3 +435,19 @@ function onLocationFound(e) {
                 }
             }
     
+
+            var rect1Bounds = [
+                [53.520515, -113.523949],
+                [53.520484, -113.523893]
+            ];
+            
+            
+        
+            
+            var rect1 = new L.rectangle(rect1Bounds).bindTooltip('2A1');
+            var divMarker1 = new L.Marker(center, {
+                icon: new L.DivIcon({
+                    className: 'my-div-icon',
+                    html: '<span class="w3-text-white">Hallway</span>'
+                })
+            });            

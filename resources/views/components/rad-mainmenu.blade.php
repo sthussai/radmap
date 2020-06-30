@@ -33,10 +33,13 @@
             </div>
             
         <div class="tabContent w3-margin-top" id="Links">
+            @guest
             <a href="/" onclick="closeNav()" class="w3-hover-white w3-text-white">Home</a>
+            @endguest
             <a href="/about" onclick="closeNav()" class="w3-hover-white w3-text-white">About</a>
             <a href="/feedback" onclick="closeNav()" class="w3-hover-white w3-text-white">Feedback</a>            
             @auth
+            <a href="/home" onclick="closeNav()" class="w3-hover-white w3-text-white">Dashboard</a> 
             <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

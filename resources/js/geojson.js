@@ -83,15 +83,18 @@ const startPointMarker = L.marker([53.52061534234248, -113.52407008409502], {dra
 const endPointMarker = L.marker([53.52060200173207, -113.52428197860719], {draggable:true, icon: redPin}).bindPopup('Drag To End Location').addTo(currentFloorOverlay());
 
 const clearPathFxn = () =>{
-    if(firstRefPoint) {currentFloorOverlay().removeLayer(firstRefPoint)};
-    if(endRefPoint) {currentFloorOverlay().removeLayer(endRefPoint)};
+
+    if(firstFloorMapOverlay.hasLayer(firstRefPoint)){firstFloorMapOverlay.removeLayer(firstRefPoint)};
+    if(secondFloorMapOverlay.hasLayer(firstRefPoint)){secondFloorMapOverlay.removeLayer(firstRefPoint)};
+    
+    if(firstFloorMapOverlay.hasLayer(endRefPoint)){firstFloorMapOverlay.removeLayer(endRefPoint)};
+    if(secondFloorMapOverlay.hasLayer(endRefPoint)){secondFloorMapOverlay.removeLayer(endRefPoint)};
+
     if(firstFloorMapOverlay.hasLayer(endPointMarker)) {firstFloorMapOverlay.removeLayer(endPointMarker);}
     if(secondFloorMapOverlay.hasLayer(endPointMarker)) {secondFloorMapOverlay.removeLayer(endPointMarker);}
 
     if(firstFloorMapOverlay.hasLayer(startPointMarker)) {firstFloorMapOverlay.removeLayer(startPointMarker);}
     if(secondFloorMapOverlay.hasLayer(startPointMarker)) {secondFloorMapOverlay.removeLayer(startPointMarker);}
-    startPointMarker.addTo(currentFloorOverlay());
-    endPointMarker.addTo(currentFloorOverlay());
     if(firstFloorMapOverlay.hasLayer(halfPathLine)) {firstFloorMapOverlay.removeLayer(halfPathLine);}
     if(secondFloorMapOverlay.hasLayer(halfPathLine)) {secondFloorMapOverlay.removeLayer(halfPathLine);}
 
@@ -114,11 +117,9 @@ const secondFloorMarkersArray = [];
 let firstRefPoint = null; 
 let endRefPoint = null;
 let distancesToClosestRefPointArray = [];
-
-
 let minDistanceLine = null;
 let halfPathLine = null;
-
+let end = null;
 
 
 const ajaxGetGeoJson = (url, floor, markerGroup) => {
@@ -200,7 +201,7 @@ const popupOnEachFeature = (feature, layer) => {
 
 }
 
-var minDistanceLineCoords = [];
+
 
 
 let shortestDistanceNode = (distances, visited) => {
@@ -298,7 +299,7 @@ let shortestDistanceNode = (distances, visited) => {
    };
 
     const getNamesInOrder = (path) => {
-        minDistanceLineCoords =[];
+        const minDistanceLineCoords =[];
         if(map.hasLayer(firstFloorMap)){     
             for ( var i = 0; i<path.length; i++){
             firstFloorMarkersArray.forEach(function (feature){
@@ -322,17 +323,98 @@ let shortestDistanceNode = (distances, visited) => {
                       });
                 }
         }
-        drawLine();    
+        drawLine(minDistanceLineCoords);    
     }   
     
-   const drawLine = () => {
+   const drawLine = (minDistanceLineCoords) => {
     minDistanceLine = L.polyline(minDistanceLineCoords, {color:"black"})
     .bindPopup('Minimum distance path ');
-    if(map.hasLayer(firstFloorMap)){    
-    minDistanceLine.addTo(firstFloorMapOverlay);
+    minDistanceLine.addTo(currentFloorOverlay());
+}
+
+
+$('#showPathsBtn').click(function(){
+    showRequestedPaths();
+});
+
+
+const validateDirectionsInput =  (directionToPath, directionFromPath) => {
+    $('#directionsInfoDiv, #directionsErrorDiv').addClass('w3-hide');
+    if (directionFromPath =="null" || directionToPath =="null" || directionFromPath == directionToPath ){
+        console.log('Locations should not be empty or same'); 
+        return $('#directionsErrorDiv').removeClass('w3-hide');     
+    } 
+    if(directionFromPath == 'currentLocation'){
+    return 'checked'
+    }
+    if(refObj[directionFromPath]['floorLevel'] != refObj.currentFloorLevel){
+        console.log('Need to switch map floors'); 
+        return $('#directionsInfoDiv').removeClass('w3-hide'); 
+    }
+    return 'checked'
+}
+
+let traversingFloors = false;
+//this function is called from the App's UI when the user requests directions by supplying 'To' and 'From' locations
+//validates users input and ensures user's 'From' location is on the same floor
+const showRequestedPaths =  () => {
+    const directionToPath = document.getElementById("directionsToInput").value;
+    const directionFromPath = document.getElementById("directionsFromInput").value;
+    const validInput = validateDirectionsInput(directionToPath, directionFromPath);
+    if(validInput != 'checked'){return validInput}
+
+    closeNav();
+    clearPathFxn();
+    if(refObj[directionToPath]['floorLevel'] != refObj.currentFloorLevel && directionFromPath == 'currentLocation'){
+        console.log('using current location and going to different floor')
+        drawOtherFloorPath(directionToPath);
+        endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location');
+        const currentFloorLevelElevator =  refObj.currentFloorLevel+'Elevator';
+        end = refObj[currentFloorLevelElevator]['pointName'];
+        traversingFloors = true;
+        return locateMe();
+    }
+    
+    //else to and from locations on same floor
+    else if(directionFromPath == 'currentLocation'){
+        locateMe();
+        endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location');
+        return end = refObj[directionToPath]['pointName'];        
+    }   
+
+    else if(refObj[directionToPath]['floorLevel'] != refObj.currentFloorLevel){
+        drawOtherFloorPath(directionToPath);
+        const currentFloorLevelElevator =  refObj.currentFloorLevel+'Elevator';
+        const end = refObj[currentFloorLevelElevator]['pointName'];
+        const start = refObj[directionFromPath]['pointName'];
+        findShortestPath(currentFloorMarkersObject(), start, end);
+        startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').addTo(currentFloorOverlay());
+        endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(otherFloorOverlay());
+        return;
+    }
+      
+    else {
+        start = refObj[directionFromPath]['pointName'];
+        end = refObj[directionToPath]['pointName'];
+        endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(currentFloorOverlay()).openPopup();
+        startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').addTo(currentFloorOverlay()).openPopup();
+        findShortestPath(currentFloorMarkersObject(), start, end);
+    }
+
+}
+
+
+
+const drawOtherFloorPath = (directionToPath) => {
+    console.log('heading to a different Floor: '+ refObj[directionToPath]['floorLevel']);
+    const halfPathsCoords = halfPathsObj[directionToPath];
+    if(refObj.currentFloorLevel == 'firstFloor'){
+        elevator1stFloor.openPopup();    
     } else {
-        minDistanceLine.addTo(secondFloorMapOverlay);
-    }    
+        elevator2ndFloor.openPopup();
+        console.log('finding from 2nd floor start to second floor elevator')
+    }
+    halfPathLine = L.polyline(halfPathsCoords, {color:'black'}).bindPopup('Your path continued..').addTo(otherFloorOverlay());
 }
 
 let locateOnce = false;
@@ -347,122 +429,77 @@ const locateMe = () => {
       })
 }
 
-$('#showPathsBtn').click(function(){
-    showRequestedPaths();
-});
-
-
-const validateDirectionsInput =  (directionToPath, directionFromPath) => {
-    $('#directionsInfoDiv, #directionsErrorDiv').addClass('w3-hide');
-    if (directionFromPath =="null" || directionToPath =="null" || directionFromPath == directionToPath ){
-        console.log('Locations should not be empty or same'); 
-        return $('#directionsErrorDiv').removeClass('w3-hide');     
-    } else if(refObj[directionFromPath]['floorLevel'] != refObj.currentFloorLevel){
-        console.log('Need to switch map floors'); 
-        return $('#directionsInfoDiv').removeClass('w3-hide'); 
-    } else {return 'checked'}
-}
-
-
-//this function is called from the App's UI when the user requests directions by supplying 'To' and 'From' locations
-//validates users input and ensures user's 'From' location is on the same floor
-const showRequestedPaths =  () => {
-    const directionToPath = document.getElementById("directionsToInput").value;
-    const directionFromPath = document.getElementById("directionsFromInput").value;
-    const validInput = validateDirectionsInput(directionToPath, directionFromPath);
-    if(validInput != 'checked'){return validInput}
-
-
-    closeNav();
-    clearPathFxn();
-    if(refObj[directionToPath]['floorLevel'] != refObj.currentFloorLevel){
-        drawOtherFloorPath(directionToPath);
-        const currentFloorLevelElevator =  refObj.currentFloorLevel+'Elevator';
-        const start = refObj[directionFromPath]['pointName'];
-        const end = refObj[currentFloorLevelElevator]['pointName'];
-        findShortestPath(currentFloorMarkersObject(), start, end);
-        startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').addTo(currentFloorOverlay());
-        endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(otherFloorOverlay());
-        return;
-    }
-    //else to and from locations on same floor
-    if(directionFromPath == 'currentLocation'){
-        locateMe();
-        endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(currentFloorOverlay()).openPopup();
-        end = refObj[directionToPath]['pointName'];
-    } else {   
-        start = refObj[directionFromPath]['pointName'];
-        end = refObj[directionToPath]['pointName'];
-        endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(currentFloorOverlay()).openPopup();
-        startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').addTo(currentFloorOverlay()).openPopup();
-        findShortestPath(currentFloorMarkersObject(), start, end);
-
-    }
-
-}
-
-
-
-const drawOtherFloorPath = (directionToPath) => {
-    console.log('heading to a different Floor: '+ refObj[directionToPath]['floorLevel']);
-    const halfPathsCoords = halfPathsObj[directionToPath];
-    if(refObj.currentFloorLevel == 'firstFloor'){
-        halfPathLine = L.polyline(halfPathsCoords, {color:'black'}).bindPopup('Your path continued..').addTo(secondFloorMapOverlay);
-        elevator1stFloor.openPopup();    
-    } else {
-        halfPathLine = L.polyline(halfPathsCoords, {color:'black'}).bindPopup('Your path continued..').addTo(firstFloorMapOverlay);
-        elevator2ndFloor.openPopup();
-        console.log('finding from 2nd floor start to second floor elevator')
-    }
-}
-
 
 
 //Supplies user's location to setStartPoint function
 //called from the showRequestedPaths function if user requests directions from "Current Location"
 const onLocationFoundOnce = (e) => {
 if (locateOnce) {
-    let userCoords = [ 53.52100017444731, -113.52254390716554];
-    startPointMarker.setLatLng(userCoords).bindPopup('Your Approximate Location').openPopup();
+    let userCoords = [ 53.521015, -113.524421];
+    startPointMarker.setLatLng(userCoords).bindPopup('Your Approximate Location', {autoClose: false}).addTo(currentFloorOverlay()).openPopup();
+    if(traversingFloors) {
+    console.log('traversingFloors = ' + traversingFloors)
+    console.log('should add end marker to other floor')
+    endPointMarker.addTo(otherFloorOverlay().openPopup());
+    } 
+    else {
+        endPointMarker.addTo(currentFloorOverlay()).openPopup();
+        console.log('adding end marker to current floor')
+    }
     setStartPoint();
 }
-locateOnce = false
+locateOnce = false;
+traversingFloors = false;
 }
 
 map.on('locationfound', onLocationFoundOnce);    
 
+
+
 //sets the closest reference point as the START point using User's location or the given START point marker
 //uses the getClosestPointFrom function which returns a sorted array based on minimum distance and..
 //includes the reference point's coordinates and name 
-//Calls the minimum path finding function 
+//Calls the minimum path finding function
+let startMarkerDragged = false; 
 const setStartPoint = () => {
-    clearPathFxn();
+    if(startMarkerDragged || endMarkerDragged){clearPathFxn();
+    startPointMarker.addTo(currentFloorOverlay());
+    endPointMarker.addTo(currentFloorOverlay());
+    }    
     getClosestPointFrom(startPointMarker);
-    if(firstRefPoint){currentFloorOverlay().removeLayer(firstRefPoint)};
+    if(firstFloorMapOverlay.hasLayer(firstRefPoint)){firstFloorMapOverlay.removeLayer(firstRefPoint)};
+    if(secondFloorMapOverlay.hasLayer(firstRefPoint)){secondFloorMapOverlay.removeLayer(firstRefPoint)};
     firstRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {color: 'green'}).addTo(currentFloorOverlay());
     firstRefPoint.bindPopup('Your closest reference point is here').openPopup();
-    if(typeof endRefPoint === 'null'){return endPointMarker.openPopup();}
-    endRefPoint.addTo(currentFloorOverlay());
     const start = distancesToClosestRefPointArray[0][2];
-    if(typeof end === 'undefined'){return endPointMarker.openPopup();}
     findShortestPath(currentFloorMarkersObject(), start, end );
+    startMarkerDragged = false;
+    endMarkerDragged = false;
 }
 
-startPointMarker.on('dragend', setStartPoint);
+startPointMarker.on('dragend', function(){
+    startMarkerDragged = true;
+    setEndPoint();   
+});
 
 
 //sets the closest reference point as the END point using the given end point marker
 //uses the getClosestPointFrom function which returns a sorted array based on minimum distance and..
 //includes the reference point's coordinates and name 
-const setEndPoint = () => {    
-    getClosestPointFrom(endPointMarker);
-    if(endRefPoint){currentFloorOverlay().removeLayer(endRefPoint)};
+let endMarkerDragged = false; 
+const setEndPoint = () => {
+    getClosestPointFrom(endPointMarker);    
+    if(firstFloorMapOverlay.hasLayer(endRefPoint)){firstFloorMapOverlay.removeLayer(endRefPoint)};
+    if(secondFloorMapOverlay.hasLayer(endRefPoint)){secondFloorMapOverlay.removeLayer(endRefPoint)};
     endRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {color: 'red'}).bindPopup('Ending Reference point');
     end = distancesToClosestRefPointArray[0][2]; // passing in Point name ie. 'Point 1'
     setStartPoint();
 }
 
-endPointMarker.on('dragend', setEndPoint);
+endPointMarker.on('dragend', function(){
+    endMarkerDragged = true;
+    setEndPoint();   
+});
 
 //Takes a given UserLocation/Start/End marker and finds the closest reference point 
 //by subtracting the given point's latlng from each point in first floor OR second floor markers array 

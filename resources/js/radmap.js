@@ -1,23 +1,23 @@
 
 
 
-var arr = [0, 0, 0];
-var currentCoord = '';
-var prevCoord = '';
-var pastCoord = '';
-var counter = 0;
-var x; //current location
-var p; //previous location
-var pp; //past location
-var coordPopup = L.popup();
+let arr = [0, 0, 0];
+let currentCoord = '';
+let prevCoord = '';
+let pastCoord = '';
+let counter = 0;
+let x; //current location
+let p; //previous location
+let pp; //past location
+let coordPopup = L.popup();
 
-var pedwaylatlngs = [
+const pedwaylatlngs = [
 	[53.52037, -113.525395],
 [53.520363, -113.526096],
 [53.519151, -113.526086],
 [53.519151, -113.526406]
 ];
-var pedway = L.polyline(pedwaylatlngs, {
+const pedway = L.polyline(pedwaylatlngs, {
 color: '#50C7E9',
 weight: 8,
 lineCap: 'butt',
@@ -33,7 +33,7 @@ $('#fontSizeSelect').change(function(){
 })
 
 
-var showInfo = true;
+let showInfo = true;
 document.getElementById("map").style.marginTop = document.getElementById("infoDivContainer").offsetHeight;
 
 $(window).on("load", function() {
@@ -72,30 +72,6 @@ $("#demoBtn").click(function(){
 });
     
 
-    var parkingMarker = L.marker([53.51978872112979, -113.52213084697725]).bindPopup('Parking'),
-        radiologyMarker = L.marker([53.52067209847866, -113.52413713932039]).bindPopup('Radiology Department'),
-        helpDeskMarker = L.marker([53.521326, -113.524185]).bindPopup('Help Desk');
-		
-    var markers = L.layerGroup([parkingMarker, radiologyMarker, helpDeskMarker]);
-
-    var baseMaps = {
-        "1st Floor": firstFloorMap,
-        "2nd Floor": secondFloorMap,
-    };
-	
-    var overlays = {
-        "Markers": markers,
-    }
-
-	
-    var controls = L.control.layers(baseMaps).addTo(map);
-	export { controls };
-	
-
-
-
-	
-
 	
 			var divMarkerRadPats = new L.Marker([53.518570974858534, -113.52696150541308], {
 				icon: new L.DivIcon({
@@ -124,21 +100,7 @@ $("#demoBtn").click(function(){
 			var rectRadStaff = new L.rectangle(rectRadStaffBounds).bindTooltip('Radiology Staff Area');
 			
 			var kayeClinicRadiologyGroup = new L.layerGroup([divMarkerRadPats, divMarkerRadStaff, rectRadPats, rectRadStaff]).addTo(secondFloorMapOverlay);
-		var rect1Bounds = [
-			[53.520515, -113.523949],
-			[53.520484, -113.523893]
-		];
 		
-		
-	
-		
-		var rect1 = new L.rectangle(rect1Bounds).bindTooltip('2A1');
-		var divMarker1 = new L.Marker(center, {
-			icon: new L.DivIcon({
-				className: 'my-div-icon',
-				html: '<span class="w3-text-white">Hallway</span>'
-			})
-		});
 		var overlaysRemoved = false;
 		
 		function onZoomShow() {

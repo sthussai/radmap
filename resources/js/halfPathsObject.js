@@ -113,7 +113,7 @@ const refObj = {
     'secondFloorElevator' : {floorLevel: 'secondFloor', pointName: 'Point 30', pointCoords: [53.520654628040006, -113.52435708045961]},
     'firstFloor' : 'firstFloor',
     'secondFloor' : 'secondFloor',
-    'currentFloorLevel' : null
+    
 }
 
     

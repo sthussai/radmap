@@ -37,17 +37,17 @@
 	
 <script>
 
-	var center = "{{$centerCoords}}";
-	var centerZoom = "{{$centerZoom}}";
-	//	var demo = "{{$demo ? $demo : false}}";
-	var demo = false;
-	var markerColor = "{{$color}}";
+	let center = "{{$centerCoords}}";
+	let centerZoom = "{{$centerZoom}}";
+	//	let demo = "{{$demo ? $demo : false}}";
+	let demo = false;
+	let markerColor = "{{$color}}";
 	center = center.split(",");
-	var centerMarker = L.marker([53.521217, -113.522732]).bindPopup('UofA Hospital Main Entrance');
-	var floor1url = 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/floorplan1.png';
-	var floor2url = 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/floorplan2.png';
+	const centerMarker = L.marker([53.521217, -113.522732]).bindPopup('UofA Hospital Main Entrance');
+	const floor1url = 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/floorplan1.png';
+	const floor2url = 'https://elasticbeanstalk-us-east-2-203326335658.s3.us-east-2.amazonaws.com/floorplan2.png';
 
-	var floor1Bounds = [
+	const floor1Bounds = [
 		[53.522184, -113.525419],
 			[53.519451, -113.521535]
 		],
@@ -56,7 +56,7 @@
 			interactive: true,
 		});
 		
-		var floor2Bounds = [
+		const floor2Bounds = [
 			[53.521833, -113.525398],
 			[53.519451, -113.521535]
 		],
@@ -66,7 +66,7 @@
 		});
 
 
-	var main = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+	const main = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
 		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 		maxZoom: 20,
 		id: 'mapbox/streets-v11',
@@ -74,22 +74,35 @@
 		zoomOffset: -1,
 		accessToken: 'pk.eyJ1IjoiZGV2dGVra2VuNDgyIiwiYSI6ImNrN21nN2oxdTAwMHMzZW4xc3hwcmljdnMifQ.1bf42iYapSNIQ_PS8D9DbQ'
 	});
-	var firstFloorMapOverlay = L.layerGroup();
-	var secondFloorMapOverlay = L.layerGroup();
-	var mapOverlay = L.layerGroup();
-	var firstFloorMap = L.layerGroup([firstFloorImage, firstFloorMapOverlay]);
-	var secondFloorMap = L.layerGroup([secondFloorImage, secondFloorMapOverlay]);
+	const firstFloorMapOverlay = L.layerGroup();
+	const secondFloorMapOverlay = L.layerGroup();
+	const mapOverlay = L.layerGroup();
+	const firstFloorMap = L.layerGroup([firstFloorImage, firstFloorMapOverlay]);
+	const secondFloorMap = L.layerGroup([secondFloorImage, secondFloorMapOverlay]);
 
-	var map = L.map('map', {
+	const map = L.map('map', {
 		center: center,
 		zoom: centerZoom,
-		layers: [main, secondFloorMap, centerMarker]
+		layers: [main, centerMarker]
 	});
 
-	
+	const firstFloorHelpDesk = L.marker([53.521326, -113.524185]).bindPopup('First Floor Help Desk'),
+	secondFloorHelpDesk = L.marker([53.520186, -113.522549]).bindPopup('Second Floor Help Desk');
+		
+    const helpDeskMarkers = L.layerGroup([firstFloorHelpDesk, secondFloorHelpDesk]);
 
+	const baseMaps = {
+        "1st Floor": firstFloorMap,
+        "2nd Floor": secondFloorMap,
+    };
 
- const changeFloorModal = () => {
+	const overlays = {
+        "Help Desk Markers": helpDeskMarkers,
+    }
+
+    const controls = L.control.layers(baseMaps, overlays).addTo(map);
+ 
+	const changeFloorModal = () => {
 	 	 
 	 Swal.fire({
 	 title: 'RadMap',
@@ -98,6 +111,13 @@
 		confirmButtonText: 'First Floor',
 		showCancelButton: true,
 		cancelButtonText: 'Second Floor',
+		backdrop: false,
+		  showClass: {
+    popup: 'animate__animated animate__fadeInDown'
+  },
+  hideClass: {
+    popup: 'animate__animated animate__fadeOutUp'
+  }
 	  }).then((result) => {
 		  if (result.value) {
 			  console.log(result.value);
