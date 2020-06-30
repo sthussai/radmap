@@ -1,0 +1,204 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52368652820589, 53.520819575486904  ]
+      },
+      "properties": {
+        "name": "Shape 1",
+        "floor": "second",
+        "popupContent": "Radiology Admin (Candice/Holly) 407-2690",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52374687790872, 53.520688686170985  ]
+      },
+      "properties": {
+        "name": "Shape 2",
+        "floor": "second",
+        "popupContent": "Film Library Conf Room ",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52373883128169, 53.52075325653884  ]
+      },
+      "properties": {
+        "name": "Shape 3",
+        "floor": "second",
+        "popupContent": "Film Library (Second Opinions)",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.5236878693104, 53.52069427192498  ]
+      },
+      "properties": {
+        "name": "Shape 4",
+        "floor": "second",
+        "popupContent": "Neuroradiology CT 407-1188",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.5236878693104, 53.520649472576004  ]
+      },
+      "properties": {
+        "name": "Shape 5",
+        "floor": "second",
+        "popupContent": "Body CT #1 407-7941",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52376431226733, 53.52061356082724  ]
+      },
+      "properties": {
+        "name": "Shape 6",
+        "floor": "second",
+        "popupContent": "Chest CT 407-6792",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.523618131876, 53.520680696577294  ]
+      },
+      "properties": {
+        "name": "Shape 7",
+        "floor": "second",
+        "popupContent": "Body CT #2/Fluoro 407-1194        ",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52351620793344, 53.5202377649421  ]
+      },
+      "properties": {
+        "name": "Shape 8",
+        "floor": "second",
+        "popupContent": "Angiointerventional Radiology 407-8850",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52381929755214, 53.52057090402788  ]
+      },
+      "properties": {
+        "name": "Shape 9",
+        "floor": "second",
+        "popupContent": "Resident Reporting Area",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52414518594743, 53.52089718056303  ]
+      },
+      "properties": {
+        "name": "Shape 10",
+        "floor": "second",
+        "size": "small",
+        "popupContent": "Peds Ultrasound 407-6793        ",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52412641048433, 53.520880076827545  ]
+      },
+      "properties": {
+        "name": "Shape 11",
+        "floor": "second",
+        "size": "small",
+        "popupContent": "Diagnostic Ultrasound 407-8585        ",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.5241425037384, 53.52086328113109  ]
+      },
+      "properties": {
+        "name": "Shape 12",
+        "floor": "second",
+        "size": "small",
+        "popupContent": "Interventional Ultrasound 407-1563        ",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52419346570971, 53.52076191460123  ]
+      },
+      "properties": {
+        "name": "Shape 13",
+        "floor": "second",
+        "popupContent": "Radiology conference room        ",
+        "secondFloor": true
+      }
+    }
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52405667304994, 53.52051135045529  ]
+      },
+      "properties": {
+        "name": "Shape 14",
+        "floor": "second",
+        "popupContent": "Nuclear Medicine 407-8415        ",
+        "secondFloor": true
+      }
+    }
+    
+  ]
+}
