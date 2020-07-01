@@ -18,12 +18,12 @@ const switchFloorLevels = () => {
         map.addLayer(firstFloorMap);
     }
 }
-
 //function to switch floors After pressing 'S'
 $(window).keydown(function(event) {
     if (event.which == 83) { //83 == Key Code for S
         switchFloorLevels(); 
-        console.log('Switch Floors');
+        console.log('Switch Floors To');
+        console.log(refObj.currentFloorLevel);
     }
 });
 
@@ -79,11 +79,14 @@ const otherFloorOverlay = () => {
 
 
 
-const startPointMarker = L.marker([53.52061534234248, -113.52407008409502], {draggable:true, icon: greenPin}).bindPopup('Drag To Start Location').addTo(currentFloorOverlay());
-const endPointMarker = L.marker([53.52060200173207, -113.52428197860719], {draggable:true, icon: redPin}).bindPopup('Drag To End Location').addTo(currentFloorOverlay());
+const startPointMarker = L.marker([53.52061534234248, -113.52407008409502], {draggable:true, icon: greenPin}).bindPopup('Drag To Start Location');
+const endPointMarker = L.marker([53.52060200173207, -113.52428197860719], {draggable:true, icon: redPin}).bindPopup('Drag To End Location');
 
 const clearPathFxn = () =>{
 
+    if(firstFloorMapOverlay.hasLayer(searchMakerLayer)){firstFloorMapOverlay.removeLayer(searchMakerLayer)};
+    if(secondFloorMapOverlay.hasLayer(searchMakerLayer)){secondFloorMapOverlay.removeLayer(searchMakerLayer)};
+    
     if(firstFloorMapOverlay.hasLayer(firstRefPoint)){firstFloorMapOverlay.removeLayer(firstRefPoint)};
     if(secondFloorMapOverlay.hasLayer(firstRefPoint)){secondFloorMapOverlay.removeLayer(firstRefPoint)};
     

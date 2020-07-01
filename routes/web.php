@@ -34,11 +34,12 @@ Route::post('/feedback', 'FeedbackController@store');
 
 Route::get('/radmap', 'RadMapController@main');
 Route::get('/radmaptest', 'RadMapController@test');
+Route::post('/addlocation', 'RadMapController@store')->middleware('auth');
+Route::get('/addlocation', function () {
+    return view('addlocation');
+})->middleware('auth');
 
 Route::get('/reactradmap', function () {
-//    Cache::put( 'cachekey', 'I am in the cache baby!', 1 );
-    //return Cache::get( 'cachekey' );
-   //	return Cache::get( 'cachekey', 'The cache is empty, so here is something to keep you happy' );
     return view('reactradmap');
 });
 
@@ -46,3 +47,5 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('dashboard');
 Route::get('/radmapstaff', 'HomeController@radmapstaff');
+
+Route::get('/search', 'AjaxSearchController@search');

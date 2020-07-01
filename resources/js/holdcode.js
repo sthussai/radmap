@@ -442,7 +442,10 @@ function onLocationFound(e) {
             ];
             
             
-        
+          /* 		googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            }).addTo(map); */
             
             var rect1 = new L.rectangle(rect1Bounds).bindTooltip('2A1');
             var divMarker1 = new L.Marker(center, {

@@ -175,7 +175,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [ -113.52389037609102, 53.52092864347813  ]
+        "coordinates": [ -113.52389037609102, 53.52092864347813  ] 
       },
       "properties": {
         "name": "Point 10",

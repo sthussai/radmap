@@ -258,12 +258,7 @@ $("#demoBtn").click(function(){
 
 
 		
-		function changeInfoDivMessage(){
-			if(map.hasLayer(firstFloorMap)) {document.getElementById('infoDiv').innerText = 'Viewing First Floor Map of University Hospital';}
-			else{document.getElementById('infoDiv').innerText = 'Viewing Second Floor Map of University Hospital';}
-		}
 
-		map.on('baselayerchange', changeInfoDivMessage );
 
 
 
@@ -299,5 +294,5 @@ $("#demoBtn").click(function(){
 		}
 
 
-
+	
 

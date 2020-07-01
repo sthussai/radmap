@@ -5,7 +5,12 @@
     </span>
     <!-- Overlay content -->
     <section id="myNav1Content" class="overlaynav-content">
-    <span id="topSpan" style="position: absolute; top: 0"></span>
+    <div class="w3-row ">
+        <input class="w3-col s11 w3-margin-bottom w3-margin-top w3-input w3-white "  type="text" name="search" placeholder="Search Locations" id="searchBar">
+        <button class="w3-col w3-blue s1 w3-btn w3-margin-bottom w3-margin-top" onclick="clearSearchInput()">X</button>
+        <div id="results" style="position: relative;margin-top:15%; z-index:1100" class="w3-white"></div>
+        </div>
+
     <button id="topBtn" type="button" style="position: absolute; top: 45%; right: 5%" onClick="topFunction()">
         <i class="fa fa-arrow-up"></i>
         </button>
@@ -31,6 +36,7 @@
                 <button onclick="closeNav()" class="w3-col s6 w3-btn w3-white w3-hover-opacity"><i
                         class="fa fa-close w3-margin-right w3-large"></i>Close Menu</button>
             </div>
+
             
         <div class="tabContent w3-margin-top" id="Links">
             @guest
@@ -141,13 +147,13 @@
 <script>
     
     function topFunction() {
-        document.getElementById('topSpan').scrollIntoView();
+        document.getElementById('searchBar').scrollIntoView();
     }
     function bottomFunction() {
         document.getElementById('refreshMapBtn').scrollIntoView();
 }
 
-    var navContent = document.getElementById('myNav1');
+/*     var navContent = document.getElementById('myNav1');
     L.DomEvent.on(navContent, 'click dblclick scroll', function(ev) {
         L.DomEvent.stopPropagation(ev);
         L.DomEvent.disableScrollPropagation(navContent);
@@ -156,7 +162,13 @@
 
     $("#myNav1Content").click(function(event){
   event.stopPropagation();
-});
+}); */
+
+const clearSearchInput = () =>{
+    if(document.getElementById('searchBar').value == ''){closeNav()};
+    document.getElementById('searchBar').value='';
+    ajaxSearch();
+}
 
     function menuTabChange(showTab) {
         var i, tabcontent, tablinks;
@@ -185,6 +197,8 @@
         map.dragging.enable();
         $('#directionsErrorDiv').addClass('w3-hide');
         $('#directionsInfoDiv').addClass('w3-hide');
+        $('#searchBar').val("");
+          ajaxSearch();
     }
 
     function recenterMap() {
@@ -192,6 +206,52 @@
         map.setView(center, 17);
 
     }	
+	
+    function ajaxSearch() {
+			$value = $("#searchBar").val();
+			$.ajax({
+			  type: 'get',
+			  url: '/search',
+			  data: {
+				'search': $value
+			  },
+			  success: function(data) {
+				  console.log(data);
+				$('#results').html(data);
+			  }
+			});
+		  }
+	
+		  $('#searchBar').on('keyup', function() {
+			ajaxSearch();
+		  });
+
+
+
+    const searchMakerLayer = L.layerGroup();
+	
+    const showMarker = (firstFloor, lat, lng, description) => {
+        if(firstFloorMapOverlay.hasLayer(searchMakerLayer)){firstFloorMapOverlay.removeLayer(searchMakerLayer)};
+        if(secondFloorMapOverlay.hasLayer(searchMakerLayer)){secondFloorMapOverlay.removeLayer(searchMakerLayer)};
+        searchMakerLayer.clearLayers();
+        map.setView([lat, lng]);
+        L.marker([lat, lng]).bindPopup(description).addTo(searchMakerLayer).openPopup();
+        closeNav();
+        if(firstFloor){
+        searchMakerLayer.addTo(firstFloorMapOverlay);
+        map.removeLayer(secondFloorMap);
+        return map.addLayer(firstFloorMap);
+        } else {
+        searchMakerLayer.addTo(secondFloorMapOverlay);
+        map.removeLayer(firstFloorMap);
+        return map.addLayer(secondFloorMap);
+        }
+
+    }   
+    function changeInfoDivMessage(){
+			if(map.hasLayer(firstFloorMap)) {document.getElementById('infoDiv').innerText = 'Viewing First Floor Map of University Hospital';}
+			else{document.getElementById('infoDiv').innerText = 'Viewing Second Floor Map of University Hospital';}
+		}
 
 
         //function to close Navigation After pressing 'ESc'

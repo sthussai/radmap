@@ -5,7 +5,7 @@
 	@include('components.rad-loader')
 	<div id="infoDivContainer" class="w3-center ">
 		<div id="infoDiv" class="w3-black w3-padding " style=" font-size: {{$fontSize}}; ">
-			Viewing Second Floor Map of University Hospital
+			Viewing First Floor Map of University Hospital
 		</div>
 	</div>
 
@@ -83,7 +83,7 @@
 	const map = L.map('map', {
 		center: center,
 		zoom: centerZoom,
-		layers: [main, centerMarker]
+		layers: [main, firstFloorMap , centerMarker]
 	});
 
 	const firstFloorHelpDesk = L.marker([53.521326, -113.524185]).bindPopup('First Floor Help Desk'),
@@ -119,28 +119,20 @@
     popup: 'animate__animated animate__fadeOutUp'
   }
 	  }).then((result) => {
-		  if (result.value) {
-			  console.log(result.value);
-			  map.removeLayer(secondFloorMap);
-			  map.addLayer(firstFloorMap);
-		  } else {
-			console.log(result.value);
-			  map.removeLayer(firstFloorMap);
-			  map.addLayer(secondFloorMap);
-		  } ;
-	 
+          if (!result . value) {
+              map . removeLayer(firstFloorMap);
+              map . addLayer(secondFloorMap);
+          }
 		}); 
 } 
 
 changeFloorModal()
 
+map.on('baselayerchange', changeInfoDivMessage );
 $('#infoDiv').click(function(){
 	changeFloorModal()
 });
-  /* 		googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            }).addTo(map); */
+
 	
 
 </script>

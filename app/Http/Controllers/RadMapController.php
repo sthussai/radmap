@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Validator;
+use App\Location;
 use Illuminate\Http\Request;
 
 class RadMapController extends Controller
@@ -68,4 +69,27 @@ class RadMapController extends Controller
         return view('about');
     }
 
+
+    public function store(Request $request){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'description' => 'required|min:10',
+            'latlng' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
+            ])->validate();
+            
+            $location = new Location();
+            $location->name = request()->name;
+            $location->description = request()->description;
+            $location->latlng = request()->latlng;
+            $location->lat = request()->lat;
+            $location->lng = request()->lng;
+            if(request()->firstFloor == '0'){
+                $location->firstFloor = false;
+            } else {$location->firstFloor = true;}
+            $location->save();
+            $request->session()->flash('message', 'Location successfully submitted!');
+            return redirect('/addlocation');
+    }
 }
