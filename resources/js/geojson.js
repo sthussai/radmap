@@ -1,6 +1,7 @@
 const { controls } = require("./radmap");
 const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = require("./halfPathsObject");
 
+
 const floorRecorder = () =>{
     if(map.hasLayer(firstFloorMap)){
         refObj.currentFloorLevel = 'firstFloor'
@@ -77,7 +78,12 @@ const otherFloorOverlay = () => {
     }
 }
 
+const changeInfoDivMessage = () => {
+    if(map.hasLayer(firstFloorMap)) {document.getElementById('infoDiv').innerText = 'Viewing First Floor Map of University Hospital';}
+    else{document.getElementById('infoDiv').innerText = 'Viewing Second Floor Map of University Hospital';}
+}
 
+map.on('baselayerchange', changeInfoDivMessage );
 
 const startPointMarker = L.marker([53.52061534234248, -113.52407008409502], {draggable:true, icon: greenPin}).bindPopup('Drag To Start Location');
 const endPointMarker = L.marker([53.52060200173207, -113.52428197860719], {draggable:true, icon: redPin}).bindPopup('Drag To End Location');
@@ -239,8 +245,6 @@ let shortestDistanceNode = (distances, visited) => {
       for (let child in graph[startNode]) {
           parents[child] = startNode;
         }
-        console.log("parents");
-        console.log(parents);
         
         // collect visited nodes
         let visited = [];
@@ -406,6 +410,24 @@ const showRequestedPaths =  () => {
 
 }
 
+$('#infoDiv').click(function(){
+    console.log('click'); 
+    if (searchMarker['Latlng']){
+        console.log(searchMarker)
+        let btnbtn = document.getElementById('searchMarkerBtn');
+        btnbtn.onclick = function(){
+            console.log('hello, this is' + searchMarker['pointName']);
+            clearPathFxn();
+            end = searchMarker['pointName'];
+            return locateMe();
+/*             let start= 'Point 30';
+            return findShortestPath(currentFloorMarkersObject(), start, end); */
+        }
+    } else {
+        console.log('searchMarkerLatlng is null');
+    }
+    
+});
 
 
 const drawOtherFloorPath = (directionToPath) => {

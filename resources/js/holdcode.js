@@ -454,3 +454,31 @@ function onLocationFound(e) {
                     html: '<span class="w3-text-white">Hallway</span>'
                 })
             });            
+
+
+ /*      <button id="topBtn" type="button" style="position: absolute; top: 45%; right: 5%" onClick="topFunction()">
+        <i class="fa fa-arrow-up"></i>
+        </button>
+        <button id="bottomBtn" type="button" style="position: absolute; top: 55%; right: 5%" onClick="bottomFunction()">
+        <i class="fa fa-arrow-down"></i>
+        </button> */
+ 
+
+    	    
+ /*            function topFunction() {
+        document.getElementById('searchBar').scrollIntoView();
+    }
+    function bottomFunction() {
+        document.getElementById('refreshMapBtn').scrollIntoView();
+} */
+
+/*     var navContent = document.getElementById('myNav1');
+    L.DomEvent.on(navContent, 'click dblclick scroll', function(ev) {
+        L.DomEvent.stopPropagation(ev);
+        L.DomEvent.disableScrollPropagation(navContent);
+        console.log('stopped');
+    });
+
+    $("#myNav1Content").click(function(event){
+  event.stopPropagation();
+}); */

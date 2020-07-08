@@ -5,19 +5,8 @@
     </span>
     <!-- Overlay content -->
     <section id="myNav1Content" class="overlaynav-content">
-    <div class="w3-row ">
-        <input class="w3-col s11 w3-margin-bottom w3-margin-top w3-input w3-white "  type="text" name="search" placeholder="Search Locations" id="searchBar">
-        <button class="w3-col w3-blue s1 w3-btn w3-margin-bottom w3-margin-top" onclick="clearSearchInput()">X</button>
-        <div id="results" style="position: relative;margin-top:15%; z-index:1100" class="w3-white"></div>
-        </div>
 
-    <button id="topBtn" type="button" style="position: absolute; top: 45%; right: 5%" onClick="topFunction()">
-        <i class="fa fa-arrow-up"></i>
-        </button>
-        <button id="bottomBtn" type="button" style="position: absolute; top: 55%; right: 5%" onClick="bottomFunction()">
-        <i class="fa fa-arrow-down"></i>
-        </button>
-        <div id='menu_items' class="w3-row w3-white w3-opacity " style='font-size:1.5em;  '>
+      <div id='menu_items' class="w3-row w3-white w3-opacity " style='font-size:1.5em;  '>
             <div class="w3-col s6">
                 <button id="settingsBtn" class="w3-button  w3-block w3-hover-blue-grey  " onclick="menuTabChange('Settings')"><i
                         class="fa fa-gear w3-margin-right"></i>Settings</button>
@@ -145,30 +134,8 @@
 
 
 <script>
-    
-    function topFunction() {
-        document.getElementById('searchBar').scrollIntoView();
-    }
-    function bottomFunction() {
-        document.getElementById('refreshMapBtn').scrollIntoView();
-}
 
-/*     var navContent = document.getElementById('myNav1');
-    L.DomEvent.on(navContent, 'click dblclick scroll', function(ev) {
-        L.DomEvent.stopPropagation(ev);
-        L.DomEvent.disableScrollPropagation(navContent);
-        console.log('stopped');
-    });
 
-    $("#myNav1Content").click(function(event){
-  event.stopPropagation();
-}); */
-
-const clearSearchInput = () =>{
-    if(document.getElementById('searchBar').value == ''){closeNav()};
-    document.getElementById('searchBar').value='';
-    ajaxSearch();
-}
 
     function menuTabChange(showTab) {
         var i, tabcontent, tablinks;
@@ -187,14 +154,18 @@ const clearSearchInput = () =>{
     
     function openNav() {
         document.getElementById("myNav1").style.height = "100%";
-            //document.getElementById("myNav1Content").click();
-            map.dragging.disable();
-		}
+        document.getElementById("myNav1").style.overflowY = "auto";
+        document.getElementById("map").style.width = "0%";
 
+        //document.getElementById("myNav1Content").click();
+        //map.dragging.disable();
+    }
+    
     /* Close when someone clicks on the "x" symbol inside the overlay Nav Bar */
     function closeNav() {
+        document.getElementById("map").style.width = "100%";
         document.getElementById("myNav1").style.height = "0%";
-        map.dragging.enable();
+        //map.dragging.enable();
         $('#directionsErrorDiv').addClass('w3-hide');
         $('#directionsInfoDiv').addClass('w3-hide');
         $('#searchBar').val("");
@@ -207,51 +178,6 @@ const clearSearchInput = () =>{
 
     }	
 	
-    function ajaxSearch() {
-			$value = $("#searchBar").val();
-			$.ajax({
-			  type: 'get',
-			  url: '/search',
-			  data: {
-				'search': $value
-			  },
-			  success: function(data) {
-				  console.log(data);
-				$('#results').html(data);
-			  }
-			});
-		  }
-	
-		  $('#searchBar').on('keyup', function() {
-			ajaxSearch();
-		  });
-
-
-
-    const searchMakerLayer = L.layerGroup();
-	
-    const showMarker = (firstFloor, lat, lng, description) => {
-        if(firstFloorMapOverlay.hasLayer(searchMakerLayer)){firstFloorMapOverlay.removeLayer(searchMakerLayer)};
-        if(secondFloorMapOverlay.hasLayer(searchMakerLayer)){secondFloorMapOverlay.removeLayer(searchMakerLayer)};
-        searchMakerLayer.clearLayers();
-        map.setView([lat, lng]);
-        L.marker([lat, lng]).bindPopup(description).addTo(searchMakerLayer).openPopup();
-        closeNav();
-        if(firstFloor){
-        searchMakerLayer.addTo(firstFloorMapOverlay);
-        map.removeLayer(secondFloorMap);
-        return map.addLayer(firstFloorMap);
-        } else {
-        searchMakerLayer.addTo(secondFloorMapOverlay);
-        map.removeLayer(firstFloorMap);
-        return map.addLayer(secondFloorMap);
-        }
-
-    }   
-    function changeInfoDivMessage(){
-			if(map.hasLayer(firstFloorMap)) {document.getElementById('infoDiv').innerText = 'Viewing First Floor Map of University Hospital';}
-			else{document.getElementById('infoDiv').innerText = 'Viewing Second Floor Map of University Hospital';}
-		}
 
 
         //function to close Navigation After pressing 'ESc'
@@ -284,7 +210,6 @@ const clearSearchInput = () =>{
 
 $('#recenterMapBtn').click(function(){recenterMap();closeNav();});
 $('#refreshMapBtn').click(function(){location.reload();});
-
 
 
 

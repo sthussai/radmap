@@ -36,9 +36,6 @@ $('#fontSizeSelect').change(function(){
 let showInfo = true;
 document.getElementById("map").style.marginTop = document.getElementById("infoDivContainer").offsetHeight;
 
-$(window).on("load", function() {
-	$("#hideBtn").slideDown();
-});
 	 
     $("#hideBtn").click(function(){ 
 		
@@ -55,7 +52,7 @@ $(window).on("load", function() {
     });
 	
 
-	$('#findBtn').click(function(){locateMe();});
+$('#findBtn').click(function(){locateMe();});
 $('#stopBtn').click(function(){stopLocating();});
 $('#menuBtn').click(function(){openNav();});
 

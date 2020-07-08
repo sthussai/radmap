@@ -2,6 +2,8 @@
 
 @section('content')
 
+	@include('components.rad-mainmenu')
+	
 	@include('components.rad-loader')
 
 	<div id="infoDivContainer" class="w3-center">
@@ -34,7 +36,6 @@
 		<button id="clearPathBtn" class="menuBtn" style="position: relative; margin-top: 35px; " title="Open Menu">
 			<i class="fa fa-undo "></i></button>
 
-	@include('components.rad-mainmenu')
 
 	</div>
 	

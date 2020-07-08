@@ -183,6 +183,15 @@ var otherFloorOverlay = function otherFloorOverlay() {
   }
 };
 
+var changeInfoDivMessage = function changeInfoDivMessage() {
+  if (map.hasLayer(firstFloorMap)) {
+    document.getElementById('infoDiv').innerText = 'Viewing First Floor Map of University Hospital';
+  } else {
+    document.getElementById('infoDiv').innerText = 'Viewing Second Floor Map of University Hospital';
+  }
+};
+
+map.on('baselayerchange', changeInfoDivMessage);
 var startPointMarker = L.marker([53.52061534234248, -113.52407008409502], {
   draggable: true,
   icon: greenPin
@@ -401,10 +410,8 @@ var findShortestPath = function findShortestPath(graph, startNode, endNode) {
 
   for (var child in graph[startNode]) {
     parents[child] = startNode;
-  }
+  } // collect visited nodes
 
-  console.log("parents");
-  console.log(parents); // collect visited nodes
 
   var visited = []; // find the nearest node
 
@@ -570,6 +577,26 @@ var showRequestedPaths = function showRequestedPaths() {
       findShortestPath(currentFloorMarkersObject(), start, end);
     }
 };
+
+$('#infoDiv').click(function () {
+  console.log('click');
+
+  if (searchMarker['Latlng']) {
+    console.log(searchMarker);
+    var btnbtn = document.getElementById('searchMarkerBtn');
+
+    btnbtn.onclick = function () {
+      console.log('hello, this is' + searchMarker['pointName']);
+      clearPathFxn();
+      end = searchMarker['pointName'];
+      return locateMe();
+      /*             let start= 'Point 30';
+                  return findShortestPath(currentFloorMarkersObject(), start, end); */
+    };
+  } else {
+    console.log('searchMarkerLatlng is null');
+  }
+});
 
 var drawOtherFloorPath = function drawOtherFloorPath(directionToPath) {
   console.log('heading to a different Floor: ' + refObj[directionToPath]['floorLevel']);
@@ -898,9 +925,6 @@ $('#fontSizeSelect').change(function () {
 });
 var showInfo = true;
 document.getElementById("map").style.marginTop = document.getElementById("infoDivContainer").offsetHeight;
-$(window).on("load", function () {
-  $("#hideBtn").slideDown();
-});
 $("#hideBtn").click(function () {
   $("#infoDiv").slideToggle(100);
 

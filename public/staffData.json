@@ -10,7 +10,7 @@
       "properties": {
         "name": "Shape 1",
         "floor": "second",
-        "popupContent": "Radiology Admin (Candice/Holly) 407-2690",
+        "popupContent": "<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/User_admin.svg/768px-User_admin.svg.png' height='150px' width='150px'/><p>Radiology Admin (Candice/Holly) 407-2690</p>",
         "secondFloor": true
       }
     }
@@ -24,7 +24,7 @@
       "properties": {
         "name": "Shape 2",
         "floor": "second",
-        "popupContent": "Film Library Conf Room ",
+        "popupContent": "<img src='https://upload.wikimedia.org/wikipedia/commons/d/dc/AS8-13-2329.jpg' height='150px' width='150px'/><p>Film Library Conf Room</p> ",
         "secondFloor": true
       }
     }
@@ -38,7 +38,7 @@
       "properties": {
         "name": "Shape 3",
         "floor": "second",
-        "popupContent": "Film Library (Second Opinions)",
+        "popupContent": "<img src='https://upload.wikimedia.org/wikipedia/commons/d/dc/AS8-13-2329.jpg' height='150px' width='150px'/><p> Film Library (Second Opinions)</p>",
         "secondFloor": true
       }
     }
@@ -52,7 +52,7 @@
       "properties": {
         "name": "Shape 4",
         "floor": "second",
-        "popupContent": "Neuroradiology CT 407-1188",
+        "popupContent": "<img src='https://3.bp.blogspot.com/_BBt5FH3wT9o/SXmioqltfBI/AAAAAAAAAdE/q0yNq-r4Blo/s400/BM2.jpg' height='150px' width='150px'/><p>Neuroradiology CT 407-1188</p>",
         "secondFloor": true
       }
     }
@@ -66,7 +66,7 @@
       "properties": {
         "name": "Shape 5",
         "floor": "second",
-        "popupContent": "Body CT #1 407-7941",
+        "popupContent": "<img src='https://c2.staticflickr.com/6/5257/5490413146_b08d8bcfc4_b.jpg' height='150px' width='150px'/><p>Body CT #1 407-7941</p>",
         "secondFloor": true
       }
     }
@@ -80,7 +80,7 @@
       "properties": {
         "name": "Shape 6",
         "floor": "second",
-        "popupContent": "Chest CT 407-6792",
+        "popupContent": "<img src='https://upload.wikimedia.org/wikipedia/commons/6/68/PulmonaryTBCXR.png' height='150px' width='150px'/><p>Chest CT 407-6792</p>",
         "secondFloor": true
       }
     }
@@ -94,7 +94,7 @@
       "properties": {
         "name": "Shape 7",
         "floor": "second",
-        "popupContent": "Body CT #2/Fluoro 407-1194        ",
+        "popupContent": "<img src='https://c2.staticflickr.com/6/5257/5490413146_b08d8bcfc4_b.jpg' height='150px' width='150px'/><p>Body CT #2/Fluoro 407-1194</p>",
         "secondFloor": true
       }
     }
@@ -108,7 +108,7 @@
       "properties": {
         "name": "Shape 8",
         "floor": "second",
-        "popupContent": "Angiointerventional Radiology 407-8850",
+        "popupContent": "<img src='https://c2.staticflickr.com/6/5257/5490413146_b08d8bcfc4_b.jpg' height='150px' width='150px'/><p>Angiointerventional Radiology 407-8850</p>",
         "secondFloor": true
       }
     }
@@ -122,7 +122,7 @@
       "properties": {
         "name": "Shape 9",
         "floor": "second",
-        "popupContent": "Resident Reporting Area",
+        "popupContent": "<img src='https://i0.wp.com/www.studentdoctor.net/wp-content/uploads/2018/11/shutterstock_558136654.png?resize=800%2C445&ssl=1' height='150px' width='150px'/><p>Resident Reporting Area</p>",
         "secondFloor": true
       }
     }
@@ -137,7 +137,7 @@
         "name": "Shape 10",
         "floor": "second",
         "size": "small",
-        "popupContent": "Peds Ultrasound 407-6793        ",
+        "popupContent": "<img src='https://www.studentdoctor.net/wp-content/uploads/2016/01/20160106_Peds_SS_204987595.jpg' height='150px' width='150px'/><p>Peds Ultrasound 407-6793</p>",
         "secondFloor": true
       }
     }
@@ -152,7 +152,7 @@
         "name": "Shape 11",
         "floor": "second",
         "size": "small",
-        "popupContent": "Diagnostic Ultrasound 407-8585        ",
+        "popupContent": "<img src='https://undergradimaging.pressbooks.com/app/uploads/sites/66470/2017/10/normal-liver-us.png' height='150px' width='150px'/><p>Diagnostic Ultrasound 407-8585</p>",
         "secondFloor": true
       }
     }
@@ -167,7 +167,7 @@
         "name": "Shape 12",
         "floor": "second",
         "size": "small",
-        "popupContent": "Interventional Ultrasound 407-1563        ",
+        "popupContent": "<img src='https://undergradimaging.pressbooks.com/app/uploads/sites/66470/2017/10/normal-liver-us.png' height='150px' width='150px'/><p>Interventional Ultrasound 407-1563</p>",
         "secondFloor": true
       }
     }
@@ -181,7 +181,7 @@
       "properties": {
         "name": "Shape 13",
         "floor": "second",
-        "popupContent": "Radiology conference room        ",
+        "popupContent": "<img src='https://get.pxhere.com/photo/table-auditorium-window-meeting-office-room-conference-room-classroom-interior-design-chairs-conference-beamer-conference-hall-970315.jpg' height='150px' width='150px'/><p>Radiology conference room</p>",
         "secondFloor": true
       }
     }
@@ -195,7 +195,7 @@
       "properties": {
         "name": "Shape 14",
         "floor": "second",
-        "popupContent": "Nuclear Medicine 407-8415        ",
+        "popupContent": "<img src='https://opentextbc.ca/universityphysicsv3openstax/wp-content/uploads/sites/273/2019/07/CNX_UPhysics_43_07_Brain-1.jpg' height='150px' width='150px'/><p>Nuclear Medicine 407-8415</p>",
         "secondFloor": true
       }
     }
