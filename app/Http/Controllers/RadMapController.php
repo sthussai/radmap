@@ -75,19 +75,20 @@ class RadMapController extends Controller
             'name' => 'required',
             'description' => 'required|min:10',
             'latlng' => 'required',
-            'lat' => 'required',
-            'lng' => 'required',
             ])->validate();
             
             $location = new Location();
             $location->name = request()->name;
             $location->description = request()->description;
             $location->latlng = request()->latlng;
-            $location->lat = request()->lat;
-            $location->lng = request()->lng;
+            $latlngArray = explode(",", request()->latlng);
+            $location->lat = trim($latlngArray[0]);
+            $location->lng = trim($latlngArray[1]);
+            $location->pointName = request()->closestRefPoint;
+            $location->lineCoords = request()->lineCoords;
             if(request()->firstFloor == '0'){
-                $location->firstFloor = false;
-            } else {$location->firstFloor = true;}
+                $location->firstFloor = true;
+            } else {$location->firstFloor = false;}
             $location->save();
             $request->session()->flash('message', 'Location successfully submitted!');
             return redirect('/addlocation');

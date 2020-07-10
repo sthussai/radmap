@@ -457,7 +457,7 @@
         "name": "Point 26",
         "floor": "first",
         "location": "final",
-        "popupContent": "MRI Clinic Reporting: 780-407-7003 ",
+        "popupContent": "MRI Clinic ",
         "neighbour1": "Point 24",
         "neighbour1Distance": "1"
       }
@@ -473,8 +473,57 @@
         "name": "Point 27",
         "floor": "first",
         "location": "final",
-        "popupContent": "Pediatrics/Fluoroscopy and Radiography 780-407-1630",
+        "popupContent": "Fluoroscopy and Radiography ",
         "neighbour1": "Point 23",
+        "neighbour1Distance": "1"
+      }
+    } 
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52341026067737, 53.52015924732917  ]
+      },
+      "properties": {
+        "name": "Point 28",
+        "floor": "first",
+        "popupContent": "Point 28 ",
+        "neighbour1": "Point 15",
+        "neighbour1Distance": "2",
+        "neighbour2": "Point 29",
+        "neighbour2Distance": "1"
+      }
+    } 
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52281749248506, 53.52016082217509  ]
+      },
+      "properties": {
+        "name": "Point 29",
+        "floor": "first",
+        "popupContent": "Point 29 ",
+        "neighbour1": "Point 28",
+        "neighbour1Distance": "1",
+        "neighbour2": "Point 30",
+        "neighbour2Distance": "1"
+      }
+    } 
+    ,
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.52280139923097, 53.52003142289179  ]
+      },
+      "properties": {
+        "name": "Point 30",
+        "floor": "first",
+        "popupContent": "Point 30 ",
+        "neighbour1": "Point 29",
         "neighbour1Distance": "1"
       }
     } 

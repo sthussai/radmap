@@ -478,7 +478,7 @@
         "name": "Point 27",
         "floor": "second",
         "location": "final",
-        "popupContent": "Kaye Clinic Radiology <br> For Edmonton Clinic Body CT/MRI/Ultrasound, take elevator to Floor 0 or call 407-5020 OR 407-5045 <br>For Edmonton Clinic MSK MRI/Fluoro, take elevator to  Floor 0 or call 407-5021",
+        "popupContent": "Kaye Edmonton Clinic Radiology ",
         "neighbour1": "Point 25",
         "neighbour1Distance": "1"
       }

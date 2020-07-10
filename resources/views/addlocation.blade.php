@@ -47,16 +47,16 @@
             <input name="latlng" type="text" class="feedback-input " placeholder="LatLng*" id="latlng"
               value="{{old('latlng')}}" required />
           </p>
-          <p class="lat">
-            <input name="lat" type="text" class="feedback-input " placeholder="lat" id="lat"
-              value="{{old('lat')}}" required />
+          <p>
+            <input name="closestRefPoint" type="text" class="feedback-input " placeholder="Closest Ref Point" id="closestRefPoint"
+              value="{{old('closestRefPoint')}}" required />
           </p>
-          <p class="lng">
-            <input name="lng" type="text" class="feedback-input " placeholder="lng" id="lng"
-              value="{{old('lng')}}" required />
+          <p>
+            <input name="lineCoords" type="text" class="feedback-input " placeholder="[Line Coords]" id="lineCoords"
+              value="{{old('lineCoords')}}" required />
           </p>
-          <p class="">
-            <input name="firsFloor" type="text" class="feedback-input " placeholder="first Floor? 1 = yes, 0 = no" id="firstFloor"
+          <p>
+            <input name="firsFloor" type="text" class="feedback-input " placeholder="first Floor? 0 = yes, 1 = no" id="firstFloor"
                required />
           </p>
 

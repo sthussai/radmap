@@ -19,14 +19,24 @@ const switchFloorLevels = () => {
         map.addLayer(firstFloorMap);
     }
 }
-//function to switch floors After pressing 'S'
-$(window).keydown(function(event) {
-    if (event.which == 83) { //83 == Key Code for S
-        switchFloorLevels(); 
-        console.log('Switch Floors To');
-        console.log(refObj.currentFloorLevel);
+
+ //function to open search After pressing Keys 'Tab' and 'S'
+ var keymap = {
+    9: false, //Key code fo Tab
+    83: false //Key code fo s
+  };
+  $(document).keydown(function(e) {
+    if (e.keyCode in keymap) {
+      keymap[e.keyCode] = true;
+      if (keymap[9] && keymap[83]) {
+        switchFloorLevels();
+      }
     }
-});
+  }).keyup(function(e) {
+    if (e.keyCode in keymap) {
+      keymap[e.keyCode] = false;
+    }
+  });
 
 $('#switchFloorBtn').click(function(){
 switchFloorLevels();    
@@ -79,8 +89,8 @@ const otherFloorOverlay = () => {
 }
 
 const changeInfoDivMessage = () => {
-    if(map.hasLayer(firstFloorMap)) {document.getElementById('infoDiv').innerText = 'Viewing First Floor Map of University Hospital';}
-    else{document.getElementById('infoDiv').innerText = 'Viewing Second Floor Map of University Hospital';}
+    if(map.hasLayer(firstFloorMap)) {document.getElementById('infoDiv').innerText = 'Viewing First Floor Map';}
+    else{document.getElementById('infoDiv').innerText = 'Viewing Second Floor Map';}
 }
 
 map.on('baselayerchange', changeInfoDivMessage );
@@ -410,6 +420,7 @@ const showRequestedPaths =  () => {
 
 }
 
+let searchBarUsed = false;
 $('#infoDiv').click(function(){
     console.log('click'); 
     if (searchMarker['Latlng']){
@@ -418,10 +429,11 @@ $('#infoDiv').click(function(){
         btnbtn.onclick = function(){
             console.log('hello, this is' + searchMarker['pointName']);
             clearPathFxn();
-            end = searchMarker['pointName'];
+            endPointMarker.setLatLng(searchMarker['Latlng']).bindPopup('Your End Location').addTo(currentFloorOverlay());
+            end = searchMarker[''];
+            searchBarUsed = true;
             return locateMe();
-/*             let start= 'Point 30';
-            return findShortestPath(currentFloorMarkersObject(), start, end); */
+
         }
     } else {
         console.log('searchMarkerLatlng is null');
@@ -460,6 +472,9 @@ const locateMe = () => {
 //called from the showRequestedPaths function if user requests directions from "Current Location"
 const onLocationFoundOnce = (e) => {
 if (locateOnce) {
+    Toast.fire({
+        title: '<span class="w3-text-white">Location Found</span>'
+      })
     let userCoords = [ 53.521015, -113.524421];
     startPointMarker.setLatLng(userCoords).bindPopup('Your Approximate Location', {autoClose: false}).addTo(currentFloorOverlay()).openPopup();
     if(traversingFloors) {
@@ -471,10 +486,15 @@ if (locateOnce) {
         endPointMarker.addTo(currentFloorOverlay()).openPopup();
         console.log('adding end marker to current floor')
     }
+    if (searchBarUsed){
+            halfPathLine = L.polyline(searchMarker['lineCoords'], {color:'black'}).bindPopup('Suggested path ').addTo(currentFloorOverlay());
+            searchBarUsed = false;
+        }
     setStartPoint();
 }
 locateOnce = false;
 traversingFloors = false;
+
 }
 
 map.on('locationfound', onLocationFoundOnce);    

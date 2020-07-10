@@ -26,7 +26,7 @@ class AjaxSearchController extends Controller
                 else {
                     foreach ($locations as $location) {
                         $output .='
-                        <div style="min-width: 350px" class="w3-button " onclick="showSearchMarker('. $location->firstFloor.', '. $location->lat.', '. $location->lng . ',\''. $location->pointName. '\', \''. $location->description .'\')">
+                        <div style="min-width: 350px" class="w3-button " onclick="showSearchMarker('. $location->firstFloor.', '. $location->lat.', '. $location->lng . ',\''. $location->pointName. '\', \''. $location->description .'\', \''. $location->lineCoords.'\')">
                             <div style="margin-top:0px; ">
                             <h5><b>' . $location->name . '</b><h5>
                             <h6>' . $location->description . '<h6>

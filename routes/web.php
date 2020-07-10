@@ -35,9 +35,7 @@ Route::post('/feedback', 'FeedbackController@store');
 Route::get('/radmap', 'RadMapController@main');
 Route::get('/radmaptest', 'RadMapController@test');
 Route::post('/addlocation', 'RadMapController@store')->middleware('auth');
-Route::get('/addlocation', function () {
-    return view('addlocation');
-})->middleware('auth');
+Route::get('/addlocation', function () {return view('addlocation');})->middleware('auth');
 
 Route::get('/reactradmap', function () {
     return view('reactradmap');

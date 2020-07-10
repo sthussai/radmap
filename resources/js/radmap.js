@@ -1,4 +1,4 @@
-
+const {Toast} = require("./halfPathsObject");
 
 
 let arr = [0, 0, 0];
@@ -33,24 +33,7 @@ $('#fontSizeSelect').change(function(){
 })
 
 
-let showInfo = true;
-document.getElementById("map").style.marginTop = document.getElementById("infoDivContainer").offsetHeight;
 
-	 
-    $("#hideBtn").click(function(){ 
-		
-		$("#infoDiv").slideToggle(100);
-        if(showInfo){
-			$("#hideBtn").html("<i class='fa fa-arrow-down w3-margin-right'></i><b>Show</b>");
-	   document.getElementById("map").style.marginTop = 0;
-	}
-        else {
-			$("#hideBtn").html("<i class='fa fa-arrow-up w3-margin-right'></i><b>Hide</b>");
-	   document.getElementById("map").style.marginTop = document.getElementById("infoDiv").offsetHeight;
-        }
-		showInfo =! showInfo;
-    });
-	
 
 $('#findBtn').click(function(){locateMe();});
 $('#stopBtn').click(function(){stopLocating();});
@@ -123,8 +106,8 @@ $("#demoBtn").click(function(){
 		let watchLocation = false;
 
 		function locateMe() {
-			document.getElementById('btn-loader').style.display = 'block';
-			document.getElementById('findBtn').style.backgroundColor = '#555';
+			document.getElementById('findBtn').innerText = 'Locating..';
+			document.getElementById('findBtn').classList.toggle("w3-grey");
 			watchLocation = true
 			map.locate({
 				setView: false,
@@ -133,6 +116,12 @@ $("#demoBtn").click(function(){
 				enableHighAccuracy: true,
 			});
 			console.log('Locating with watch option ON...');
+			if(watchLocation){
+				Toast.fire({
+					title: '<span class="w3-text-white">Locating with live location update...</span>'
+				  })
+			}
+			
 		}
 
 
@@ -155,6 +144,9 @@ $("#demoBtn").click(function(){
 			}
 
 			if (counter == 0 ){
+				Toast.fire({
+					title: '<span class="w3-text-white">Showing live location... cancel with Stop button >>> </span>'
+				  })
 				document.getElementById('findBtn').style.display = 'none';
 				document.getElementById('stopBtn').style.display = 'block';	
 				map.setView(e.latlng, 18);
@@ -188,7 +180,12 @@ $("#demoBtn").click(function(){
 						color: markerColor
 					})
 					.bindPopup("You are within " + radius + " meters from this point")
-					.addTo(locationMarkersLayerGroup).openPopup(e.latlng);
+					.addTo(locationMarkersLayerGroup);
+					
+			}
+			
+			if (counter <= 2) {
+				x.openPopup();
 			}
 
 			if (counter >= 2) {
@@ -216,11 +213,14 @@ $("#demoBtn").click(function(){
 		function stopLocating() {
 			watchLocation = false
 			map.stopLocate();
+			Toast.fire({
+				title: '<span class="w3-text-white">Stopped Location Sharing >>> </span>'
+			  })
 			console.log('Stopped Locating');
 			counter = 0;
 			document.getElementById('findBtn').style.display = 'block';
-			document.getElementById('findBtn').style.backgroundColor = '';
-			document.getElementById('btn-loader').style.display = 'none';
+			document.getElementById('findBtn').classList.toggle("w3-grey");
+			document.getElementById('findBtn').innerText = 'Locate';
 			document.getElementById('stopBtn').style.display = 'none';
 		}
 
@@ -244,7 +244,7 @@ $("#demoBtn").click(function(){
 			coordPopup.setLatLng(t.latlng)
 				.setContent("You clicked the map at " + t.latlng.toString()).openOn(map);
 				let coordString = t.latlng.lat + ', ' + t.latlng.lng;
-				coordString = t.latlng.lng + ', ' + t.latlng.lat;
+				//coordString = t.latlng.lng + ', ' + t.latlng.lat;
 			
 			copyToClipboard(coordString);
 			console.log("Copied the Coordinates to Clipboard: " + coordString);

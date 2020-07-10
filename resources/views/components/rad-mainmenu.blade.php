@@ -150,7 +150,6 @@
 
     menuTabChange('Links');
 
-    document.body.style.overflowY = "hidden";
     
     function openNav() {
         document.getElementById("myNav1").style.height = "100%";

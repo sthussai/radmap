@@ -5,30 +5,35 @@
 	@include('components.rad-mainmenu')
 
 	@include('components.rad-loader')
-	<div id="infoDivContainer" class="w3-center ">
-		<div id="infoDiv" class="w3-black w3-padding " style=" font-size: {{$fontSize}}; ">
-			Viewing First Floor Map of University Hospital
-		</div>
-		<div class="w3-row w3-light-grey" style="max-width: 600px; margin: 0px auto ;">
-        <input class="w3-col s10 w3-light-grey w3-input w3-white "  type="text" name="search" placeholder="Search Locations" id="searchBar">
-        <button class="w3-col w3-blue w3-right s1 w3-btn " onclick="clearSearchInput()">X</button>
-        <div id="results" style="position: relative; margin-top: 10%; z-index:1100" class="w3-hide"></div>
-        </div>
+	<style>
 
+
+
+	</style>
+
+	<div id="infoDivContainer" class="w3-center " style="margin: 0px auto; position:absolute; z-index: 1000; width: 100%; ">
+		<div id="infoDiv" class="w3-black w3-padding " style=" font-size: {{$fontSize}}; ">
+			Viewing First Floor Map 
+		</div>
+ 
+		<div class="w3-row w3-light-grey " style="max-width:600px; margin:0 auto;" >
+			<input class="w3-col s9 w3-light-grey w3-input w3-white" style="width:80%;"  type="text" name="search" placeholder="Search Locations" id="searchBar">
+			<button class="w3-col s1 w3-blue w3-btn" style="width:10%; padding: 8px" onclick="clearSearchInput()"><i class="fa fa-close"></i></button>
+			<button id="hideBtn" class="w3-col s1 w3-black w3-btn w3-right" style="width:10%; padding: 8px"> <i class="fa fa-arrow-up"></i></button>
+			<div id="results" style="position: relative; margin-top: 10%; z-index:1100" class="w3-hide"></div>
+			</div>
+			
 	</div>
 
 
-
 	<div id="map">
-	<div class="w3-center" style="margin: 0px auto; position:absolute; z-index: 1000; width: 100% ">
-				<span id="hideBtn" class="w3-grey w3-button"> <i class="fa fa-arrow-up w3-margin-right"></i><b>Hide</b></span>
-			</div>
 
-		<button id="findBtn" class="myBtn" style="font-size:{{$fontSize}}"
+
+		<button id="findBtn" class="myBtn w3-light-green" style="font-size:{{$fontSize}}"
 			title="Find My Location">Locate
 			<span id="btn-loader" style="display:none" class="loader-1" title="Find My Location"></span>
 		</button>
-		<button id="stopBtn" style="display: none" class="myBtn" 
+		<button id="stopBtn" style="display: none" class="myBtn w3-pale-red" 
 			title="Stop Location Sharing">Stop</button>
 
 		<button id="menuBtn" class="menuBtn" style="background-color:{{$color}}" title="Open Menu">
@@ -88,6 +93,7 @@
 	const secondFloorMap = L.layerGroup([secondFloorImage, secondFloorMapOverlay]);
 
 	const map = L.map('map', {
+		zoomControl: false,
 		center: center,
 		zoom: centerZoom,
 		layers: [main, firstFloorMap , centerMarker]
@@ -108,7 +114,31 @@
     }
 
     const controls = L.control.layers(baseMaps, overlays).addTo(map);
- 
+	const controlsContainer = controls.getContainer(); 
+	controlsContainer.style.marginTop =  '80px';
+
+
+let showInfo = true;
+	const infoDivContainer = document.getElementById("infoDiv");
+	const infoDivContainerHeight = document.getElementById("infoDivContainer").offsetHeight;
+
+
+	 
+    $("#hideBtn").click(function(){ 
+		$('#infoDiv').slideToggle(100);
+        if(showInfo){
+			$("#hideBtn").html("<i class='fa fa-arrow-down'></i>");
+
+		}
+        else {
+			$("#hideBtn").html("<i class='fa fa-arrow-up '></i>");
+
+        }
+		showInfo =! showInfo;
+    });
+	
+
+
 	const changeFloorModal = () => {
 	 	 
 	 Swal.fire({
@@ -172,28 +202,30 @@ const clearSearchInput = () =>{
 
 	let searchMarker = {};
 
-    const showSearchMarker = (firstFloor, lat, lng, pointName, description) => {
+    const showSearchMarker = (firstFloor, lat, lng, pointName, description, lineCoords) => {
         if(firstFloorMapOverlay.hasLayer(searchMakerLayer)){firstFloorMapOverlay.removeLayer(searchMakerLayer)};
         if(secondFloorMapOverlay.hasLayer(searchMakerLayer)){secondFloorMapOverlay.removeLayer(searchMakerLayer)};
 		searchMakerLayer.clearLayers();
 		searchMarker['Latlng'] = [lat, lng];
 		searchMarker['pointName'] = pointName;
+		lineCoords = JSON.parse("[" + lineCoords + "]");
+		searchMarker['lineCoords'] = lineCoords;
 		map.setView(searchMarker['Latlng']);
 		setTimeout(() => {
-	$('#infoDiv').click();
-	clearSearchInput();
-    console.log('info div clicked')
-}, 500);
+			$('#infoDiv').click();
+			clearSearchInput();
+			console.log('info div clicked')
+		}, 500);
         if(firstFloor){
         searchMakerLayer.addTo(firstFloorMapOverlay);
         map.removeLayer(secondFloorMap);
         map.addLayer(firstFloorMap);
-        return L.marker([lat, lng]).bindPopup(description + '<br><button id="searchMarkerBtn">Show Path To here</button>').addTo(searchMakerLayer).openPopup();
+        return L.marker([lat, lng]).bindPopup(description + '<br><button id="searchMarkerBtn">Show Path From My Location</button>').addTo(searchMakerLayer).openPopup();
         } else {
         searchMakerLayer.addTo(secondFloorMapOverlay);
         map.removeLayer(firstFloorMap);
         map.addLayer(secondFloorMap);
-		return L.marker([lat, lng]).bindPopup(description + '<button id="searchMarkerBtn">Show Path To here</button>').addTo(searchMakerLayer).openPopup();
+		return L.marker([lat, lng]).bindPopup(description + '<br><button id="searchMarkerBtn">Show Path From My Location</button>').addTo(searchMakerLayer).openPopup();
         }
 
 	}	
