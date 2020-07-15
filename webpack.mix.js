@@ -48,6 +48,7 @@ require('laravel-mix-react-css-modules');
 //mix.dump();   
  
 mix.js('resources/js/app.js', 'public/js')
+    .js('resources/js/mainmap.js','public/js/mainmap.js')
     .js(['resources/js/geojson.js', 'resources/js/radmap.js'],'public/js/radmap.js')
     .sass('resources/sass/app.scss', 'public/css')
     .styles('resources/css/custom.css', 'public/css/custom.css');

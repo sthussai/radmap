@@ -17,6 +17,7 @@ class AjaxSearchController extends Controller
                 $locations = DB::table('locations')
                 ->where('name', 'LIKE', '%' . $request->search . '%')
                 ->orWhere('description', 'LIKE', '%' . $request->search . '%')
+                ->take(5)
                 ->get();
     
                 $total_row = $locations->count();

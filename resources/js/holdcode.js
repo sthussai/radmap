@@ -482,3 +482,16 @@ function onLocationFound(e) {
     $("#myNav1Content").click(function(event){
   event.stopPropagation();
 }); */
+
+
+
+    /* let graph = {
+	"Point 14": { "Point 13": 1},
+	"Point 13": { "Point 14": 1, "Point 10": 1, "Point 17": 2 },
+	"Point 10": { "Point 8": 2, "Point 3": 3, "Point 13": 1 },
+	"Point 17": { "Point 3": 1, "Point 13": 1 },
+	"Point 8": { "Point 7": 2, "Point 10": 2 },
+	"Point 7": { "Point 5": 1 , "Point 8": 2},
+	"Point 3": { "Point 5": 1, "Point 17": 1, "Point 10": 3  },
+	"Point 5": {"Point 3": 1, "Point 7": 1 },
+}; */

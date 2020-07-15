@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -273,6 +273,14 @@ var clearPathFxn = function clearPathFxn() {
     secondFloorMapOverlay.removeLayer(halfPathLine);
   }
 
+  if (firstFloorMapOverlay.hasLayer(searchHalfPathLine)) {
+    firstFloorMapOverlay.removeLayer(searchHalfPathLine);
+  }
+
+  if (secondFloorMapOverlay.hasLayer(searchHalfPathLine)) {
+    secondFloorMapOverlay.removeLayer(searchHalfPathLine);
+  }
+
   if (firstFloorMapOverlay.hasLayer(minDistanceLine)) {
     firstFloorMapOverlay.removeLayer(minDistanceLine);
   }
@@ -296,6 +304,7 @@ var endRefPoint = null;
 var distancesToClosestRefPointArray = [];
 var minDistanceLine = null;
 var halfPathLine = null;
+var searchHalfPathLine = null;
 var end = null;
 
 var ajaxGetGeoJson = function ajaxGetGeoJson(url, floor, markerGroup) {
@@ -415,6 +424,10 @@ var findShortestPath = function findShortestPath(graph, startNode, endNode) {
 
   console.log("distances");
   console.log(distances);
+  console.log('start');
+  console.log(startNode);
+  console.log('end');
+  console.log(endNode);
   var parents = {
     endNode: null
   };
@@ -600,8 +613,8 @@ $('#infoDiv').click(function () {
     btnbtn.onclick = function () {
       console.log('hello, this is' + searchMarker['pointName']);
       clearPathFxn();
-      endPointMarker.setLatLng(searchMarker['Latlng']).bindPopup('Your End Location').addTo(currentFloorOverlay());
-      end = searchMarker[''];
+      endPointMarker.setLatLng(searchMarker['Latlng']).bindPopup('Your searched destination');
+      end = searchMarker['pointName'];
       searchBarUsed = true;
       return locateMe();
     };
@@ -646,7 +659,7 @@ var onLocationFoundOnce = function onLocationFoundOnce(e) {
     Toast.fire({
       title: '<span class="w3-text-white">Location Found</span>'
     });
-    var userCoords = [53.521015, -113.524421];
+    var userCoords = [53.520701578731185, -113.52416932582857];
     startPointMarker.setLatLng(userCoords).bindPopup('Your Approximate Location', {
       autoClose: false
     }).addTo(currentFloorOverlay()).openPopup();
@@ -661,9 +674,9 @@ var onLocationFoundOnce = function onLocationFoundOnce(e) {
     }
 
     if (searchBarUsed) {
-      halfPathLine = L.polyline(searchMarker['lineCoords'], {
+      searchHalfPathLine = L.polyline(searchMarker['lineCoords'], {
         color: 'black'
-      }).bindPopup('Suggested path ').addTo(currentFloorOverlay());
+      }).bindPopup('Suggested path to Unit ').addTo(currentFloorOverlay());
       searchBarUsed = false;
     }
 
@@ -684,8 +697,11 @@ var startMarkerDragged = false;
 var setStartPoint = function setStartPoint() {
   if (startMarkerDragged || endMarkerDragged) {
     clearPathFxn();
+    console.log('clearing after markers dragged');
     startPointMarker.addTo(currentFloorOverlay());
     endPointMarker.addTo(currentFloorOverlay());
+    startMarkerDragged = false;
+    endMarkerDragged = false;
   }
 
   getClosestPointFrom(startPointMarker);
@@ -707,8 +723,6 @@ var setStartPoint = function setStartPoint() {
   firstRefPoint.bindPopup('Your closest reference point is here').openPopup();
   var start = distancesToClosestRefPointArray[0][2];
   findShortestPath(currentFloorMarkersObject(), start, end);
-  startMarkerDragged = false;
-  endMarkerDragged = false;
 };
 
 startPointMarker.on('dragend', function () {
@@ -774,16 +788,6 @@ var calcDistancesFromEachMarker = function calcDistancesFromEachMarker(markersAr
 $('#hideBtn').click(function () {
   console.log('hideBtn clicked');
 });
-/* let graph = {
-"Point 14": { "Point 13": 1},
-"Point 13": { "Point 14": 1, "Point 10": 1, "Point 17": 2 },
-"Point 10": { "Point 8": 2, "Point 3": 3, "Point 13": 1 },
-"Point 17": { "Point 3": 1, "Point 13": 1 },
-"Point 8": { "Point 7": 2, "Point 10": 2 },
-"Point 7": { "Point 5": 1 , "Point 8": 2},
-"Point 3": { "Point 5": 1, "Point 17": 1, "Point 10": 3  },
-"Point 5": {"Point 3": 1, "Point 7": 1 },
-}; */
 
 /***/ }),
 
@@ -1175,7 +1179,7 @@ function ajaxSetMapCenter(centerCoords, centerZoom) {
 
 /***/ }),
 
-/***/ 1:
+/***/ 2:
 /*!****************************************************************!*\
   !*** multi ./resources/js/geojson.js ./resources/js/radmap.js ***!
   \****************************************************************/

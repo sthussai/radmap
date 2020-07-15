@@ -27,24 +27,25 @@
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 
 
+
 	<!-- Scripts -->
+
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
 	integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
 	crossorigin=""></script>
-
-
-
 </head>
 
 
 
 <body>
-    
-            @yield('content')
-        
-			<script src="{{ asset('js/radmap.js') }}"></script>	
+
+			@yield('content')
+
+			<script>$(document).ready(function() {$.getScript("{{ asset('js/radmap.js') }}");});</script>			
+
 </body>
 
 </html>

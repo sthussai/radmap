@@ -167,8 +167,6 @@
         //map.dragging.enable();
         $('#directionsErrorDiv').addClass('w3-hide');
         $('#directionsInfoDiv').addClass('w3-hide');
-        $('#searchBar').val("");
-          ajaxSearch();
     }
 
     function recenterMap() {
@@ -188,23 +186,45 @@
     });
 
 
-    //function to open Navigation After pressing Key M
 
-    $(window).keydown(function(event) {
-        if (event.which == 77) { //77 == Key Code for M
+       //function to open menu After pressing Keys 'Tab' and 'M'
+       const keyMapM = {
+        9: false, //Key code fo Tab
+        77: false //Key code fo m
+      };
+      $(document).keydown(function(e) {
+        if (e.keyCode in keyMapM) {
+          keyMapM[e.keyCode] = true;
+          if (keyMapM[9] && keyMapM[77]) {
             openNav();
-            console.log('Open nav');
+          }
         }
-    });
+      }).keyup(function(e) {
+        if (e.keyCode in keyMapM) {
+          keyMapM[e.keyCode] = false;
+        }
+      });
 
-    //function to open Directions After pressing 'D'
-    $(window).keydown(function(event) {
-        if (event.which == 68) { //68 == Key Code for D
+    //function to open Directions After pressing 'Tab' and 'D'
+       const keyMapD = {
+        9: false, //Key code fo Tab
+        68: false //Key code fo D
+      };
+      $(document).keydown(function(e) {
+        if (e.keyCode in keyMapD) {
+          keyMapD[e.keyCode] = true;
+          if (keyMapD[9] && keyMapD[68]) {
             openNav();
             menuTabChange('Directions');
-            console.log('Open Directions tab');
+          }
         }
-    });
+      }).keyup(function(e) {
+        if (e.keyCode in keyMapD) {
+          keyMapD[e.keyCode] = false;
+        }
+      });
+    
+
 
 
 $('#recenterMapBtn').click(function(){recenterMap();closeNav();});

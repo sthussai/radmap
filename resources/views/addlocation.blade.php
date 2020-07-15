@@ -56,7 +56,7 @@
               value="{{old('lineCoords')}}" required />
           </p>
           <p>
-            <input name="firsFloor" type="text" class="feedback-input " placeholder="first Floor? 0 = yes, 1 = no" id="firstFloor"
+            <input name="firstFloor" type="text" class="feedback-input " placeholder="first Floor? 1 = yes, 0 = no" id="firstFloor"
                required />
           </p>
 

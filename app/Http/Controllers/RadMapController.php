@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class RadMapController extends Controller
 {
     public $demo = true;
-    public $color = 'black';
+    public $color = 'white';
     public $fontSize = '15px';
     public $centerCoords = '53.520742, -113.523993';
     public $centerZoom = 18;
@@ -86,7 +86,7 @@ class RadMapController extends Controller
             $location->lng = trim($latlngArray[1]);
             $location->pointName = request()->closestRefPoint;
             $location->lineCoords = request()->lineCoords;
-            if(request()->firstFloor == '0'){
+            if(request()->firstFloor == '1'){
                 $location->firstFloor = true;
             } else {$location->firstFloor = false;}
             $location->save();
