@@ -8,7 +8,7 @@
         "coordinates": [ -113.52368652820589, 53.520819575486904  ]
       },
       "properties": {
-        "name": "Shape 1",
+        "name": "Staff Point 1",
         "floor": "second",
         "popupContent": "<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/User_admin.svg/768px-User_admin.svg.png' height='150px' width='150px'/><p>Radiology Admin (Candice/Holly) 407-2690</p>",
         "secondFloor": true
@@ -22,7 +22,7 @@
         "coordinates": [ -113.52374687790872, 53.520688686170985  ]
       },
       "properties": {
-        "name": "Shape 2",
+        "name": "Staff Point 2",
         "floor": "second",
         "popupContent": "<img src='https://upload.wikimedia.org/wikipedia/commons/d/dc/AS8-13-2329.jpg' height='150px' width='150px'/><p>Film Library Conf Room</p> ",
         "secondFloor": true
@@ -36,7 +36,7 @@
         "coordinates": [ -113.52373883128169, 53.52075325653884  ]
       },
       "properties": {
-        "name": "Shape 3",
+        "name": "Staff Point 3",
         "floor": "second",
         "popupContent": "<img src='https://upload.wikimedia.org/wikipedia/commons/d/dc/AS8-13-2329.jpg' height='150px' width='150px'/><p> Film Library (Second Opinions)</p>",
         "secondFloor": true
@@ -50,7 +50,7 @@
         "coordinates": [ -113.5236878693104, 53.52069427192498  ]
       },
       "properties": {
-        "name": "Shape 4",
+        "name": "Staff Point 4",
         "floor": "second",
         "popupContent": "<img src='https://3.bp.blogspot.com/_BBt5FH3wT9o/SXmioqltfBI/AAAAAAAAAdE/q0yNq-r4Blo/s400/BM2.jpg' height='150px' width='150px'/><p>Neuroradiology CT 407-1188</p>",
         "secondFloor": true
@@ -64,7 +64,7 @@
         "coordinates": [ -113.5236878693104, 53.520649472576004  ]
       },
       "properties": {
-        "name": "Shape 5",
+        "name": "Staff Point 5",
         "floor": "second",
         "popupContent": "<img src='https://c2.staticflickr.com/6/5257/5490413146_b08d8bcfc4_b.jpg' height='150px' width='150px'/><p>Body CT #1 407-7941</p>",
         "secondFloor": true
@@ -78,7 +78,7 @@
         "coordinates": [ -113.52376431226733, 53.52061356082724  ]
       },
       "properties": {
-        "name": "Shape 6",
+        "name": "Staff Point 6",
         "floor": "second",
         "popupContent": "<img src='https://upload.wikimedia.org/wikipedia/commons/6/68/PulmonaryTBCXR.png' height='150px' width='150px'/><p>Chest CT 407-6792</p>",
         "secondFloor": true
@@ -92,7 +92,7 @@
         "coordinates": [ -113.523618131876, 53.520680696577294  ]
       },
       "properties": {
-        "name": "Shape 7",
+        "name": "Staff Point 7",
         "floor": "second",
         "popupContent": "<img src='https://c2.staticflickr.com/6/5257/5490413146_b08d8bcfc4_b.jpg' height='150px' width='150px'/><p>Body CT #2/Fluoro 407-1194</p>",
         "secondFloor": true
@@ -106,7 +106,7 @@
         "coordinates": [ -113.52351620793344, 53.5202377649421  ]
       },
       "properties": {
-        "name": "Shape 8",
+        "name": "Staff Point 8",
         "floor": "second",
         "popupContent": "<img src='https://c2.staticflickr.com/6/5257/5490413146_b08d8bcfc4_b.jpg' height='150px' width='150px'/><p>Angiointerventional Radiology 407-8850</p>",
         "secondFloor": true
@@ -120,7 +120,7 @@
         "coordinates": [ -113.52381929755214, 53.52057090402788  ]
       },
       "properties": {
-        "name": "Shape 9",
+        "name": "Staff Point 9",
         "floor": "second",
         "popupContent": "<img src='https://i0.wp.com/www.studentdoctor.net/wp-content/uploads/2018/11/shutterstock_558136654.png?resize=800%2C445&ssl=1' height='150px' width='150px'/><p>Resident Reporting Area</p>",
         "secondFloor": true
@@ -134,7 +134,7 @@
         "coordinates": [ -113.52414518594743, 53.52089718056303  ]
       },
       "properties": {
-        "name": "Shape 10",
+        "name": "Staff Point 10",
         "floor": "second",
         "size": "small",
         "popupContent": "<img src='https://www.studentdoctor.net/wp-content/uploads/2016/01/20160106_Peds_SS_204987595.jpg' height='150px' width='150px'/><p>Peds Ultrasound 407-6793</p>",
@@ -149,7 +149,7 @@
         "coordinates": [ -113.52412641048433, 53.520880076827545  ]
       },
       "properties": {
-        "name": "Shape 11",
+        "name": "Staff Point 11",
         "floor": "second",
         "size": "small",
         "popupContent": "<img src='https://undergradimaging.pressbooks.com/app/uploads/sites/66470/2017/10/normal-liver-us.png' height='150px' width='150px'/><p>Diagnostic Ultrasound 407-8585</p>",
@@ -164,7 +164,7 @@
         "coordinates": [ -113.5241425037384, 53.52086328113109  ]
       },
       "properties": {
-        "name": "Shape 12",
+        "name": "Staff Point 12",
         "floor": "second",
         "size": "small",
         "popupContent": "<img src='https://undergradimaging.pressbooks.com/app/uploads/sites/66470/2017/10/normal-liver-us.png' height='150px' width='150px'/><p>Interventional Ultrasound 407-1563</p>",
@@ -179,7 +179,7 @@
         "coordinates": [ -113.52419346570971, 53.52076191460123  ]
       },
       "properties": {
-        "name": "Shape 13",
+        "name": "Staff Point 13",
         "floor": "second",
         "popupContent": "<img src='https://get.pxhere.com/photo/table-auditorium-window-meeting-office-room-conference-room-classroom-interior-design-chairs-conference-beamer-conference-hall-970315.jpg' height='150px' width='150px'/><p>Radiology conference room</p>",
         "secondFloor": true
@@ -193,7 +193,7 @@
         "coordinates": [ -113.52405667304994, 53.52051135045529  ]
       },
       "properties": {
-        "name": "Shape 14",
+        "name": "Staff Point 14",
         "floor": "second",
         "popupContent": "<img src='https://opentextbc.ca/universityphysicsv3openstax/wp-content/uploads/sites/273/2019/07/CNX_UPhysics_43_07_Brain-1.jpg' height='150px' width='150px'/><p>Nuclear Medicine 407-8415</p>",
         "secondFloor": true

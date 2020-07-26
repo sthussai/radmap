@@ -127,8 +127,37 @@ body {
     /* Rounded corners */
     font-size: 12px;
     /* Increase font size */
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
+
+}
+.slideUp {
+    display: block;
+    /* Hidden by default */
+    position: absolute;
+    /* Fixed/sticky position */
+    top: 120px;
+    /* Place the button at the bottom of the page */
+    left: 11px;
+    /* Place the button 11px from the Left */
+    z-index: 1000;
+    /* Make sure it does not overlap */
+    border: solid 2px grey;
+    /* Remove borders */
+    outline: none;
+    /* Remove outline */
+    background-color: white;
+    /* Set a background color */
+    color: darkgrey;
+    /* Text color */
+    cursor: pointer;
+    /* Add a mouse pointer on hover */
+    border-radius: 2px;
+    /* Rounded corners */
+    font-size: 12px;
+    /* Increase font size */
+    height: 40px;
+    width: 40px;
 
 }
 

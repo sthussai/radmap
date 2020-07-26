@@ -96,13 +96,16 @@
 var _require = __webpack_require__(/*! ./radmap */ "./resources/js/radmap.js"),
     controls = _require.controls;
 
-var _require2 = __webpack_require__(/*! ./halfPathsObject */ "./resources/js/halfPathsObject.js"),
-    halfPathsObj = _require2.halfPathsObj,
-    greenPin = _require2.greenPin,
-    redPin = _require2.redPin,
-    geojsonMarkerOptions = _require2.geojsonMarkerOptions,
-    Toast = _require2.Toast,
-    refObj = _require2.refObj;
+var _require2 = __webpack_require__(/*! ./pathFinding */ "./resources/js/pathFinding.js"),
+    findShortestPath = _require2.findShortestPath;
+
+var _require3 = __webpack_require__(/*! ./references */ "./resources/js/references.js"),
+    halfPathsObj = _require3.halfPathsObj,
+    greenPin = _require3.greenPin,
+    redPin = _require3.redPin,
+    geojsonMarkerOptions = _require3.geojsonMarkerOptions,
+    Toast = _require3.Toast,
+    refObj = _require3.refObj;
 
 var floorRecorder = function floorRecorder() {
   if (map.hasLayer(firstFloorMap)) {
@@ -291,6 +294,9 @@ var clearPathFxn = function clearPathFxn() {
 };
 
 $('#clearPathBtn').on('click', function () {
+  Toast.fire({
+    title: '<span class="w3-text-white">Cleared map of searched location markers or paths</span>'
+  });
   clearPathFxn();
 });
 var secondFloorMarkerGroup = L.layerGroup().addTo(secondFloorMapOverlay);
@@ -398,102 +404,8 @@ var popupOnEachFeature = function popupOnEachFeature(feature, layer) {
   }
 };
 
-var shortestDistanceNode = function shortestDistanceNode(distances, visited) {
-  // create a default value for shortest
-  var shortest = null; // for each node in the distances object
-
-  for (var node in distances) {
-    // if no node has been assigned to shortest yet
-    // or if the current node's distance is smaller than the current shortest
-    var currentIsShortest = shortest === null || distances[node] < distances[shortest]; // and if the current node is in the unvisited set
-
-    if (currentIsShortest && !visited.includes(node)) {
-      // update shortest to be the current node
-      shortest = node;
-    }
-  }
-
-  return shortest;
-};
-
-var findShortestPath = function findShortestPath(graph, startNode, endNode) {
-  // track distances from the start node using a hash object
-  var distances = {};
-  distances[endNode] = "Infinity";
-  distances = Object.assign(distances, graph[startNode]); // track paths using a hash object
-
-  console.log("distances");
-  console.log(distances);
-  console.log('start');
-  console.log(startNode);
-  console.log('end');
-  console.log(endNode);
-  var parents = {
-    endNode: null
-  };
-
-  for (var child in graph[startNode]) {
-    parents[child] = startNode;
-  } // collect visited nodes
-
-
-  var visited = []; // find the nearest node
-
-  var node = shortestDistanceNode(distances, visited); //return console.log(node);
-  // for that node:
-
-  while (node) {
-    // find its distance from the start node & its child nodes
-    var distance = distances[node];
-    var children = graph[node]; // for each of those child nodes:
-
-    for (var _child in children) {
-      // make sure each child node is not the start node
-      if (String(_child) === String(startNode)) {
-        continue;
-      } else {
-        // save the distance from the start node to the child node
-        var newdistance = distance + children[_child]; // if there's no recorded distance from the start node to the child node in the distances object
-        // or if the recorded distance is shorter than the previously stored distance from the start node to the child node
-
-        if (!distances[_child] || distances[_child] > newdistance) {
-          // save the distance to the object
-          distances[_child] = newdistance; // record the path
-
-          parents[_child] = node;
-        }
-      }
-    } // move the current node to the visited set
-
-
-    visited.push(node); // move to the nearest neighbor node
-
-    node = shortestDistanceNode(distances, visited);
-  } // using the stored paths from start node to end node
-  // record the shortest path
-
-
-  var shortestPath = [endNode];
-  var parent = parents[endNode];
-
-  while (parent) {
-    shortestPath.push(parent);
-    parent = parents[parent];
-  } //this is the shortest path
-
-
-  shortestPath.reverse();
-  var results = {
-    distance: distances[endNode],
-    path: shortestPath
-  }; // return the shortest path & the end node's distance from the start node
-
-  console.log("results");
-  console.log(results);
-  getNamesInOrder(results.path);
-};
-
 var getNamesInOrder = function getNamesInOrder(path) {
+  console.log('getting names in order ...');
   var minDistanceLineCoords = [];
 
   if (map.hasLayer(firstFloorMap)) {
@@ -589,7 +501,7 @@ var showRequestedPaths = function showRequestedPaths() {
 
       var _end = refObj[_currentFloorLevelElevator]['pointName'];
       var _start = refObj[directionFromPath]['pointName'];
-      findShortestPath(currentFloorMarkersObject(), _start, _end);
+      getNamesInOrder(findShortestPath(currentFloorMarkersObject(), _start, _end));
       startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').addTo(currentFloorOverlay());
       endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(otherFloorOverlay());
       return;
@@ -598,8 +510,24 @@ var showRequestedPaths = function showRequestedPaths() {
       end = refObj[directionToPath]['pointName'];
       endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(currentFloorOverlay()).openPopup();
       startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').addTo(currentFloorOverlay()).openPopup();
-      findShortestPath(currentFloorMarkersObject(), start, end);
+      getNamesInOrder(findShortestPath(currentFloorMarkersObject(), start, end));
     }
+};
+
+var drawOtherFloorPath = function drawOtherFloorPath(directionToPath) {
+  console.log('heading to a different Floor: ' + refObj[directionToPath]['floorLevel']);
+  var halfPathsCoords = halfPathsObj[directionToPath];
+
+  if (refObj.currentFloorLevel == 'firstFloor') {
+    elevator1stFloor.openPopup();
+  } else {
+    elevator2ndFloor.openPopup();
+    console.log('finding from 2nd floor start to second floor elevator');
+  }
+
+  halfPathLine = L.polyline(halfPathsCoords, {
+    color: 'black'
+  }).bindPopup('Your path continued..').addTo(otherFloorOverlay());
 };
 
 var searchBarUsed = false;
@@ -622,23 +550,6 @@ $('#infoDiv').click(function () {
     console.log('searchMarkerLatlng is null');
   }
 });
-
-var drawOtherFloorPath = function drawOtherFloorPath(directionToPath) {
-  console.log('heading to a different Floor: ' + refObj[directionToPath]['floorLevel']);
-  var halfPathsCoords = halfPathsObj[directionToPath];
-
-  if (refObj.currentFloorLevel == 'firstFloor') {
-    elevator1stFloor.openPopup();
-  } else {
-    elevator2ndFloor.openPopup();
-    console.log('finding from 2nd floor start to second floor elevator');
-  }
-
-  halfPathLine = L.polyline(halfPathsCoords, {
-    color: 'black'
-  }).bindPopup('Your path continued..').addTo(otherFloorOverlay());
-};
-
 var locateOnce = false;
 
 var locateMe = function locateMe() {
@@ -659,7 +570,7 @@ var onLocationFoundOnce = function onLocationFoundOnce(e) {
     Toast.fire({
       title: '<span class="w3-text-white">Location Found</span>'
     });
-    var userCoords = [53.520701578731185, -113.52416932582857];
+    var userCoords = [53.5200336271986, -113.51781249046327];
     startPointMarker.setLatLng(userCoords).bindPopup('Your Approximate Location', {
       autoClose: false
     }).addTo(currentFloorOverlay()).openPopup();
@@ -674,6 +585,8 @@ var onLocationFoundOnce = function onLocationFoundOnce(e) {
     }
 
     if (searchBarUsed) {
+      console.log('search bar used');
+      console.log(searchMarker);
       searchHalfPathLine = L.polyline(searchMarker['lineCoords'], {
         color: 'black'
       }).bindPopup('Suggested path to Unit ').addTo(currentFloorOverlay());
@@ -681,6 +594,7 @@ var onLocationFoundOnce = function onLocationFoundOnce(e) {
     }
 
     setStartPoint();
+    console.log('fired setStartPOint');
   }
 
   locateOnce = false;
@@ -693,11 +607,14 @@ map.on('locationfound', onLocationFoundOnce); //sets the closest reference point
 //Calls the minimum path finding function
 
 var startMarkerDragged = false;
+var counter = 0;
 
 var setStartPoint = function setStartPoint() {
+  counter++;
+  console.log('setStartPoint fired ' + counter + ' times');
+
   if (startMarkerDragged || endMarkerDragged) {
     clearPathFxn();
-    console.log('clearing after markers dragged');
     startPointMarker.addTo(currentFloorOverlay());
     endPointMarker.addTo(currentFloorOverlay());
     startMarkerDragged = false;
@@ -705,6 +622,14 @@ var setStartPoint = function setStartPoint() {
   }
 
   getClosestPointFrom(startPointMarker);
+  console.log('distancesToClosestRefPoint Array');
+  console.log(distancesToClosestRefPointArray);
+
+  if (distancesToClosestRefPointArray.length == 0) {
+    return console.log('Location out of range');
+  }
+
+  ;
 
   if (firstFloorMapOverlay.hasLayer(firstRefPoint)) {
     firstFloorMapOverlay.removeLayer(firstRefPoint);
@@ -717,12 +642,12 @@ var setStartPoint = function setStartPoint() {
   }
 
   ;
-  firstRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {
+  firstRefPoint = L.circleMarker(distancesToClosestRefPointArray[1], {
     color: 'green'
   }).addTo(currentFloorOverlay());
   firstRefPoint.bindPopup('Your closest reference point is here').openPopup();
-  var start = distancesToClosestRefPointArray[0][2];
-  findShortestPath(currentFloorMarkersObject(), start, end);
+  var start = distancesToClosestRefPointArray[2];
+  getNamesInOrder(findShortestPath(currentFloorMarkersObject(), start, end));
 };
 
 startPointMarker.on('dragend', function () {
@@ -735,6 +660,7 @@ startPointMarker.on('dragend', function () {
 var endMarkerDragged = false;
 
 var setEndPoint = function setEndPoint() {
+  console.log('fired setEndPoint');
   getClosestPointFrom(endPointMarker);
 
   if (firstFloorMapOverlay.hasLayer(endRefPoint)) {
@@ -748,10 +674,10 @@ var setEndPoint = function setEndPoint() {
   }
 
   ;
-  endRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {
+  endRefPoint = L.circleMarker(distancesToClosestRefPointArray[1], {
     color: 'red'
   }).bindPopup('Ending Reference point');
-  end = distancesToClosestRefPointArray[0][2]; // passing in Point name ie. 'Point 1'
+  end = distancesToClosestRefPointArray[2]; // passing in Point name ie. 'Point 1'
 
   setStartPoint();
 };
@@ -765,11 +691,18 @@ endPointMarker.on('dragend', function () {
 
 var getClosestPointFrom = function getClosestPointFrom(PointMarker) {
   distancesToClosestRefPointArray = [];
+
+  if (map.distance(PointMarker.getLatLng(), elevator1stFloor.getLatLng()) > 300) {
+    return Toast.fire({
+      title: 'Your location is outside the range of the hospital. Please move closer to the hospital'
+    });
+  }
+
   calcDistancesFromEachMarker(currentFloorMarkersArray(), PointMarker);
   distancesToClosestRefPointArray.sort(function (a, b) {
     return a[0] - b[0];
   });
-  return distancesToClosestRefPointArray;
+  return distancesToClosestRefPointArray = distancesToClosestRefPointArray[0];
 };
 
 var calcDistancesFromEachMarker = function calcDistancesFromEachMarker(markersArray, PointMarker) {
@@ -791,10 +724,414 @@ $('#hideBtn').click(function () {
 
 /***/ }),
 
-/***/ "./resources/js/halfPathsObject.js":
-/*!*****************************************!*\
-  !*** ./resources/js/halfPathsObject.js ***!
-  \*****************************************/
+/***/ "./resources/js/pathFinding.js":
+/*!*************************************!*\
+  !*** ./resources/js/pathFinding.js ***!
+  \*************************************/
+/*! exports provided: findShortestPath */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findShortestPath", function() { return findShortestPath; });
+var shortestDistanceNode = function shortestDistanceNode(distances, visited) {
+  // create a default value for shortest
+  var shortest = null; // for each node in the distances object
+
+  for (var node in distances) {
+    // if no node has been assigned to shortest yet
+    // or if the current node's distance is smaller than the current shortest
+    var currentIsShortest = shortest === null || distances[node] < distances[shortest]; // and if the current node is in the unvisited set
+
+    if (currentIsShortest && !visited.includes(node)) {
+      // update shortest to be the current node
+      shortest = node;
+    }
+  }
+
+  return shortest;
+};
+
+var findShortestPath = function findShortestPath(graph, startNode, endNode) {
+  // track distances from the start node using a hash object
+  var distances = {};
+  distances[endNode] = "Infinity";
+  distances = Object.assign(distances, graph[startNode]); // track paths using a hash object
+
+  /*         console.log("distances");
+    console.log(distances);
+    console.log('start');
+    console.log(startNode);
+    console.log('end');
+    console.log(endNode); */
+
+  var parents = {
+    endNode: null
+  };
+
+  for (var child in graph[startNode]) {
+    parents[child] = startNode;
+  } // collect visited nodes
+
+
+  var visited = []; // find the nearest node
+
+  var node = shortestDistanceNode(distances, visited); //return console.log(node);
+  // for that node:
+
+  while (node) {
+    // find its distance from the start node & its child nodes
+    var distance = distances[node];
+    var children = graph[node]; // for each of those child nodes:
+
+    for (var _child in children) {
+      // make sure each child node is not the start node
+      if (String(_child) === String(startNode)) {
+        continue;
+      } else {
+        // save the distance from the start node to the child node
+        var newdistance = distance + children[_child]; // if there's no recorded distance from the start node to the child node in the distances object
+        // or if the recorded distance is shorter than the previously stored distance from the start node to the child node
+
+        if (!distances[_child] || distances[_child] > newdistance) {
+          // save the distance to the object
+          distances[_child] = newdistance; // record the path
+
+          parents[_child] = node;
+        }
+      }
+    } // move the current node to the visited set
+
+
+    visited.push(node); // move to the nearest neighbor node
+
+    node = shortestDistanceNode(distances, visited);
+  } // using the stored paths from start node to end node
+  // record the shortest path
+
+
+  var shortestPath = [endNode];
+  var parent = parents[endNode];
+
+  while (parent) {
+    shortestPath.push(parent);
+    parent = parents[parent];
+  } //this is the shortest path
+
+
+  shortestPath.reverse();
+  var results = {
+    distance: distances[endNode],
+    path: shortestPath
+  }; // return the shortest path & the end node's distance from the start node
+
+  return results.path;
+};
+
+
+
+/***/ }),
+
+/***/ "./resources/js/radmap.js":
+/*!********************************!*\
+  !*** ./resources/js/radmap.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _require = __webpack_require__(/*! ./references */ "./resources/js/references.js"),
+    Toast = _require.Toast;
+
+var arr = [0, 0, 0];
+var currentCoord = '';
+var prevCoord = '';
+var pastCoord = '';
+var counter = 0;
+var x; //current location
+
+var p; //previous location
+
+var pp; //past location
+
+var coordPopup = L.popup();
+var pedwaylatlngs = [[53.52037, -113.525395], [53.520363, -113.526096], [53.519151, -113.526086], [53.519151, -113.526406]];
+var pedway = L.polyline(pedwaylatlngs, {
+  color: '#50C7E9',
+  weight: 8,
+  lineCap: 'butt'
+}).bindPopup('Second Floor Pedway Between UofA Hospital and Kaye Edmonton Clinic');
+pedway.addTo(secondFloorMapOverlay);
+$('#fontSizeSelect').change(function () {
+  console.log($('#fontSizeSelect').val());
+  document.getElementById("infoDiv").style.fontSize = $('#fontSizeSelect').val();
+  document.getElementById("findBtn").style.fontSize = $('#fontSizeSelect').val();
+  document.getElementById("stopBtn").style.fontSize = $('#fontSizeSelect').val();
+  closeNav();
+});
+
+function recenterMap2() {
+  console.log('Zoom = ' + map.getZoom());
+  map.setView(center, 17);
+  Toast.fire({
+    title: '<span class="w3-text-white">Re-centered map view...</span>'
+  });
+}
+
+$('#centerMapBtn').click(function () {
+  recenterMap2();
+});
+$('#locateBtn').click(function () {
+  locateMe();
+});
+$('#stopBtn').click(function () {
+  stopLocating();
+});
+$('#menuBtn').click(function () {
+  openNav();
+}); //demo default is false
+
+$("#demoBtn").click(function () {
+  demo = !demo;
+  console.log('demo ' + demo);
+
+  if (demo) {
+    $("#demoBtn").text("Demo ON - Turn OFF?");
+  } else {
+    $("#demoBtn").text("Demo Movement OFF ");
+  }
+});
+var divMarkerRadPats = new L.Marker([53.518570974858534, -113.52696150541308], {
+  icon: new L.DivIcon({
+    className: '',
+    html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Patient Area</span>'
+  })
+});
+var divMarkerRadStaff = new L.Marker([53.51857895180517, -113.52668255567552], {
+  icon: new L.DivIcon({
+    className: '',
+    html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Staff Area</span>'
+  })
+});
+var rectRadPatsBounds = [[53.51862112948697, -113.52706074714662], [53.51846888301307, -113.52678984403612]];
+var rectRadPats = new L.rectangle(rectRadPatsBounds).bindTooltip('Radiology Patients Area');
+var rectRadStaffBounds = [[53.518619628257014, -113.52674692869188], [53.51846651102743, -113.52648943662645]];
+var rectRadStaff = new L.rectangle(rectRadStaffBounds).bindTooltip('Radiology Staff Area');
+var kayeClinicRadiologyGroup = new L.layerGroup([divMarkerRadPats, divMarkerRadStaff, rectRadPats, rectRadStaff]).addTo(secondFloorMapOverlay);
+var overlaysRemoved = false;
+
+function onZoomShow() {
+  var zoomx = map.getZoom();
+  console.log('Zoom level is = ' + zoomx);
+
+  if (zoomx < 17 && !overlaysRemoved) {
+    firstFloorMapOverlay.remove();
+    secondFloorMapOverlay.remove();
+    overlaysRemoved = true;
+    console.log('Overlays removed');
+  }
+
+  if (zoomx >= 17 && overlaysRemoved) {
+    firstFloorMapOverlay.addTo(firstFloorMap);
+    secondFloorMapOverlay.addTo(secondFloorMap);
+    overlaysRemoved = false;
+    console.log('Overlays added after being removed');
+  }
+}
+
+map.on('zoomend', onZoomShow);
+var watchLocation = false;
+
+function locateMe() {
+  watchLocation = true;
+  map.locate({
+    setView: false,
+    maxZoom: 19,
+    watch: watchLocation,
+    enableHighAccuracy: true
+  });
+  console.log('Locating with watch option ON...');
+
+  if (watchLocation) {
+    Toast.fire({
+      title: '<span class="w3-text-white">Locating with live location update...</span>'
+    });
+  }
+} //locateMe(map);
+
+
+var locationMarkersLayerGroup = L.layerGroup().addTo(map);
+
+function onLocationError(e) {
+  alert(e.message);
+}
+
+map.on('locationerror', onLocationError);
+
+function onLocationFound(e) {
+  if (!watchLocation) {
+    console.log('watch Location not true, returning from watch fxn');
+    return;
+  } else {
+    console.log('Located via location watch fxn');
+  }
+
+  if (counter == 0) {
+    Toast.fire({
+      title: '<span class="w3-text-white">Showing live location... cancel with Stop button >>> </span>'
+    });
+    document.getElementById('stopBtn').style.display = 'block';
+    map.setView(e.latlng, 18);
+  }
+
+  if (demo) {
+    var rand = Math.random() / 5000;
+    e.latlng.lat = e.latlng.lat + rand;
+    e.latlng.lng = e.latlng.lng + rand;
+  } //if new latlng is same as previous in array, return
+
+
+  if (JSON.stringify(arr[2]) === JSON.stringify(e.latlng)) {
+    console.log('new latlng is same as previous');
+    return;
+  }
+
+  locationMarkersLayerGroup.clearLayers();
+  counter++;
+  var radius = e.accuracy / 2;
+  arr.push(e.latlng);
+
+  if (arr.length > 3) {
+    arr.shift();
+  }
+
+  currentCoord = arr[2];
+  prevCoord = arr[1];
+  pastCoord = arr[0];
+
+  if (counter >= 1) {
+    x = L.circleMarker(e.latlng, {
+      color: markerColor
+    }).bindPopup("You are within " + radius + " meters from this point").addTo(locationMarkersLayerGroup);
+  }
+
+  if (counter <= 2) {
+    x.openPopup();
+  }
+
+  if (counter >= 2) {
+    p = L.circleMarker(prevCoord, {
+      radius: 2,
+      color: '#848D99'
+    }).bindPopup("Your previous location").addTo(locationMarkersLayerGroup);
+  }
+
+  if (counter >= 3) {
+    pp = L.circleMarker(pastCoord, {
+      radius: 1,
+      color: '#848D99'
+    }).bindPopup("Your past location").addTo(locationMarkersLayerGroup);
+  }
+}
+
+map.on('locationfound', onLocationFound);
+
+function stopLocating() {
+  watchLocation = false;
+  map.stopLocate();
+  Toast.fire({
+    title: '<span class="w3-text-white">Stopped Location Sharing >>> </span>'
+  });
+  console.log('Stopped Locating');
+  counter = 0;
+  document.getElementById('stopBtn').style.display = 'none';
+}
+
+var copyToClipboard = function copyToClipboard(str) {
+  var el = document.createElement('textarea');
+  el.value = str;
+  el.setAttribute('readonly', '');
+  el.style.position = 'absolute';
+  el.style.left = '-9999px';
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+};
+
+function onMapDblClick(t) {
+  coordPopup.setLatLng(t.latlng).setContent("You clicked the map at " + t.latlng.toString()).openOn(map);
+  var coordString = t.latlng.lat + ', ' + t.latlng.lng; //coordString = t.latlng.lng + ', ' + t.latlng.lat;
+
+  copyToClipboard(coordString);
+  console.log("Copied the Coordinates to Clipboard: " + coordString);
+}
+
+map.on('dblclick', onMapDblClick);
+$('#setMapCenterBtn').click(function () {
+  setMapCenter();
+});
+
+function setMapCenter() {
+  var centerCoords = document.getElementById("centerCoordsInput").value;
+  var centerZoom = document.getElementById("centerZoomInput").value;
+
+  if (centerCoords != '' && centerCoords != '') {
+    ajaxSetMapCenter(centerCoords, centerZoom);
+    centerCoords = centerCoords.split(",");
+    map.setView(centerCoords, centerZoom);
+    closeNav();
+  } else {
+    console.log('Please Enter Valid Values ');
+  }
+}
+
+function ajaxSetMapCenter(centerCoords, centerZoom) {
+  $.ajax({
+    type: 'get',
+    url: '/cookie/setCenterCookie',
+    data: {
+      'centerCoords': centerCoords,
+      'centerZoom': centerZoom
+    },
+    success: function success(data) {
+      console.log(centerCoords + 'set successfully');
+    }
+  });
+}
+
+$(document).ready(function () {
+  // Toggles paragraphs display with sliding
+  $("#slideUpBtn").click(function () {
+    $(".slideUp").slideUp();
+    $(this).animate({
+      'margin-top': '35px'
+    });
+    setTimeout(function () {
+      $("#slideUpBtn").hide();
+      $("#slideDownBtn").css('margin-top', '35px').show();
+    }, 300);
+  });
+});
+$(document).ready(function () {
+  // Toggles paragraphs display with sliding
+  $("#slideDownBtn").click(function () {
+    $(".slideUp").slideDown();
+    $(this).animate({
+      'margin-top': '180px'
+    });
+    setTimeout(function () {
+      $("#slideDownBtn").hide();
+      $("#slideUpBtn").css('margin-top', '180px').show();
+    }, 300);
+  });
+});
+
+/***/ }),
+
+/***/ "./resources/js/references.js":
+/*!************************************!*\
+  !*** ./resources/js/references.js ***!
+  \************************************/
 /*! exports provided: halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -913,269 +1250,6 @@ var refObj = {
   'secondFloor': 'secondFloor'
 };
 
-
-/***/ }),
-
-/***/ "./resources/js/radmap.js":
-/*!********************************!*\
-  !*** ./resources/js/radmap.js ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var _require = __webpack_require__(/*! ./halfPathsObject */ "./resources/js/halfPathsObject.js"),
-    Toast = _require.Toast;
-
-var arr = [0, 0, 0];
-var currentCoord = '';
-var prevCoord = '';
-var pastCoord = '';
-var counter = 0;
-var x; //current location
-
-var p; //previous location
-
-var pp; //past location
-
-var coordPopup = L.popup();
-var pedwaylatlngs = [[53.52037, -113.525395], [53.520363, -113.526096], [53.519151, -113.526086], [53.519151, -113.526406]];
-var pedway = L.polyline(pedwaylatlngs, {
-  color: '#50C7E9',
-  weight: 8,
-  lineCap: 'butt'
-}).bindPopup('Second Floor Pedway Between UofA Hospital and Kaye Edmonton Clinic');
-pedway.addTo(secondFloorMapOverlay);
-$('#fontSizeSelect').change(function () {
-  console.log($('#fontSizeSelect').val());
-  document.getElementById("infoDiv").style.fontSize = $('#fontSizeSelect').val();
-  document.getElementById("findBtn").style.fontSize = $('#fontSizeSelect').val();
-  document.getElementById("stopBtn").style.fontSize = $('#fontSizeSelect').val();
-  closeNav();
-});
-$('#findBtn').click(function () {
-  locateMe();
-});
-$('#stopBtn').click(function () {
-  stopLocating();
-});
-$('#menuBtn').click(function () {
-  openNav();
-}); //demo default is false
-
-$("#demoBtn").click(function () {
-  demo = !demo;
-  console.log('demo ' + demo);
-
-  if (demo) {
-    $("#demoBtn").text("Demo ON - Turn OFF?");
-  } else {
-    $("#demoBtn").text("Demo Movement OFF ");
-  }
-});
-var divMarkerRadPats = new L.Marker([53.518570974858534, -113.52696150541308], {
-  icon: new L.DivIcon({
-    className: '',
-    html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Patient Area</span>'
-  })
-});
-var divMarkerRadStaff = new L.Marker([53.51857895180517, -113.52668255567552], {
-  icon: new L.DivIcon({
-    className: '',
-    html: '<span style="text-align: center">Radiology</span><br><span style="text-align: center">Staff Area</span>'
-  })
-});
-var rectRadPatsBounds = [[53.51862112948697, -113.52706074714662], [53.51846888301307, -113.52678984403612]];
-var rectRadPats = new L.rectangle(rectRadPatsBounds).bindTooltip('Radiology Patients Area');
-var rectRadStaffBounds = [[53.518619628257014, -113.52674692869188], [53.51846651102743, -113.52648943662645]];
-var rectRadStaff = new L.rectangle(rectRadStaffBounds).bindTooltip('Radiology Staff Area');
-var kayeClinicRadiologyGroup = new L.layerGroup([divMarkerRadPats, divMarkerRadStaff, rectRadPats, rectRadStaff]).addTo(secondFloorMapOverlay);
-var overlaysRemoved = false;
-
-function onZoomShow() {
-  var zoomx = map.getZoom();
-  console.log('Zoom level is = ' + zoomx);
-
-  if (zoomx < 17 && !overlaysRemoved) {
-    firstFloorMapOverlay.remove();
-    secondFloorMapOverlay.remove();
-    overlaysRemoved = true;
-    console.log('Overlays removed');
-  }
-
-  if (zoomx >= 17 && overlaysRemoved) {
-    firstFloorMapOverlay.addTo(firstFloorMap);
-    secondFloorMapOverlay.addTo(secondFloorMap);
-    overlaysRemoved = false;
-    console.log('Overlays added after being removed');
-  }
-}
-
-map.on('zoomend', onZoomShow);
-var watchLocation = false;
-
-function locateMe() {
-  document.getElementById('findBtn').innerText = 'Locating..';
-  document.getElementById('findBtn').classList.toggle("w3-grey");
-  watchLocation = true;
-  map.locate({
-    setView: false,
-    maxZoom: 19,
-    watch: watchLocation,
-    enableHighAccuracy: true
-  });
-  console.log('Locating with watch option ON...');
-
-  if (watchLocation) {
-    Toast.fire({
-      title: '<span class="w3-text-white">Locating with live location update...</span>'
-    });
-  }
-} //locateMe(map);
-
-
-var locationMarkersLayerGroup = L.layerGroup().addTo(map);
-
-function onLocationError(e) {
-  alert(e.message);
-}
-
-map.on('locationerror', onLocationError);
-
-function onLocationFound(e) {
-  if (!watchLocation) {
-    console.log('watch Location not true, returning from watch fxn');
-    return;
-  } else {
-    console.log('Located via location watch fxn');
-  }
-
-  if (counter == 0) {
-    Toast.fire({
-      title: '<span class="w3-text-white">Showing live location... cancel with Stop button >>> </span>'
-    });
-    document.getElementById('findBtn').style.display = 'none';
-    document.getElementById('stopBtn').style.display = 'block';
-    map.setView(e.latlng, 18);
-  }
-
-  if (demo) {
-    var rand = Math.random() / 5000;
-    e.latlng.lat = e.latlng.lat + rand;
-    e.latlng.lng = e.latlng.lng + rand;
-  } //if new latlng is same as previous in array, return
-
-
-  if (JSON.stringify(arr[2]) === JSON.stringify(e.latlng)) {
-    console.log('new latlng is same as previous');
-    return;
-  }
-
-  locationMarkersLayerGroup.clearLayers();
-  counter++;
-  var radius = e.accuracy / 2;
-  arr.push(e.latlng);
-
-  if (arr.length > 3) {
-    arr.shift();
-  }
-
-  currentCoord = arr[2];
-  prevCoord = arr[1];
-  pastCoord = arr[0];
-
-  if (counter >= 1) {
-    x = L.circleMarker(e.latlng, {
-      color: markerColor
-    }).bindPopup("You are within " + radius + " meters from this point").addTo(locationMarkersLayerGroup);
-  }
-
-  if (counter <= 2) {
-    x.openPopup();
-  }
-
-  if (counter >= 2) {
-    p = L.circleMarker(prevCoord, {
-      radius: 2,
-      color: '#848D99'
-    }).bindPopup("Your previous location").addTo(locationMarkersLayerGroup);
-  }
-
-  if (counter >= 3) {
-    pp = L.circleMarker(pastCoord, {
-      radius: 1,
-      color: '#848D99'
-    }).bindPopup("Your past location").addTo(locationMarkersLayerGroup);
-  }
-}
-
-map.on('locationfound', onLocationFound);
-
-function stopLocating() {
-  watchLocation = false;
-  map.stopLocate();
-  Toast.fire({
-    title: '<span class="w3-text-white">Stopped Location Sharing >>> </span>'
-  });
-  console.log('Stopped Locating');
-  counter = 0;
-  document.getElementById('findBtn').style.display = 'block';
-  document.getElementById('findBtn').classList.toggle("w3-grey");
-  document.getElementById('findBtn').innerText = 'Locate';
-  document.getElementById('stopBtn').style.display = 'none';
-}
-
-var copyToClipboard = function copyToClipboard(str) {
-  var el = document.createElement('textarea');
-  el.value = str;
-  el.setAttribute('readonly', '');
-  el.style.position = 'absolute';
-  el.style.left = '-9999px';
-  document.body.appendChild(el);
-  el.select();
-  document.execCommand('copy');
-  document.body.removeChild(el);
-};
-
-function onMapDblClick(t) {
-  coordPopup.setLatLng(t.latlng).setContent("You clicked the map at " + t.latlng.toString()).openOn(map);
-  var coordString = t.latlng.lat + ', ' + t.latlng.lng; //coordString = t.latlng.lng + ', ' + t.latlng.lat;
-
-  copyToClipboard(coordString);
-  console.log("Copied the Coordinates to Clipboard: " + coordString);
-}
-
-map.on('dblclick', onMapDblClick);
-$('#setMapCenterBtn').click(function () {
-  setMapCenter();
-});
-
-function setMapCenter() {
-  var centerCoords = document.getElementById("centerCoordsInput").value;
-  var centerZoom = document.getElementById("centerZoomInput").value;
-
-  if (centerCoords != '' && centerCoords != '') {
-    ajaxSetMapCenter(centerCoords, centerZoom);
-    centerCoords = centerCoords.split(",");
-    map.setView(centerCoords, centerZoom);
-    closeNav();
-  } else {
-    console.log('Please Enter Valid Values ');
-  }
-}
-
-function ajaxSetMapCenter(centerCoords, centerZoom) {
-  $.ajax({
-    type: 'get',
-    url: '/cookie/setCenterCookie',
-    data: {
-      'centerCoords': centerCoords,
-      'centerZoom': centerZoom
-    },
-    success: function success(data) {
-      console.log(centerCoords + 'set successfully');
-    }
-  });
-}
 
 /***/ }),
 

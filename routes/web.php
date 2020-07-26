@@ -36,6 +36,8 @@ Route::get('/radmap', 'RadMapController@main');
 Route::get('/radmaptest', 'RadMapController@test');
 Route::post('/addlocation', 'RadMapController@store')->middleware('auth');
 Route::get('/addlocation', function () {return view('addlocation');})->middleware('auth');
+Route::post('/addlocation_staff', 'RadMapController@store_staff')->middleware('auth');
+Route::get('/addlocation_staff', function () {return view('addlocation_staff');})->middleware('auth');
 
 Route::get('/reactradmap', function () {
     return view('reactradmap');
@@ -47,3 +49,4 @@ Route::get('/home', 'HomeController@index')->name('dashboard');
 Route::get('/radmapstaff', 'HomeController@radmapstaff');
 
 Route::get('/search', 'AjaxSearchController@search');
+Route::get('/search_staff', 'AjaxSearchController@search_staff');

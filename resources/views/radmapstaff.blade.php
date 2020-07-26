@@ -6,9 +6,10 @@
 	
 	@include('components.rad-loader')
 
-	<div id="infoDivContainer" class="w3-center " style="margin: 0px auto; position:absolute; z-index: 1000; width: 100%; ">
-		<div id="infoDiv" class="w3-black w3-padding " style=" font-size: {{$fontSize}}; ">
-			Viewing Second Floor Map 
+	<div id="infoDivContainer" class="w3-center"  style="margin: 0px auto; position:absolute; z-index: 1000; width: 100%; ">
+		<div id="infoDiv" data-intro="This shows the current floor map you're viewing" data-step=1 class="w3-black w3-padding " style=" font-size: {{$fontSize}}; ">
+			Welcome to RadMap 
+
 		</div>
  
 		<div class="w3-row w3-light-grey " style="max-width:600px; margin:0 auto;" >		
@@ -16,43 +17,53 @@
 			<button class="w3-col s1 w3-blue w3-btn" style="width:10%; padding: 8px" onclick="clearSearchInput()"><i class="fa fa-close"></i></button>
 			<button id="hideBtn" class="w3-col s1 w3-black w3-btn w3-right" style="width:10%; padding: 8px"> <i class="fa fa-arrow-up"></i></button>
 			<div class="w3-col s1 w3-grey w3-dropdown-click" style="width:10%;">
-			<button class="w3-grey w3-btn" onclick="toggleDropDown()"><i class="fa fa-user"></i></button>
-			<div id="dropDownContent" class="w3-dropdown-content w3-bar-block w3-card-4 w3-animate-zoom">
-			<a href="{{ route('logout') }}" class="w3-bar-item w3-button"
-			onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
-			<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-			@csrf</form>
+				<button class="w3-grey w3-btn" onclick="toggleDropDown()"><i class="fa fa-user"></i></button>
+				<div id="dropDownContent" class="w3-dropdown-content w3-bar-block w3-card-4 w3-animate-zoom">
+				<a href="{{ route('logout') }}" class="w3-bar-item w3-button"
+				onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
+				<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+				@csrf</form>
+				</div>
 			</div>
-		</div>
-
 			<div id="results" style="position: relative; margin-top: 10%; z-index:1100" class="w3-hide"></div>
 		</div>
+
+
 			
 	</div>
 
-	<div id="map">
-
-
-		<button id="findBtn" class="myBtn w3-light-green" style="font-size:{{$fontSize}}"
-			title="Find My Location">Locate
-			<span id="btn-loader" style="display:none" class="loader-1" title="Find My Location"></span>
-		</button>
-		<button id="stopBtn" style="display: none" class="myBtn w3-pale-red" 
+	
+	<button id="stopBtn" style="display: none" class="myBtn w3-pale-red" 
 			title="Stop Location Sharing">Stop</button>
 
-		<button id="menuBtn" class="menuBtn" style="background-color:{{$color}}" title="Open Menu">
+			<button data-intro="Use this button to open the menu" id="menuBtn" class="menuBtn" style="background-color:{{$color}}" title="Open Menu">
 			<i class="fa fa-bars "></i></button>
 
-		<button id="clearPathBtn" class="menuBtn" style="position: relative; margin-top: 35px; " title="Clear Map">
+		<button data-intro="Use this button clear the map of location markers" id="clearPathBtn" class=" slideUp" style="position: absolute; margin-top: 0px; " title="Clear Map">
 			<i class="fa fa-undo "></i></button>
 
+		<button data-intro="Use this button re-center the map" id="centerMapBtn" class=" slideUp" style="position: absolute; margin-top: 35px; " title="Recenter map">
+			<i class="fa fa-map "></i></button>
 
+		<button data-intro="Use this button to show and track your location on the map" id="locateBtn" class=" slideUp" style="position: absolute; margin-top: 70px; " title="Find location">
+			<i class="fa fa-location-arrow "></i></button>
 
-	</div>
+		<a href="/feedback"><button data-intro="Link to the feedback page" id="feedbackBtn" class=" slideUp" style="position: absolute; margin-top: 105px; " title="Feedback">
+			<i class="fa fa-comment "></i></button></a>
+
+			<button id="slideUpBtn" class="menuBtn" style="position: absolute; margin-top: 180px; background-color:{{$color}};" title="Slide Up">
+		<i class="fa fa-arrow-up "></i></button>	
+		<button id="slideDownBtn" class="menuBtn" style="display: none; position: absolute; margin-top: 35px; background-color:{{$color}};" title="Slide Down">
+		<i class="fa fa-arrow-down "></i></button>	
+
 	
 
 
-	<script>
+<script>
+		var mapDiv = document.createElement("DIV");
+	mapDiv.setAttribute("id", "map"); 
+	mapDiv.setAttribute("class", "map"); 
+	document.body.appendChild(mapDiv);
 
 		
 	let center = "{{$centerCoords}}";
@@ -133,6 +144,8 @@
     const controls = L.control.layers(baseMaps).addTo(map);
 	const controlsContainer = controls.getContainer(); 
 	controlsContainer.style.marginTop =  '80px';
+	controlsContainer.setAttribute("data-intro", "Use this to switch between map floors");
+	controlsContainer.setAttribute("data-step", 2);
 
 	let showInfo = true;
 	const infoDivContainer = document.getElementById("infoDiv");
@@ -162,7 +175,7 @@
 			}
 			else {
 				if(!map.hasLayer(secondFloorDetailedMapOverlay)){
-					secondFloorDetailedMapOverlay.addTo(map);
+					secondFloorDetailedMapOverlay.addTo(secondFloorDetailedMap);
 				}
 
 			}
@@ -183,10 +196,10 @@
                 },
                 style: function(feature) {
                     switch (feature.properties.size) {
-                        case 'small': return {color: "blue", fillColor: "red", radius: 5};
+                        case 'small': return {color: "black", fillColor: "red", radius: 5};
                     }
                     switch (feature.properties.floor) {
-                        case 'second': return {color: "blue", fillColor: "red", radius: 8};
+                        case 'second': return {color: "black", fillColor: "red", radius: 8};
                     }
                 },
 
@@ -197,60 +210,64 @@
             console.log(xhr);
           }
     });
-}
-ajaxGetGeoJsonStaff();
-const popupStaff = (feature, layer) => {	
-if (feature.properties && feature.properties.popupContent) {
-	layer.bindPopup(feature.properties.popupContent);
 	}
-}
+	ajaxGetGeoJsonStaff();
+	const staffMarkersObj = {}; 
+	const popupStaff = (feature, layer) => {	
+	if (feature.properties && feature.properties.popupContent) {
+		staffMarkersObj[feature.properties.name] = feature.properties;
+		layer.bindPopup(feature.properties.popupContent);
+		}
+	}
 
  const changeFloorModal = () => {
 	 	 
-	 Swal.fire({
-	 title: 'RadMap',
-		text: 'Which floor map would you like to view?',
-		icon: 'question',
-		confirmButtonText: 'First Floor',
-		showCancelButton: true,
-		cancelButtonText: 'Second Floor',
-		backdrop: false,
-		  showClass: {
+	 		
+	Swal.fire({
+		title: 'RadMap',
+			icon: 'question',
+			html:'<div class="w3-button w3-round w3-small" style="background-color:#C9DAE1;" id="tourBtn">Take a tour</div> '+ 
+			'<br>Which floor map would you like to view?',
+			confirmButtonText: 'First Floor',
+			showCancelButton: true,
+			cancelButtonText: 'Second Floor',
+			backdrop: false,
+			showClass: {
     popup: 'animate__animated animate__fadeInDown'
   },
   hideClass: {
     popup: 'animate__animated animate__fadeOutUp'
   }
 	  }).then((result) => {
-		  if (result.value) {
-			  console.log(result.value);
-			  map.removeLayer(secondFloorMap);
-			  map.removeLayer(secondFloorDetailedMap);
-			  map.addLayer(firstFloorMap);
-		  } else {
-			console.log(result.value);
-			  map.removeLayer(firstFloorMap);
-			  map.addLayer(secondFloorMap);
-		  } ;
+		if (result . value) {
+				if(map.hasLayer(secondFloorMap)){map.removeLayer(secondFloorMap)};
+				if(map.hasLayer(secondFloorDetailedMap)){map.removeLayer(secondFloorDetailedMap)};
+				map . addLayer(firstFloorMap);
+			} else {
+				if(map.hasLayer(firstFloorMap)){map.removeLayer(firstFloorMap)};
+				map . addLayer(secondFloorMap);
+				map . addLayer(secondFloorDetailedMap);
+			}
 	 
 		}); 
-} 
+	} 
 
-changeFloorModal()
-
-/* $('#infoDiv').click(function(){
 	changeFloorModal()
-}); */
 
-const clearSearchInput = () =>{
-    document.getElementById('searchBar').value='';
-	$('#results').addClass('w3-hide');
-}
+	/* $('#infoDiv').click(function(){
+		changeFloorModal()
+	}); */
+
+	const clearSearchInput = () =>{
+		document.getElementById('searchBar').value='';
+		$('#results').addClass('w3-hide');
+	}
+	document.addEventListener("load", clearSearchInput());
 	    const ajaxSearch = () => {
 			let value = $("#searchBar").val();
 			$.ajax({
 			  type: 'get',
-			  url: '/search',
+			  url: '/search_staff',
 			  data: {
 				'search': value
 			  },
@@ -261,40 +278,75 @@ const clearSearchInput = () =>{
 			  }
 			});
 		  }
-	
-		  $('#searchBar').on('keyup', function() {
-			ajaxSearch();
-		  });
+		  var debounce = function (func, wait, immediate) {
+     var timeout;
+     return function() {
+         var context = this, args = arguments;
+         var later = function() {
+                 timeout = null;
+                 if (!immediate) func.apply(context, args);
+         };
+         var callNow = immediate && !timeout;
+         clearTimeout(timeout);
+         timeout = setTimeout(later, wait);
+         if (callNow) func.apply(context, args);
+     };
+};
 
-
+$('#searchBar').keyup(debounce(function(){
+     // the following function will be executed every half second
+     ajaxSearch();
+},500))
 
     const searchMakerLayer = L.layerGroup();
 	
 
 	let searchMarker = {};
 
-    const showSearchMarker = (firstFloor, lat, lng, pointName, description) => {
+    const showSearchMarker = (firstFloor, lat, lng, pointName, description, lineCoords) => {
         if(firstFloorMapOverlay.hasLayer(searchMakerLayer)){firstFloorMapOverlay.removeLayer(searchMakerLayer)};
         if(secondFloorMapOverlay.hasLayer(searchMakerLayer)){secondFloorMapOverlay.removeLayer(searchMakerLayer)};
 		searchMakerLayer.clearLayers();
 		searchMarker['Latlng'] = [lat, lng];
 		searchMarker['pointName'] = pointName;
+		lineCoords = JSON.parse("[" + lineCoords + "]");
+			searchMarker['lineCoords'] = lineCoords;
 		map.setView(searchMarker['Latlng']);
+		if(firstFloor == 2){
+			map.removeLayer(firstFloorMap);
+			map.removeLayer(secondFloorMap);
+			map.removeLayer(secondFloorDetailedMap);
+			map.addLayer(secondFloorMap);
+		map.addLayer(secondFloorDetailedMap);
+		map.eachLayer(function(layer){
+				if(layer._latlng && layer._latlng.lat){
+					if(lat == layer._latlng.lat && lng == layer._latlng.lng){
+						layer.openPopup();	
+						console.log(layer);	
+					}
+				}
+			});
+		return clearSearchInput();
+		}
 		setTimeout(() => {
 			$('#infoDiv').click();
 			clearSearchInput();
-			console.log('info div clicked')
 		}, 500);
+		
         if(firstFloor){
         searchMakerLayer.addTo(firstFloorMapOverlay);
-        map.removeLayer(secondFloorMap);
-        map.addLayer(firstFloorMap);
-        return L.marker([lat, lng]).bindPopup(description + '<br><button id="searchMarkerBtn">Show Path To here</button>').addTo(searchMakerLayer).openPopup();
+		if(map.hasLayer(secondFloorMap)){map.removeLayer(secondFloorMap)};
+		if(map.hasLayer(secondFloorDetailedMap)){map.removeLayer(secondFloorDetailedMap)};
+	    map.addLayer(firstFloorMap);
+		return L.marker([lat, lng]).bindPopup(description + '<br><button id="searchMarkerBtn">Show Path To here</button>',
+		{	autoPanPadding: [100, 100]}).addTo(searchMakerLayer).openPopup();
         } else {
         searchMakerLayer.addTo(secondFloorMapOverlay);
-        map.removeLayer(firstFloorMap);
-        map.addLayer(secondFloorMap);
-		return L.marker([lat, lng]).bindPopup(description + '<button id="searchMarkerBtn">Show Path To here</button>').addTo(searchMakerLayer).openPopup();
+		if(map.hasLayer(firstFloorMap)){map.removeLayer(firstFloorMap)};
+		if(map.hasLayer(secondFloorDetailedMap)){map.removeLayer(secondFloorDetailedMap)};
+	        map.addLayer(secondFloorMap);
+		return L.marker([lat, lng]).bindPopup(description + '<button id="searchMarkerBtn">Show Path To here</button>',
+		{	autoPanPadding: [100, 100]}).addTo(searchMakerLayer).openPopup();
         }
 
 	}	
@@ -302,14 +354,31 @@ const clearSearchInput = () =>{
 		var x = document.getElementById("dropDownContent");
 		if (x.className.indexOf("w3-show") == -1) {
 			x.className += " w3-show";
+			controlsContainer.style.marginTop =  '120px';
 		} else { 
 			x.className = x.className.replace(" w3-show", "");
+			controlsContainer.style.marginTop =  '80px';
 		}
+		console.log(staffMarkersObj);
 	}
 
 
 
 </script>
+
+
+
+	<!-- 		<button id="test" class="menuBtn" style="position: absolute; margin-top: 80px ; " >Test </button> -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.js"></script>
+		<script>
+			$('#tourBtn').click(function(){
+				Swal.close();
+					introJs().setOption('hideNext', true).setOption('scrollToElement', true).start().onexit(function(){
+						changeFloorModal();
+					}) //start introduction for element id='intro-farm'
+			});
+		</script>
 
 
 @endsection

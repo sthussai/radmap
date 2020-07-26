@@ -1,5 +1,7 @@
 const { controls } = require("./radmap");
-const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = require("./halfPathsObject");
+const { findShortestPath } = require("./pathFinding");
+const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = require("./references");
+
 
 
     const floorRecorder = () =>{
@@ -124,9 +126,13 @@ const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = 
         if(firstFloorMapOverlay.hasLayer(minDistanceLine)) {firstFloorMapOverlay.removeLayer(minDistanceLine);}
         if(secondFloorMapOverlay.hasLayer(minDistanceLine)) {secondFloorMapOverlay.removeLayer(minDistanceLine);}
         
+        
     }
     
     $('#clearPathBtn').on('click', function (){
+        Toast.fire({
+			title: '<span class="w3-text-white">Cleared map of searched location markers or paths</span>'
+		  })
         clearPathFxn();
     })
     
@@ -228,136 +234,43 @@ const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = 
     
     
     
-    let shortestDistanceNode = (distances, visited) => {
-        // create a default value for shortest
-          let shortest = null;
-          
-            // for each node in the distances object
-          for (let node in distances) {
-              // if no node has been assigned to shortest yet
-                // or if the current node's distance is smaller than the current shortest
-                let currentIsShortest = shortest === null || distances[node] < distances[shortest];
-                // and if the current node is in the unvisited set
-              if (currentIsShortest && !visited.includes(node)) {
-                  // update shortest to be the current node
-                  shortest = node;
-              }
-          }
+
     
-          return shortest;
-          
-      };
-    
-        let findShortestPath = (graph, startNode, endNode) => {
-     
-          // track distances from the start node using a hash object
-          let distances = {};
-          distances[endNode] = "Infinity";
-          distances = Object.assign(distances, graph[startNode]);// track paths using a hash object
-          console.log("distances");
-          console.log(distances);
-          console.log('start');
-          console.log(startNode);
-          console.log('end');
-          console.log(endNode);
-          let parents = { endNode: null };
-          for (let child in graph[startNode]) {
-              parents[child] = startNode;
+    const getNamesInOrder = (path) => {
+        console.log('getting names in order ...');
+        const minDistanceLineCoords =[];
+        if(map.hasLayer(firstFloorMap)){     
+            for ( var i = 0; i<path.length; i++){
+            firstFloorMarkersArray.forEach(function (feature){
+                    if(feature.properties.name == path[i]){
+                            let lt = feature.geometry.coordinates[1];
+                            let ln = feature.geometry.coordinates[0];
+                            let ltln = [lt, ln];
+                            minDistanceLineCoords.push(ltln);  
+                        }                   
+                    });
             }
-            
-            // collect visited nodes
-            let visited = [];
-            // find the nearest node
-            let node = shortestDistanceNode(distances, visited);
-            //return console.log(node);
-            
-        // for that node:
-        while (node) {
-        // find its distance from the start node & its child nodes
-         let distance = distances[node];
-         let children = graph[node]; 
-             
-        // for each of those child nodes:
-             for (let child in children) {
-         
-         // make sure each child node is not the start node
-               if (String(child) === String(startNode)) {
-                 continue;
-              } else {
-                 // save the distance from the start node to the child node
-                 let newdistance = distance + children[child];// if there's no recorded distance from the start node to the child node in the distances object
-       // or if the recorded distance is shorter than the previously stored distance from the start node to the child node
-                 if (!distances[child] || distances[child] > newdistance) {
-       // save the distance to the object
-            distances[child] = newdistance;
-       // record the path
-            parents[child] = node;
-           } 
-                }
-              }  
-             // move the current node to the visited set
-             visited.push(node);// move to the nearest neighbor node
-             node = shortestDistanceNode(distances, visited);
-           }
-         
-        // using the stored paths from start node to end node
-        // record the shortest path
-        let shortestPath = [endNode];
-        let parent = parents[endNode];
-        while (parent) {
-         shortestPath.push(parent);
-         parent = parents[parent];
-        }
-        //this is the shortest path
-        shortestPath.reverse();
-    
-        let results = {
-         distance: distances[endNode],
-         path: shortestPath,
-        };
-        // return the shortest path & the end node's distance from the start node
-    
-        console.log("results");   
-        console.log(results);   
-        
-        getNamesInOrder(results.path);
-        
-       };
-    
-        const getNamesInOrder = (path) => {
-            const minDistanceLineCoords =[];
-            if(map.hasLayer(firstFloorMap)){     
-                for ( var i = 0; i<path.length; i++){
-                firstFloorMarkersArray.forEach(function (feature){
+        } else{
+            for ( var i = 0; i<path.length; i++){
+                secondFloorMarkersArray.forEach(function (feature){
                         if(feature.properties.name == path[i]){
-                              let lt = feature.geometry.coordinates[1];
-                              let ln = feature.geometry.coordinates[0];
-                              let ltln = [lt, ln];
-                              minDistanceLineCoords.push(ltln);  
+                                let lt = feature.geometry.coordinates[1];
+                                let ln = feature.geometry.coordinates[0];
+                                let ltln = [lt, ln];
+                                minDistanceLineCoords.push(ltln);  
                             }                   
-                      });
+                        });
                 }
-            } else{
-                for ( var i = 0; i<path.length; i++){
-                    secondFloorMarkersArray.forEach(function (feature){
-                            if(feature.properties.name == path[i]){
-                                  let lt = feature.geometry.coordinates[1];
-                                  let ln = feature.geometry.coordinates[0];
-                                  let ltln = [lt, ln];
-                                  minDistanceLineCoords.push(ltln);  
-                                }                   
-                          });
-                    }
-            }
-            drawLine(minDistanceLineCoords);    
-        }   
+        }
+        drawLine(minDistanceLineCoords);    
+    }   
         
-       const drawLine = (minDistanceLineCoords) => {
-        minDistanceLine = L.polyline(minDistanceLineCoords, {color:"black"})
-        .bindPopup('Minimum distance path ');
-        minDistanceLine.addTo(currentFloorOverlay());
+    const drawLine = (minDistanceLineCoords) => {
+    minDistanceLine = L.polyline(minDistanceLineCoords, {color:"black"})
+    .bindPopup('Minimum distance path ');
+    minDistanceLine.addTo(currentFloorOverlay());
     }
-    
+
     
     $('#showPathsBtn').click(function(){
         showRequestedPaths();
@@ -413,7 +326,7 @@ const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = 
             const currentFloorLevelElevator =  refObj.currentFloorLevel+'Elevator';
             const end = refObj[currentFloorLevelElevator]['pointName'];
             const start = refObj[directionFromPath]['pointName'];
-            findShortestPath(currentFloorMarkersObject(), start, end);
+            getNamesInOrder(findShortestPath(currentFloorMarkersObject(), start, end));
             startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').addTo(currentFloorOverlay());
             endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(otherFloorOverlay());
             return;
@@ -424,10 +337,24 @@ const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = 
             end = refObj[directionToPath]['pointName'];
             endPointMarker.setLatLng(refObj[directionToPath]['pointCoords']).bindPopup('Your End Location').addTo(currentFloorOverlay()).openPopup();
             startPointMarker.setLatLng(refObj[directionFromPath]['pointCoords']).bindPopup('Your Start Location').addTo(currentFloorOverlay()).openPopup();
-            findShortestPath(currentFloorMarkersObject(), start, end);
+            getNamesInOrder(findShortestPath(currentFloorMarkersObject(), start, end));
         }
     
     }
+
+
+        const drawOtherFloorPath = (directionToPath) => {
+        console.log('heading to a different Floor: '+ refObj[directionToPath]['floorLevel']);
+        const halfPathsCoords = halfPathsObj[directionToPath];
+        if(refObj.currentFloorLevel == 'firstFloor'){
+            elevator1stFloor.openPopup();    
+        } else {
+            elevator2ndFloor.openPopup();
+            console.log('finding from 2nd floor start to second floor elevator')
+        }
+        halfPathLine = L.polyline(halfPathsCoords, {color:'black'}).bindPopup('Your path continued..').addTo(otherFloorOverlay());
+    }
+    
     
     let searchBarUsed = false;
     $('#infoDiv').click(function(){
@@ -451,18 +378,7 @@ const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = 
     });
     
     
-    const drawOtherFloorPath = (directionToPath) => {
-        console.log('heading to a different Floor: '+ refObj[directionToPath]['floorLevel']);
-        const halfPathsCoords = halfPathsObj[directionToPath];
-        if(refObj.currentFloorLevel == 'firstFloor'){
-            elevator1stFloor.openPopup();    
-        } else {
-            elevator2ndFloor.openPopup();
-            console.log('finding from 2nd floor start to second floor elevator')
-        }
-        halfPathLine = L.polyline(halfPathsCoords, {color:'black'}).bindPopup('Your path continued..').addTo(otherFloorOverlay());
-    }
-    
+
     let locateOnce = false;
     const locateMe = () => {
         locateOnce = true;
@@ -484,7 +400,7 @@ const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = 
         Toast.fire({
             title: '<span class="w3-text-white">Location Found</span>'
           })
-        let userCoords = [ 53.520701578731185, -113.52416932582857];
+        let userCoords = [ 53.5200336271986, -113.51781249046327];
         startPointMarker.setLatLng(userCoords).bindPopup('Your Approximate Location', {autoClose: false}).addTo(currentFloorOverlay()).openPopup();
         if(traversingFloors) {
         console.log('traversingFloors = ' + traversingFloors)
@@ -496,10 +412,13 @@ const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = 
             console.log('adding end marker to current floor')
         }
         if (searchBarUsed){
-                searchHalfPathLine = L.polyline(searchMarker['lineCoords'], {color:'black'}).bindPopup('Suggested path to Unit ').addTo(currentFloorOverlay());
-                searchBarUsed = false;
-            }
+            console.log('search bar used');
+            console.log(searchMarker);
+            searchHalfPathLine = L.polyline(searchMarker['lineCoords'], {color:'black'}).bindPopup('Suggested path to Unit ').addTo(currentFloorOverlay());
+            searchBarUsed = false;
+        }
         setStartPoint();
+        console.log('fired setStartPOint');
     }
     locateOnce = false;
     traversingFloors = false;
@@ -515,22 +434,27 @@ const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = 
     //includes the reference point's coordinates and name 
     //Calls the minimum path finding function
     let startMarkerDragged = false; 
+    let counter = 0; 
     const setStartPoint = () => {
+        counter++;
+        console.log('setStartPoint fired '+ counter + ' times');
         if(startMarkerDragged || endMarkerDragged){
         clearPathFxn();
-        console.log('clearing after markers dragged');
         startPointMarker.addTo(currentFloorOverlay());
         endPointMarker.addTo(currentFloorOverlay());
         startMarkerDragged = false;
         endMarkerDragged = false;
         }    
         getClosestPointFrom(startPointMarker);
+        console.log('distancesToClosestRefPoint Array');
+        console.log(distancesToClosestRefPointArray);
+        if(distancesToClosestRefPointArray.length == 0){return console.log('Location out of range')};
         if(firstFloorMapOverlay.hasLayer(firstRefPoint)){firstFloorMapOverlay.removeLayer(firstRefPoint)};
         if(secondFloorMapOverlay.hasLayer(firstRefPoint)){secondFloorMapOverlay.removeLayer(firstRefPoint)};
-        firstRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {color: 'green'}).addTo(currentFloorOverlay());
+        firstRefPoint = L.circleMarker(distancesToClosestRefPointArray[1], {color: 'green'}).addTo(currentFloorOverlay());
         firstRefPoint.bindPopup('Your closest reference point is here').openPopup();
-        const start = distancesToClosestRefPointArray[0][2];
-        findShortestPath(currentFloorMarkersObject(), start, end );
+        const start = distancesToClosestRefPointArray[2];
+        getNamesInOrder(findShortestPath(currentFloorMarkersObject(), start, end ));
     
     }
     
@@ -545,11 +469,12 @@ const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = 
     //includes the reference point's coordinates and name 
     let endMarkerDragged = false; 
     const setEndPoint = () => {
+        console.log('fired setEndPoint');
         getClosestPointFrom(endPointMarker);    
         if(firstFloorMapOverlay.hasLayer(endRefPoint)){firstFloorMapOverlay.removeLayer(endRefPoint)};
         if(secondFloorMapOverlay.hasLayer(endRefPoint)){secondFloorMapOverlay.removeLayer(endRefPoint)};
-        endRefPoint = L.circleMarker(distancesToClosestRefPointArray[0][1], {color: 'red'}).bindPopup('Ending Reference point');
-        end = distancesToClosestRefPointArray[0][2]; // passing in Point name ie. 'Point 1'
+        endRefPoint = L.circleMarker(distancesToClosestRefPointArray[1], {color: 'red'}).bindPopup('Ending Reference point');
+        end = distancesToClosestRefPointArray[2]; // passing in Point name ie. 'Point 1'
         setStartPoint();
     }
     
@@ -563,9 +488,15 @@ const { halfPathsObj, greenPin, redPin, geojsonMarkerOptions, Toast, refObj } = 
     //returns a sorted array of distances with the lowest distance first (ie. closest ref point) 
     const getClosestPointFrom = (PointMarker) => {
         distancesToClosestRefPointArray = [];
+        if(map.distance(PointMarker.getLatLng(), elevator1stFloor.getLatLng())>300){
+            return  Toast.fire({
+                title: 'Your location is outside the range of the hospital. Please move closer to the hospital'
+            })
+        }
+
         calcDistancesFromEachMarker(currentFloorMarkersArray(), PointMarker);
         distancesToClosestRefPointArray.sort(function(a, b){return a[0] - b[0]});
-        return distancesToClosestRefPointArray;
+        return distancesToClosestRefPointArray = distancesToClosestRefPointArray[0];
         }
         
     const calcDistancesFromEachMarker = (markersArray, PointMarker) => {

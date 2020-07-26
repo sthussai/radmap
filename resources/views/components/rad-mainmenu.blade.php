@@ -121,8 +121,6 @@
                 </div>
 
 
-            <button class="w3-button w3-padding w3-white w3-margin-top" id="recenterMapBtn" 
-                title="Stop Location Sharing">Recenter Map</button> <br>
             <button class="w3-button w3-padding w3-white w3-margin-top" id="refreshMapBtn" 
                 title="Stop Location Sharing">Refresh Map</button>
         </div>
@@ -227,7 +225,7 @@
 
 
 
-$('#recenterMapBtn').click(function(){recenterMap();closeNav();});
+
 $('#refreshMapBtn').click(function(){location.reload();});
 
 

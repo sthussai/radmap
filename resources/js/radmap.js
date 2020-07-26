@@ -1,4 +1,4 @@
-const {Toast} = require("./halfPathsObject");
+const {Toast} = require("./references");
 
 
 	let arr = [0, 0, 0];
@@ -32,10 +32,19 @@ const {Toast} = require("./halfPathsObject");
 		closeNav();
 	})
 	
+	function recenterMap2() {
+        console.log('Zoom = ' + map.getZoom());
+		map.setView(center, 17);
+		Toast.fire({
+			title: '<span class="w3-text-white">Re-centered map view...</span>'
+		  })
+
+    }	
 	
 	
 	
-	$('#findBtn').click(function(){locateMe();});
+	$('#centerMapBtn').click(function(){recenterMap2();});
+	$('#locateBtn').click(function(){locateMe();});
 	$('#stopBtn').click(function(){stopLocating();});
 	$('#menuBtn').click(function(){openNav();});
 	
@@ -106,8 +115,6 @@ const {Toast} = require("./halfPathsObject");
 			let watchLocation = false;
 	
 			function locateMe() {
-				document.getElementById('findBtn').innerText = 'Locating..';
-				document.getElementById('findBtn').classList.toggle("w3-grey");
 				watchLocation = true
 				map.locate({
 					setView: false,
@@ -147,7 +154,6 @@ const {Toast} = require("./halfPathsObject");
 					Toast.fire({
 						title: '<span class="w3-text-white">Showing live location... cancel with Stop button >>> </span>'
 					  })
-					document.getElementById('findBtn').style.display = 'none';
 					document.getElementById('stopBtn').style.display = 'block';	
 					map.setView(e.latlng, 18);
 				}
@@ -218,9 +224,6 @@ const {Toast} = require("./halfPathsObject");
 				  })
 				console.log('Stopped Locating');
 				counter = 0;
-				document.getElementById('findBtn').style.display = 'block';
-				document.getElementById('findBtn').classList.toggle("w3-grey");
-				document.getElementById('findBtn').innerText = 'Locate';
 				document.getElementById('stopBtn').style.display = 'none';
 			}
 	
@@ -291,3 +294,31 @@ const {Toast} = require("./halfPathsObject");
 			}
 	
 	
+			$(document).ready(function(){
+				// Toggles paragraphs display with sliding
+				$("#slideUpBtn").click(function(){
+					$(".slideUp").slideUp();
+					$(this).animate({'margin-top':'35px'});
+					setTimeout(
+			  function() 
+			  {
+				$("#slideUpBtn").hide();
+				$("#slideDownBtn").css('margin-top','35px').show();
+			  }, 300);
+					
+				});
+			});
+			$(document).ready(function(){
+				// Toggles paragraphs display with sliding
+				$("#slideDownBtn").click(function(){
+					$(".slideUp").slideDown();
+					$(this).animate({'margin-top':'180px'});
+					setTimeout(
+			  function() 
+			  {
+				$("#slideDownBtn").hide();
+				$("#slideUpBtn").css('margin-top','180px').show();
+			  }, 300);
+					
+				});
+			});

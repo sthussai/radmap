@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 use Validator;
 use App\Location;
+use App\StaffLocation;
 use Illuminate\Http\Request;
 
 class RadMapController extends Controller
 {
     public $demo = true;
-    public $color = 'white';
+    public $color = 'black';
     public $fontSize = '15px';
     public $centerCoords = '53.520742, -113.523993';
     public $centerZoom = 18;
@@ -92,5 +93,32 @@ class RadMapController extends Controller
             $location->save();
             $request->session()->flash('message', 'Location successfully submitted!');
             return redirect('/addlocation');
+    }
+
+    public function store_staff(Request $request){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'description' => 'required|min:10',
+            'latlng' => 'required',
+            ])->validate();
+            
+            $location = new StaffLocation();
+            $location->name = request()->name;
+            $location->description = request()->description;
+            $location->latlng = request()->latlng;
+            $latlngArray = explode(",", request()->latlng);
+            $location->lat = trim($latlngArray[0]);
+            $location->lng = trim($latlngArray[1]);
+            $location->pointName = request()->closestRefPoint;
+            $location->lineCoords = request()->lineCoords;
+            if(request()->firstFloor == '1'){
+                $location->firstFloor = true;
+            } else if(request()->firstFloor == '2'){
+                $location->firstFloor = 2;
+            }
+            else {$location->firstFloor = false;}
+            $location->save();
+            $request->session()->flash('message', 'Location successfully submitted!');
+            return redirect('/addlocation_staff');
     }
 }
